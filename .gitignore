@@ -30,8 +30,8 @@ Thumbs.db
 .idea/
 
 # Prisma local database
-prisma/*.db
-prisma/*.db-journal
+*.db
+*.db-journal
 
 # Temporary files
 *.tmp
