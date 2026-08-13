@@ -47,7 +47,59 @@ export const NotificationType = {
   STATUS_CHANGED: 'STATUS_CHANGED',
   COMMENT_ADDED: 'COMMENT_ADDED',
   ASSIGNMENT_CHANGED: 'ASSIGNMENT_CHANGED',
+  SLA_WARNING: 'SLA_WARNING',
+  ESCALATION_CREATED: 'ESCALATION_CREATED',
   SYSTEM: 'SYSTEM'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const AssignmentType = {
+  MANUAL: 'MANUAL',
+  AUTOMATIC: 'AUTOMATIC',
+  AI_RECOMMENDED: 'AI_RECOMMENDED',
+  REASSIGNMENT: 'REASSIGNMENT'
+} as const
+
+export type AssignmentType = (typeof AssignmentType)[keyof typeof AssignmentType]
+
+
+export const AssignmentStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type AssignmentStatus = (typeof AssignmentStatus)[keyof typeof AssignmentStatus]
+
+
+export const SLAStatus = {
+  ACTIVE: 'ACTIVE',
+  WARNING: 'WARNING',
+  BREACHED: 'BREACHED',
+  COMPLETED: 'COMPLETED',
+  PAUSED: 'PAUSED'
+} as const
+
+export type SLAStatus = (typeof SLAStatus)[keyof typeof SLAStatus]
+
+
+export const EscalationLevel = {
+  LEVEL_1: 'LEVEL_1',
+  LEVEL_2: 'LEVEL_2',
+  LEVEL_3: 'LEVEL_3',
+  ADMIN: 'ADMIN'
+} as const
+
+export type EscalationLevel = (typeof EscalationLevel)[keyof typeof EscalationLevel]
+
+
+export const EscalationStatus = {
+  OPEN: 'OPEN',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type EscalationStatus = (typeof EscalationStatus)[keyof typeof EscalationStatus]

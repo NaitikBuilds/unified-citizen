@@ -36,7 +36,44 @@ enum NotificationType {
   STATUS_CHANGED
   COMMENT_ADDED
   ASSIGNMENT_CHANGED
+  SLA_WARNING
+  ESCALATION_CREATED
   SYSTEM
+}
+
+enum AssignmentType {
+  MANUAL
+  AUTOMATIC
+  AI_RECOMMENDED
+  REASSIGNMENT
+}
+
+enum AssignmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum SLAStatus {
+  ACTIVE
+  WARNING
+  BREACHED
+  COMPLETED
+  PAUSED
+}
+
+enum EscalationLevel {
+  LEVEL_1
+  LEVEL_2
+  LEVEL_3
+  ADMIN
+}
+
+enum EscalationStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+  CANCELLED
 }
 
 model User {
@@ -50,15 +87,18 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+
   grievances         Grievance[]    @relation("CitizenGrievances")
-  assignedGrievances Grievance[]    @relation("AssignedOfficer")
   comments           Comment[]
   notifications      Notification[]
   auditLogs          AuditLog[]
   attachments        Attachment[]
-
-  departmentId String?
-  department   Department? @relation(fields: [departmentId], references: [id])
+  assignments        Assignment[]
+  refreshTokens      RefreshToken[]
+  feedback           Feedback[]
+  escalationsCreated Escalation[]   @relation("EscalationCreatedBy")
 
   @@index([email])
   @@index([departmentId])
@@ -73,8 +113,10 @@ model Department {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users      User[]
-  grievances Grievance[]
+  users       User[]
+  grievances  Grievance[]
+  assignments Assignment[]
+  slas        SLA[]
 }
 
 model Grievance {
@@ -100,13 +142,14 @@ model Grievance {
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
 
-  assignedOfficerId String?
-  assignedOfficer   User?   @relation("AssignedOfficer", fields: [assignedOfficerId], references: [id])
-
+  assignments      Assignment[]
+  comments         Comment[]
+  attachments      Attachment[]
+  notifications    Notification[]
   aiClassification AIClassification?
-
-  comments    Comment[]
-  attachments Attachment[]
+  sla              SLA?
+  feedback         Feedback[]
+  escalations      Escalation[]
 
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -115,10 +158,36 @@ model Grievance {
   @@index([ticketId])
   @@index([citizenId])
   @@index([departmentId])
-  @@index([assignedOfficerId])
   @@index([status])
   @@index([priority])
   @@index([createdAt])
+}
+
+model Assignment {
+  id String @id @default(cuid())
+
+  grievanceId String
+  grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  officerId String
+  officer   User   @relation(fields: [officerId], references: [id])
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  type   AssignmentType
+  status AssignmentStatus @default(ACTIVE)
+
+  assignedById String?
+  assignedAt   DateTime  @default(now())
+  completedAt  DateTime?
+
+  reason String?
+
+  @@index([grievanceId])
+  @@index([officerId])
+  @@index([departmentId])
+  @@index([status])
 }
 
 model AIClassification {
@@ -195,10 +264,12 @@ model Notification {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   grievanceId String?
+  grievance   Grievance? @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@index([userId])
+  @@index([grievanceId])
   @@index([isRead])
   @@index([createdAt])
 }
@@ -220,4 +291,91 @@ model AuditLog {
   @@index([entityId])
   @@index([userId])
   @@index([createdAt])
+}
+
+model RefreshToken {
+  id String @id @default(cuid())
+
+  tokenHash String @unique
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+  revokedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model SLA {
+  id String @id @default(cuid())
+
+  grievanceId String    @unique
+  grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  responseTimeHours   Int
+  resolutionTimeHours Int
+
+  responseDueAt   DateTime
+  resolutionDueAt DateTime
+
+  status SLAStatus @default(ACTIVE)
+
+  responseCompletedAt   DateTime?
+  resolutionCompletedAt DateTime?
+  breachedAt            DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([departmentId])
+  @@index([status])
+  @@index([resolutionDueAt])
+}
+
+model Feedback {
+  id String @id @default(cuid())
+
+  grievanceId String
+  grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  rating  Int
+  comment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([grievanceId])
+  @@index([userId])
+}
+
+model Escalation {
+  id String @id @default(cuid())
+
+  grievanceId String
+  grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  level  EscalationLevel
+  status EscalationStatus @default(OPEN)
+
+  reason String
+
+  createdById String?
+  createdBy   User?   @relation("EscalationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+
+  @@index([grievanceId])
+  @@index([level])
+  @@index([status])
 }

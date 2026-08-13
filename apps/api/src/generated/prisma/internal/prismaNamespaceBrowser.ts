@@ -54,11 +54,16 @@ export const ModelName = {
   User: 'User',
   Department: 'Department',
   Grievance: 'Grievance',
+  Assignment: 'Assignment',
   AIClassification: 'AIClassification',
   Comment: 'Comment',
   Attachment: 'Attachment',
   Notification: 'Notification',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  RefreshToken: 'RefreshToken',
+  SLA: 'SLA',
+  Feedback: 'Feedback',
+  Escalation: 'Escalation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -118,13 +123,28 @@ export const GrievanceScalarFieldEnum = {
   longitude: 'longitude',
   citizenId: 'citizenId',
   departmentId: 'departmentId',
-  assignedOfficerId: 'assignedOfficerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   resolvedAt: 'resolvedAt'
 } as const
 
 export type GrievanceScalarFieldEnum = (typeof GrievanceScalarFieldEnum)[keyof typeof GrievanceScalarFieldEnum]
+
+
+export const AssignmentScalarFieldEnum = {
+  id: 'id',
+  grievanceId: 'grievanceId',
+  officerId: 'officerId',
+  departmentId: 'departmentId',
+  type: 'type',
+  status: 'status',
+  assignedById: 'assignedById',
+  assignedAt: 'assignedAt',
+  completedAt: 'completedAt',
+  reason: 'reason'
+} as const
+
+export type AssignmentScalarFieldEnum = (typeof AssignmentScalarFieldEnum)[keyof typeof AssignmentScalarFieldEnum]
 
 
 export const AIClassificationScalarFieldEnum = {
@@ -196,6 +216,64 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const RefreshTokenScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  userId: 'userId',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
+
+
+export const SLAScalarFieldEnum = {
+  id: 'id',
+  grievanceId: 'grievanceId',
+  departmentId: 'departmentId',
+  responseTimeHours: 'responseTimeHours',
+  resolutionTimeHours: 'resolutionTimeHours',
+  responseDueAt: 'responseDueAt',
+  resolutionDueAt: 'resolutionDueAt',
+  status: 'status',
+  responseCompletedAt: 'responseCompletedAt',
+  resolutionCompletedAt: 'resolutionCompletedAt',
+  breachedAt: 'breachedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SLAScalarFieldEnum = (typeof SLAScalarFieldEnum)[keyof typeof SLAScalarFieldEnum]
+
+
+export const FeedbackScalarFieldEnum = {
+  id: 'id',
+  grievanceId: 'grievanceId',
+  userId: 'userId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeedbackScalarFieldEnum = (typeof FeedbackScalarFieldEnum)[keyof typeof FeedbackScalarFieldEnum]
+
+
+export const EscalationScalarFieldEnum = {
+  id: 'id',
+  grievanceId: 'grievanceId',
+  level: 'level',
+  status: 'status',
+  reason: 'reason',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type EscalationScalarFieldEnum = (typeof EscalationScalarFieldEnum)[keyof typeof EscalationScalarFieldEnum]
 
 
 export const SortOrder = {

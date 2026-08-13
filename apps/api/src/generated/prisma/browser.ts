@@ -33,6 +33,11 @@ export type Department = Prisma.DepartmentModel
  */
 export type Grievance = Prisma.GrievanceModel
 /**
+ * Model Assignment
+ * 
+ */
+export type Assignment = Prisma.AssignmentModel
+/**
  * Model AIClassification
  * 
  */
@@ -57,3 +62,23 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel
+/**
+ * Model SLA
+ * 
+ */
+export type SLA = Prisma.SLAModel
+/**
+ * Model Feedback
+ * 
+ */
+export type Feedback = Prisma.FeedbackModel
+/**
+ * Model Escalation
+ * 
+ */
+export type Escalation = Prisma.EscalationModel

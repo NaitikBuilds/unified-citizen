@@ -214,13 +214,16 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   departmentId?: Prisma.StringNullableFilter<"User"> | string | null
+  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   grievances?: Prisma.GrievanceListRelationFilter
-  assignedGrievances?: Prisma.GrievanceListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
-  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
+  assignments?: Prisma.AssignmentListRelationFilter
+  refreshTokens?: Prisma.RefreshTokenListRelationFilter
+  feedback?: Prisma.FeedbackListRelationFilter
+  escalationsCreated?: Prisma.EscalationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -233,13 +236,16 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  department?: Prisma.DepartmentOrderByWithRelationInput
   grievances?: Prisma.GrievanceOrderByRelationAggregateInput
-  assignedGrievances?: Prisma.GrievanceOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
-  department?: Prisma.DepartmentOrderByWithRelationInput
+  assignments?: Prisma.AssignmentOrderByRelationAggregateInput
+  refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
+  feedback?: Prisma.FeedbackOrderByRelationAggregateInput
+  escalationsCreated?: Prisma.EscalationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -255,13 +261,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   departmentId?: Prisma.StringNullableFilter<"User"> | string | null
+  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   grievances?: Prisma.GrievanceListRelationFilter
-  assignedGrievances?: Prisma.GrievanceListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
-  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
+  assignments?: Prisma.AssignmentListRelationFilter
+  refreshTokens?: Prisma.RefreshTokenListRelationFilter
+  feedback?: Prisma.FeedbackListRelationFilter
+  escalationsCreated?: Prisma.EscalationListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -303,13 +312,16 @@ export type UserCreateInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -323,11 +335,14 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   departmentId?: string | null
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -339,13 +354,16 @@ export type UserUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -359,11 +377,14 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -521,12 +542,6 @@ export type UserCreateNestedOneWithoutGrievancesInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutAssignedGrievancesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedGrievancesInput, Prisma.UserUncheckedCreateWithoutAssignedGrievancesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedGrievancesInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
 export type UserUpdateOneRequiredWithoutGrievancesNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutGrievancesInput, Prisma.UserUncheckedCreateWithoutGrievancesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutGrievancesInput
@@ -535,14 +550,18 @@ export type UserUpdateOneRequiredWithoutGrievancesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGrievancesInput, Prisma.UserUpdateWithoutGrievancesInput>, Prisma.UserUncheckedUpdateWithoutGrievancesInput>
 }
 
-export type UserUpdateOneWithoutAssignedGrievancesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedGrievancesInput, Prisma.UserUncheckedCreateWithoutAssignedGrievancesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedGrievancesInput
-  upsert?: Prisma.UserUpsertWithoutAssignedGrievancesInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
+export type UserCreateNestedOneWithoutAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsInput, Prisma.UserUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignmentsInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignedGrievancesInput, Prisma.UserUpdateWithoutAssignedGrievancesInput>, Prisma.UserUncheckedUpdateWithoutAssignedGrievancesInput>
+}
+
+export type UserUpdateOneRequiredWithoutAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsInput, Prisma.UserUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignmentsInput
+  upsert?: Prisma.UserUpsertWithoutAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.UserUpdateWithoutAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutAssignmentsInput>
 }
 
 export type UserCreateNestedOneWithoutCommentsInput = {
@@ -603,6 +622,50 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutRefreshTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRefreshTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshTokensInput
+  upsert?: Prisma.UserUpsertWithoutRefreshTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefreshTokensInput, Prisma.UserUpdateWithoutRefreshTokensInput>, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
+}
+
+export type UserCreateNestedOneWithoutFeedbackInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbackInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFeedbackNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbackInput
+  upsert?: Prisma.UserUpsertWithoutFeedbackInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFeedbackInput, Prisma.UserUpdateWithoutFeedbackInput>, Prisma.UserUncheckedUpdateWithoutFeedbackInput>
+}
+
+export type UserCreateNestedOneWithoutEscalationsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEscalationsCreatedInput, Prisma.UserUncheckedCreateWithoutEscalationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscalationsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutEscalationsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEscalationsCreatedInput, Prisma.UserUncheckedCreateWithoutEscalationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscalationsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutEscalationsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEscalationsCreatedInput, Prisma.UserUpdateWithoutEscalationsCreatedInput>, Prisma.UserUncheckedUpdateWithoutEscalationsCreatedInput>
+}
+
 export type UserCreateWithoutDepartmentInput = {
   id?: string
   name: string
@@ -613,11 +676,14 @@ export type UserCreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentInput = {
@@ -630,11 +696,14 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentInput = {
@@ -687,12 +756,15 @@ export type UserCreateWithoutGrievancesInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutGrievancesInput = {
@@ -705,55 +777,19 @@ export type UserUncheckedCreateWithoutGrievancesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   departmentId?: string | null
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutGrievancesInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutGrievancesInput, Prisma.UserUncheckedCreateWithoutGrievancesInput>
-}
-
-export type UserCreateWithoutAssignedGrievancesInput = {
-  id?: string
-  name: string
-  email: string
-  passwordHash: string
-  phone?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
-}
-
-export type UserUncheckedCreateWithoutAssignedGrievancesInput = {
-  id?: string
-  name: string
-  email: string
-  passwordHash: string
-  phone?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  departmentId?: string | null
-  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
-}
-
-export type UserCreateOrConnectWithoutAssignedGrievancesInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedGrievancesInput, Prisma.UserUncheckedCreateWithoutAssignedGrievancesInput>
 }
 
 export type UserUpsertWithoutGrievancesInput = {
@@ -776,12 +812,15 @@ export type UserUpdateWithoutGrievancesInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGrievancesInput = {
@@ -794,25 +833,73 @@ export type UserUncheckedUpdateWithoutGrievancesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
-export type UserUpsertWithoutAssignedGrievancesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutAssignedGrievancesInput, Prisma.UserUncheckedUpdateWithoutAssignedGrievancesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedGrievancesInput, Prisma.UserUncheckedCreateWithoutAssignedGrievancesInput>
+export type UserCreateWithoutAssignmentsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutAssignmentsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutAssignmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsInput, Prisma.UserUncheckedCreateWithoutAssignmentsInput>
+}
+
+export type UserUpsertWithoutAssignmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAssignmentsInput, Prisma.UserUncheckedUpdateWithoutAssignmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsInput, Prisma.UserUncheckedCreateWithoutAssignmentsInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutAssignedGrievancesInput = {
+export type UserUpdateToOneWithWhereWithoutAssignmentsInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutAssignedGrievancesInput, Prisma.UserUncheckedUpdateWithoutAssignedGrievancesInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAssignmentsInput, Prisma.UserUncheckedUpdateWithoutAssignmentsInput>
 }
 
-export type UserUpdateWithoutAssignedGrievancesInput = {
+export type UserUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -821,15 +908,18 @@ export type UserUpdateWithoutAssignedGrievancesInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
-export type UserUncheckedUpdateWithoutAssignedGrievancesInput = {
+export type UserUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -844,6 +934,9 @@ export type UserUncheckedUpdateWithoutAssignedGrievancesInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -855,12 +948,15 @@ export type UserCreateWithoutCommentsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -874,10 +970,13 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   departmentId?: string | null
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -905,12 +1004,15 @@ export type UserUpdateWithoutCommentsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -924,10 +1026,13 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAttachmentsInput = {
@@ -939,12 +1044,15 @@ export type UserCreateWithoutAttachmentsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAttachmentsInput = {
@@ -958,10 +1066,13 @@ export type UserUncheckedCreateWithoutAttachmentsInput = {
   updatedAt?: Date | string
   departmentId?: string | null
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAttachmentsInput = {
@@ -989,12 +1100,15 @@ export type UserUpdateWithoutAttachmentsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttachmentsInput = {
@@ -1008,10 +1122,13 @@ export type UserUncheckedUpdateWithoutAttachmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1023,12 +1140,15 @@ export type UserCreateWithoutNotificationsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1042,10 +1162,13 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   updatedAt?: Date | string
   departmentId?: string | null
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1073,12 +1196,15 @@ export type UserUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1092,10 +1218,13 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1107,12 +1236,15 @@ export type UserCreateWithoutAuditLogsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1126,10 +1258,13 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   departmentId?: string | null
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
-  assignedGrievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutAssignedOfficerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1157,12 +1292,15 @@ export type UserUpdateWithoutAuditLogsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1176,10 +1314,301 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutRefreshTokensInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutRefreshTokensInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutRefreshTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+}
+
+export type UserUpsertWithoutRefreshTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRefreshTokensInput, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRefreshTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRefreshTokensInput, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
+}
+
+export type UserUpdateWithoutRefreshTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRefreshTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutFeedbackInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutFeedbackInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutFeedbackInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+}
+
+export type UserUpsertWithoutFeedbackInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFeedbackInput, Prisma.UserUncheckedUpdateWithoutFeedbackInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFeedbackInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFeedbackInput, Prisma.UserUncheckedUpdateWithoutFeedbackInput>
+}
+
+export type UserUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutEscalationsCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutEscalationsCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutEscalationsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEscalationsCreatedInput, Prisma.UserUncheckedCreateWithoutEscalationsCreatedInput>
+}
+
+export type UserUpsertWithoutEscalationsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEscalationsCreatedInput, Prisma.UserUncheckedUpdateWithoutEscalationsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEscalationsCreatedInput, Prisma.UserUncheckedCreateWithoutEscalationsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEscalationsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEscalationsCreatedInput, Prisma.UserUncheckedUpdateWithoutEscalationsCreatedInput>
+}
+
+export type UserUpdateWithoutEscalationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEscalationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyDepartmentInput = {
@@ -1203,11 +1632,14 @@ export type UserUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentInput = {
@@ -1220,11 +1652,14 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
-  assignedGrievances?: Prisma.GrievanceUncheckedUpdateManyWithoutAssignedOfficerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutDepartmentInput = {
@@ -1245,20 +1680,26 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
 
 export type UserCountOutputType = {
   grievances: number
-  assignedGrievances: number
   comments: number
   notifications: number
   auditLogs: number
   attachments: number
+  assignments: number
+  refreshTokens: number
+  feedback: number
+  escalationsCreated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievances?: boolean | UserCountOutputTypeCountGrievancesArgs
-  assignedGrievances?: boolean | UserCountOutputTypeCountAssignedGrievancesArgs
   comments?: boolean | UserCountOutputTypeCountCommentsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   attachments?: boolean | UserCountOutputTypeCountAttachmentsArgs
+  assignments?: boolean | UserCountOutputTypeCountAssignmentsArgs
+  refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
+  feedback?: boolean | UserCountOutputTypeCountFeedbackArgs
+  escalationsCreated?: boolean | UserCountOutputTypeCountEscalationsCreatedArgs
 }
 
 /**
@@ -1275,13 +1716,6 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountGrievancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.GrievanceWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountAssignedGrievancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GrievanceWhereInput
 }
 
@@ -1313,6 +1747,34 @@ export type UserCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Type
   where?: Prisma.AttachmentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefreshTokenWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeedbackWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEscalationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EscalationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1324,13 +1786,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   departmentId?: boolean
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   grievances?: boolean | Prisma.User$grievancesArgs<ExtArgs>
-  assignedGrievances?: boolean | Prisma.User$assignedGrievancesArgs<ExtArgs>
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
+  assignments?: boolean | Prisma.User$assignmentsArgs<ExtArgs>
+  refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
+  feedback?: boolean | Prisma.User$feedbackArgs<ExtArgs>
+  escalationsCreated?: boolean | Prisma.User$escalationsCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1374,13 +1839,16 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "phone" | "role" | "createdAt" | "updatedAt" | "departmentId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   grievances?: boolean | Prisma.User$grievancesArgs<ExtArgs>
-  assignedGrievances?: boolean | Prisma.User$assignedGrievancesArgs<ExtArgs>
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
+  assignments?: boolean | Prisma.User$assignmentsArgs<ExtArgs>
+  refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
+  feedback?: boolean | Prisma.User$feedbackArgs<ExtArgs>
+  escalationsCreated?: boolean | Prisma.User$escalationsCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1393,13 +1861,16 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    department: Prisma.$DepartmentPayload<ExtArgs> | null
     grievances: Prisma.$GrievancePayload<ExtArgs>[]
-    assignedGrievances: Prisma.$GrievancePayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
-    department: Prisma.$DepartmentPayload<ExtArgs> | null
+    assignments: Prisma.$AssignmentPayload<ExtArgs>[]
+    refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
+    feedback: Prisma.$FeedbackPayload<ExtArgs>[]
+    escalationsCreated: Prisma.$EscalationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1805,13 +2276,16 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  department<T extends Prisma.User$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   grievances<T extends Prisma.User$grievancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$grievancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GrievancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  assignedGrievances<T extends Prisma.User$assignedGrievancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedGrievancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GrievancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.User$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.User$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  department<T extends Prisma.User$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  assignments<T extends Prisma.User$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  refreshTokens<T extends Prisma.User$refreshTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feedback<T extends Prisma.User$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  escalationsCreated<T extends Prisma.User$escalationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$escalationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EscalationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2251,33 +2725,28 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.grievances
+ * User.department
  */
-export type User$grievancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$departmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Grievance
+   * Select specific fields to fetch from the Department
    */
-  select?: Prisma.GrievanceSelect<ExtArgs> | null
+  select?: Prisma.DepartmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Grievance
+   * Omit specific fields from the Department
    */
-  omit?: Prisma.GrievanceOmit<ExtArgs> | null
+  omit?: Prisma.DepartmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.GrievanceInclude<ExtArgs> | null
-  where?: Prisma.GrievanceWhereInput
-  orderBy?: Prisma.GrievanceOrderByWithRelationInput | Prisma.GrievanceOrderByWithRelationInput[]
-  cursor?: Prisma.GrievanceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.GrievanceScalarFieldEnum | Prisma.GrievanceScalarFieldEnum[]
+  include?: Prisma.DepartmentInclude<ExtArgs> | null
+  where?: Prisma.DepartmentWhereInput
 }
 
 /**
- * User.assignedGrievances
+ * User.grievances
  */
-export type User$assignedGrievancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$grievancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Grievance
    */
@@ -2395,22 +2864,99 @@ export type User$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * User.department
+ * User.assignments
  */
-export type User$departmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Department
+   * Select specific fields to fetch from the Assignment
    */
-  select?: Prisma.DepartmentSelect<ExtArgs> | null
+  select?: Prisma.AssignmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Department
+   * Omit specific fields from the Assignment
    */
-  omit?: Prisma.DepartmentOmit<ExtArgs> | null
+  omit?: Prisma.AssignmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.DepartmentInclude<ExtArgs> | null
-  where?: Prisma.DepartmentWhereInput
+  include?: Prisma.AssignmentInclude<ExtArgs> | null
+  where?: Prisma.AssignmentWhereInput
+  orderBy?: Prisma.AssignmentOrderByWithRelationInput | Prisma.AssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.AssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssignmentScalarFieldEnum | Prisma.AssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.refreshTokens
+ */
+export type User$refreshTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RefreshToken
+   */
+  select?: Prisma.RefreshTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RefreshToken
+   */
+  omit?: Prisma.RefreshTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefreshTokenInclude<ExtArgs> | null
+  where?: Prisma.RefreshTokenWhereInput
+  orderBy?: Prisma.RefreshTokenOrderByWithRelationInput | Prisma.RefreshTokenOrderByWithRelationInput[]
+  cursor?: Prisma.RefreshTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefreshTokenScalarFieldEnum | Prisma.RefreshTokenScalarFieldEnum[]
+}
+
+/**
+ * User.feedback
+ */
+export type User$feedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Feedback
+   */
+  select?: Prisma.FeedbackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Feedback
+   */
+  omit?: Prisma.FeedbackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeedbackInclude<ExtArgs> | null
+  where?: Prisma.FeedbackWhereInput
+  orderBy?: Prisma.FeedbackOrderByWithRelationInput | Prisma.FeedbackOrderByWithRelationInput[]
+  cursor?: Prisma.FeedbackWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeedbackScalarFieldEnum | Prisma.FeedbackScalarFieldEnum[]
+}
+
+/**
+ * User.escalationsCreated
+ */
+export type User$escalationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Escalation
+   */
+  select?: Prisma.EscalationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Escalation
+   */
+  omit?: Prisma.EscalationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EscalationInclude<ExtArgs> | null
+  where?: Prisma.EscalationWhereInput
+  orderBy?: Prisma.EscalationOrderByWithRelationInput | Prisma.EscalationOrderByWithRelationInput[]
+  cursor?: Prisma.EscalationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EscalationScalarFieldEnum | Prisma.EscalationScalarFieldEnum[]
 }
 
 /**
