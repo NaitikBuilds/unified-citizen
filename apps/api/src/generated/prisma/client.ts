@@ -92,6 +92,11 @@ export type AuditLog = Prisma.AuditLogModel
  */
 export type RefreshToken = Prisma.RefreshTokenModel
 /**
+ * Model SLAPolicy
+ * 
+ */
+export type SLAPolicy = Prisma.SLAPolicyModel
+/**
  * Model SLA
  * 
  */

@@ -95,7 +95,8 @@ model User {
   notifications      Notification[]
   auditLogs          AuditLog[]
   attachments        Attachment[]
-  assignments        Assignment[]
+  assignments        Assignment[]   @relation("AssignedOfficer")
+  assignmentsCreated Assignment[]   @relation("AssignmentCreatedBy")
   refreshTokens      RefreshToken[]
   feedback           Feedback[]
   escalationsCreated Escalation[]   @relation("EscalationCreatedBy")
@@ -117,6 +118,7 @@ model Department {
   grievances  Grievance[]
   assignments Assignment[]
   slas        SLA[]
+  slaPolicies SLAPolicy[]
 }
 
 model Grievance {
@@ -170,23 +172,26 @@ model Assignment {
   grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 
   officerId String
-  officer   User   @relation(fields: [officerId], references: [id])
+  officer   User   @relation("AssignedOfficer", fields: [officerId], references: [id])
 
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
 
+  assignedById String?
+  assignedBy   User?   @relation("AssignmentCreatedBy", fields: [assignedById], references: [id], onDelete: SetNull)
+
   type   AssignmentType
   status AssignmentStatus @default(ACTIVE)
 
-  assignedById String?
-  assignedAt   DateTime  @default(now())
-  completedAt  DateTime?
+  assignedAt  DateTime  @default(now())
+  completedAt DateTime?
 
   reason String?
 
   @@index([grievanceId])
   @@index([officerId])
   @@index([departmentId])
+  @@index([assignedById])
   @@index([status])
 }
 
@@ -310,11 +315,42 @@ model RefreshToken {
   @@index([expiresAt])
 }
 
+model SLAPolicy {
+  id String @id @default(cuid())
+
+  name        String
+  description String?
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  category String?
+  priority GrievancePriority?
+
+  responseTimeHours   Int
+  resolutionTimeHours Int
+
+  isActive Boolean @default(true)
+
+  slas SLA[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([departmentId])
+  @@index([category])
+  @@index([priority])
+  @@index([isActive])
+}
+
 model SLA {
   id String @id @default(cuid())
 
   grievanceId String    @unique
   grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  policyId String?
+  policy   SLAPolicy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
 
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
@@ -334,6 +370,7 @@ model SLA {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([policyId])
   @@index([departmentId])
   @@index([status])
   @@index([resolutionDueAt])

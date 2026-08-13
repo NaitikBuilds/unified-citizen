@@ -61,6 +61,7 @@ export const ModelName = {
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   RefreshToken: 'RefreshToken',
+  SLAPolicy: 'SLAPolicy',
   SLA: 'SLA',
   Feedback: 'Feedback',
   Escalation: 'Escalation'
@@ -136,9 +137,9 @@ export const AssignmentScalarFieldEnum = {
   grievanceId: 'grievanceId',
   officerId: 'officerId',
   departmentId: 'departmentId',
+  assignedById: 'assignedById',
   type: 'type',
   status: 'status',
-  assignedById: 'assignedById',
   assignedAt: 'assignedAt',
   completedAt: 'completedAt',
   reason: 'reason'
@@ -230,9 +231,27 @@ export const RefreshTokenScalarFieldEnum = {
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
+export const SLAPolicyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  departmentId: 'departmentId',
+  category: 'category',
+  priority: 'priority',
+  responseTimeHours: 'responseTimeHours',
+  resolutionTimeHours: 'resolutionTimeHours',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SLAPolicyScalarFieldEnum = (typeof SLAPolicyScalarFieldEnum)[keyof typeof SLAPolicyScalarFieldEnum]
+
+
 export const SLAScalarFieldEnum = {
   id: 'id',
   grievanceId: 'grievanceId',
+  policyId: 'policyId',
   departmentId: 'departmentId',
   responseTimeHours: 'responseTimeHours',
   resolutionTimeHours: 'resolutionTimeHours',

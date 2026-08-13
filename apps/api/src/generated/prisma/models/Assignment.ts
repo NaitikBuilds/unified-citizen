@@ -29,9 +29,9 @@ export type AssignmentMinAggregateOutputType = {
   grievanceId: string | null
   officerId: string | null
   departmentId: string | null
+  assignedById: string | null
   type: $Enums.AssignmentType | null
   status: $Enums.AssignmentStatus | null
-  assignedById: string | null
   assignedAt: Date | null
   completedAt: Date | null
   reason: string | null
@@ -42,9 +42,9 @@ export type AssignmentMaxAggregateOutputType = {
   grievanceId: string | null
   officerId: string | null
   departmentId: string | null
+  assignedById: string | null
   type: $Enums.AssignmentType | null
   status: $Enums.AssignmentStatus | null
-  assignedById: string | null
   assignedAt: Date | null
   completedAt: Date | null
   reason: string | null
@@ -55,9 +55,9 @@ export type AssignmentCountAggregateOutputType = {
   grievanceId: number
   officerId: number
   departmentId: number
+  assignedById: number
   type: number
   status: number
-  assignedById: number
   assignedAt: number
   completedAt: number
   reason: number
@@ -70,9 +70,9 @@ export type AssignmentMinAggregateInputType = {
   grievanceId?: true
   officerId?: true
   departmentId?: true
+  assignedById?: true
   type?: true
   status?: true
-  assignedById?: true
   assignedAt?: true
   completedAt?: true
   reason?: true
@@ -83,9 +83,9 @@ export type AssignmentMaxAggregateInputType = {
   grievanceId?: true
   officerId?: true
   departmentId?: true
+  assignedById?: true
   type?: true
   status?: true
-  assignedById?: true
   assignedAt?: true
   completedAt?: true
   reason?: true
@@ -96,9 +96,9 @@ export type AssignmentCountAggregateInputType = {
   grievanceId?: true
   officerId?: true
   departmentId?: true
+  assignedById?: true
   type?: true
   status?: true
-  assignedById?: true
   assignedAt?: true
   completedAt?: true
   reason?: true
@@ -182,9 +182,9 @@ export type AssignmentGroupByOutputType = {
   grievanceId: string
   officerId: string
   departmentId: string
+  assignedById: string | null
   type: $Enums.AssignmentType
   status: $Enums.AssignmentStatus
-  assignedById: string | null
   assignedAt: Date
   completedAt: Date | null
   reason: string | null
@@ -216,15 +216,16 @@ export type AssignmentWhereInput = {
   grievanceId?: Prisma.StringFilter<"Assignment"> | string
   officerId?: Prisma.StringFilter<"Assignment"> | string
   departmentId?: Prisma.StringFilter<"Assignment"> | string
+  assignedById?: Prisma.StringNullableFilter<"Assignment"> | string | null
   type?: Prisma.EnumAssignmentTypeFilter<"Assignment"> | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFilter<"Assignment"> | $Enums.AssignmentStatus
-  assignedById?: Prisma.StringNullableFilter<"Assignment"> | string | null
   assignedAt?: Prisma.DateTimeFilter<"Assignment"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Assignment"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"Assignment"> | string | null
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   officer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
+  assignedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type AssignmentOrderByWithRelationInput = {
@@ -232,15 +233,16 @@ export type AssignmentOrderByWithRelationInput = {
   grievanceId?: Prisma.SortOrder
   officerId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
+  assignedById?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  assignedById?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   grievance?: Prisma.GrievanceOrderByWithRelationInput
   officer?: Prisma.UserOrderByWithRelationInput
   department?: Prisma.DepartmentOrderByWithRelationInput
+  assignedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type AssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -251,15 +253,16 @@ export type AssignmentWhereUniqueInput = Prisma.AtLeast<{
   grievanceId?: Prisma.StringFilter<"Assignment"> | string
   officerId?: Prisma.StringFilter<"Assignment"> | string
   departmentId?: Prisma.StringFilter<"Assignment"> | string
+  assignedById?: Prisma.StringNullableFilter<"Assignment"> | string | null
   type?: Prisma.EnumAssignmentTypeFilter<"Assignment"> | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFilter<"Assignment"> | $Enums.AssignmentStatus
-  assignedById?: Prisma.StringNullableFilter<"Assignment"> | string | null
   assignedAt?: Prisma.DateTimeFilter<"Assignment"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Assignment"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"Assignment"> | string | null
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   officer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
+  assignedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type AssignmentOrderByWithAggregationInput = {
@@ -267,9 +270,9 @@ export type AssignmentOrderByWithAggregationInput = {
   grievanceId?: Prisma.SortOrder
   officerId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
+  assignedById?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  assignedById?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,9 +289,9 @@ export type AssignmentScalarWhereWithAggregatesInput = {
   grievanceId?: Prisma.StringWithAggregatesFilter<"Assignment"> | string
   officerId?: Prisma.StringWithAggregatesFilter<"Assignment"> | string
   departmentId?: Prisma.StringWithAggregatesFilter<"Assignment"> | string
+  assignedById?: Prisma.StringNullableWithAggregatesFilter<"Assignment"> | string | null
   type?: Prisma.EnumAssignmentTypeWithAggregatesFilter<"Assignment"> | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusWithAggregatesFilter<"Assignment"> | $Enums.AssignmentStatus
-  assignedById?: Prisma.StringNullableWithAggregatesFilter<"Assignment"> | string | null
   assignedAt?: Prisma.DateTimeWithAggregatesFilter<"Assignment"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Assignment"> | Date | string | null
   reason?: Prisma.StringNullableWithAggregatesFilter<"Assignment"> | string | null
@@ -298,13 +301,13 @@ export type AssignmentCreateInput = {
   id?: string
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
   grievance: Prisma.GrievanceCreateNestedOneWithoutAssignmentsInput
   officer: Prisma.UserCreateNestedOneWithoutAssignmentsInput
   department: Prisma.DepartmentCreateNestedOneWithoutAssignmentsInput
+  assignedBy?: Prisma.UserCreateNestedOneWithoutAssignmentsCreatedInput
 }
 
 export type AssignmentUncheckedCreateInput = {
@@ -312,9 +315,9 @@ export type AssignmentUncheckedCreateInput = {
   grievanceId: string
   officerId: string
   departmentId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -324,13 +327,13 @@ export type AssignmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutAssignmentsNestedInput
   officer?: Prisma.UserUpdateOneRequiredWithoutAssignmentsNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutAssignmentsNestedInput
+  assignedBy?: Prisma.UserUpdateOneWithoutAssignmentsCreatedNestedInput
 }
 
 export type AssignmentUncheckedUpdateInput = {
@@ -338,9 +341,9 @@ export type AssignmentUncheckedUpdateInput = {
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
   officerId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -351,9 +354,9 @@ export type AssignmentCreateManyInput = {
   grievanceId: string
   officerId: string
   departmentId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -363,7 +366,6 @@ export type AssignmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -374,9 +376,9 @@ export type AssignmentUncheckedUpdateManyInput = {
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
   officerId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -397,9 +399,9 @@ export type AssignmentCountOrderByAggregateInput = {
   grievanceId?: Prisma.SortOrder
   officerId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
+  assignedById?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  assignedById?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   reason?: Prisma.SortOrder
@@ -410,9 +412,9 @@ export type AssignmentMaxOrderByAggregateInput = {
   grievanceId?: Prisma.SortOrder
   officerId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
+  assignedById?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  assignedById?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   reason?: Prisma.SortOrder
@@ -423,9 +425,9 @@ export type AssignmentMinOrderByAggregateInput = {
   grievanceId?: Prisma.SortOrder
   officerId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
+  assignedById?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  assignedById?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   reason?: Prisma.SortOrder
@@ -438,10 +440,24 @@ export type AssignmentCreateNestedManyWithoutOfficerInput = {
   connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
 }
 
+export type AssignmentCreateNestedManyWithoutAssignedByInput = {
+  create?: Prisma.XOR<Prisma.AssignmentCreateWithoutAssignedByInput, Prisma.AssignmentUncheckedCreateWithoutAssignedByInput> | Prisma.AssignmentCreateWithoutAssignedByInput[] | Prisma.AssignmentUncheckedCreateWithoutAssignedByInput[]
+  connectOrCreate?: Prisma.AssignmentCreateOrConnectWithoutAssignedByInput | Prisma.AssignmentCreateOrConnectWithoutAssignedByInput[]
+  createMany?: Prisma.AssignmentCreateManyAssignedByInputEnvelope
+  connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+}
+
 export type AssignmentUncheckedCreateNestedManyWithoutOfficerInput = {
   create?: Prisma.XOR<Prisma.AssignmentCreateWithoutOfficerInput, Prisma.AssignmentUncheckedCreateWithoutOfficerInput> | Prisma.AssignmentCreateWithoutOfficerInput[] | Prisma.AssignmentUncheckedCreateWithoutOfficerInput[]
   connectOrCreate?: Prisma.AssignmentCreateOrConnectWithoutOfficerInput | Prisma.AssignmentCreateOrConnectWithoutOfficerInput[]
   createMany?: Prisma.AssignmentCreateManyOfficerInputEnvelope
+  connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+}
+
+export type AssignmentUncheckedCreateNestedManyWithoutAssignedByInput = {
+  create?: Prisma.XOR<Prisma.AssignmentCreateWithoutAssignedByInput, Prisma.AssignmentUncheckedCreateWithoutAssignedByInput> | Prisma.AssignmentCreateWithoutAssignedByInput[] | Prisma.AssignmentUncheckedCreateWithoutAssignedByInput[]
+  connectOrCreate?: Prisma.AssignmentCreateOrConnectWithoutAssignedByInput | Prisma.AssignmentCreateOrConnectWithoutAssignedByInput[]
+  createMany?: Prisma.AssignmentCreateManyAssignedByInputEnvelope
   connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
 }
 
@@ -459,6 +475,20 @@ export type AssignmentUpdateManyWithoutOfficerNestedInput = {
   deleteMany?: Prisma.AssignmentScalarWhereInput | Prisma.AssignmentScalarWhereInput[]
 }
 
+export type AssignmentUpdateManyWithoutAssignedByNestedInput = {
+  create?: Prisma.XOR<Prisma.AssignmentCreateWithoutAssignedByInput, Prisma.AssignmentUncheckedCreateWithoutAssignedByInput> | Prisma.AssignmentCreateWithoutAssignedByInput[] | Prisma.AssignmentUncheckedCreateWithoutAssignedByInput[]
+  connectOrCreate?: Prisma.AssignmentCreateOrConnectWithoutAssignedByInput | Prisma.AssignmentCreateOrConnectWithoutAssignedByInput[]
+  upsert?: Prisma.AssignmentUpsertWithWhereUniqueWithoutAssignedByInput | Prisma.AssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
+  createMany?: Prisma.AssignmentCreateManyAssignedByInputEnvelope
+  set?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  disconnect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  delete?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  update?: Prisma.AssignmentUpdateWithWhereUniqueWithoutAssignedByInput | Prisma.AssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
+  updateMany?: Prisma.AssignmentUpdateManyWithWhereWithoutAssignedByInput | Prisma.AssignmentUpdateManyWithWhereWithoutAssignedByInput[]
+  deleteMany?: Prisma.AssignmentScalarWhereInput | Prisma.AssignmentScalarWhereInput[]
+}
+
 export type AssignmentUncheckedUpdateManyWithoutOfficerNestedInput = {
   create?: Prisma.XOR<Prisma.AssignmentCreateWithoutOfficerInput, Prisma.AssignmentUncheckedCreateWithoutOfficerInput> | Prisma.AssignmentCreateWithoutOfficerInput[] | Prisma.AssignmentUncheckedCreateWithoutOfficerInput[]
   connectOrCreate?: Prisma.AssignmentCreateOrConnectWithoutOfficerInput | Prisma.AssignmentCreateOrConnectWithoutOfficerInput[]
@@ -470,6 +500,20 @@ export type AssignmentUncheckedUpdateManyWithoutOfficerNestedInput = {
   connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
   update?: Prisma.AssignmentUpdateWithWhereUniqueWithoutOfficerInput | Prisma.AssignmentUpdateWithWhereUniqueWithoutOfficerInput[]
   updateMany?: Prisma.AssignmentUpdateManyWithWhereWithoutOfficerInput | Prisma.AssignmentUpdateManyWithWhereWithoutOfficerInput[]
+  deleteMany?: Prisma.AssignmentScalarWhereInput | Prisma.AssignmentScalarWhereInput[]
+}
+
+export type AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput = {
+  create?: Prisma.XOR<Prisma.AssignmentCreateWithoutAssignedByInput, Prisma.AssignmentUncheckedCreateWithoutAssignedByInput> | Prisma.AssignmentCreateWithoutAssignedByInput[] | Prisma.AssignmentUncheckedCreateWithoutAssignedByInput[]
+  connectOrCreate?: Prisma.AssignmentCreateOrConnectWithoutAssignedByInput | Prisma.AssignmentCreateOrConnectWithoutAssignedByInput[]
+  upsert?: Prisma.AssignmentUpsertWithWhereUniqueWithoutAssignedByInput | Prisma.AssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
+  createMany?: Prisma.AssignmentCreateManyAssignedByInputEnvelope
+  set?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  disconnect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  delete?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  connect?: Prisma.AssignmentWhereUniqueInput | Prisma.AssignmentWhereUniqueInput[]
+  update?: Prisma.AssignmentUpdateWithWhereUniqueWithoutAssignedByInput | Prisma.AssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
+  updateMany?: Prisma.AssignmentUpdateManyWithWhereWithoutAssignedByInput | Prisma.AssignmentUpdateManyWithWhereWithoutAssignedByInput[]
   deleteMany?: Prisma.AssignmentScalarWhereInput | Prisma.AssignmentScalarWhereInput[]
 }
 
@@ -569,21 +613,21 @@ export type AssignmentCreateWithoutOfficerInput = {
   id?: string
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
   grievance: Prisma.GrievanceCreateNestedOneWithoutAssignmentsInput
   department: Prisma.DepartmentCreateNestedOneWithoutAssignmentsInput
+  assignedBy?: Prisma.UserCreateNestedOneWithoutAssignmentsCreatedInput
 }
 
 export type AssignmentUncheckedCreateWithoutOfficerInput = {
   id?: string
   grievanceId: string
   departmentId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -596,6 +640,40 @@ export type AssignmentCreateOrConnectWithoutOfficerInput = {
 
 export type AssignmentCreateManyOfficerInputEnvelope = {
   data: Prisma.AssignmentCreateManyOfficerInput | Prisma.AssignmentCreateManyOfficerInput[]
+  skipDuplicates?: boolean
+}
+
+export type AssignmentCreateWithoutAssignedByInput = {
+  id?: string
+  type: $Enums.AssignmentType
+  status?: $Enums.AssignmentStatus
+  assignedAt?: Date | string
+  completedAt?: Date | string | null
+  reason?: string | null
+  grievance: Prisma.GrievanceCreateNestedOneWithoutAssignmentsInput
+  officer: Prisma.UserCreateNestedOneWithoutAssignmentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutAssignmentsInput
+}
+
+export type AssignmentUncheckedCreateWithoutAssignedByInput = {
+  id?: string
+  grievanceId: string
+  officerId: string
+  departmentId: string
+  type: $Enums.AssignmentType
+  status?: $Enums.AssignmentStatus
+  assignedAt?: Date | string
+  completedAt?: Date | string | null
+  reason?: string | null
+}
+
+export type AssignmentCreateOrConnectWithoutAssignedByInput = {
+  where: Prisma.AssignmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AssignmentCreateWithoutAssignedByInput, Prisma.AssignmentUncheckedCreateWithoutAssignedByInput>
+}
+
+export type AssignmentCreateManyAssignedByInputEnvelope = {
+  data: Prisma.AssignmentCreateManyAssignedByInput | Prisma.AssignmentCreateManyAssignedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -623,33 +701,49 @@ export type AssignmentScalarWhereInput = {
   grievanceId?: Prisma.StringFilter<"Assignment"> | string
   officerId?: Prisma.StringFilter<"Assignment"> | string
   departmentId?: Prisma.StringFilter<"Assignment"> | string
+  assignedById?: Prisma.StringNullableFilter<"Assignment"> | string | null
   type?: Prisma.EnumAssignmentTypeFilter<"Assignment"> | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFilter<"Assignment"> | $Enums.AssignmentStatus
-  assignedById?: Prisma.StringNullableFilter<"Assignment"> | string | null
   assignedAt?: Prisma.DateTimeFilter<"Assignment"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Assignment"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"Assignment"> | string | null
+}
+
+export type AssignmentUpsertWithWhereUniqueWithoutAssignedByInput = {
+  where: Prisma.AssignmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AssignmentUpdateWithoutAssignedByInput, Prisma.AssignmentUncheckedUpdateWithoutAssignedByInput>
+  create: Prisma.XOR<Prisma.AssignmentCreateWithoutAssignedByInput, Prisma.AssignmentUncheckedCreateWithoutAssignedByInput>
+}
+
+export type AssignmentUpdateWithWhereUniqueWithoutAssignedByInput = {
+  where: Prisma.AssignmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AssignmentUpdateWithoutAssignedByInput, Prisma.AssignmentUncheckedUpdateWithoutAssignedByInput>
+}
+
+export type AssignmentUpdateManyWithWhereWithoutAssignedByInput = {
+  where: Prisma.AssignmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AssignmentUpdateManyMutationInput, Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByInput>
 }
 
 export type AssignmentCreateWithoutDepartmentInput = {
   id?: string
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
   grievance: Prisma.GrievanceCreateNestedOneWithoutAssignmentsInput
   officer: Prisma.UserCreateNestedOneWithoutAssignmentsInput
+  assignedBy?: Prisma.UserCreateNestedOneWithoutAssignmentsCreatedInput
 }
 
 export type AssignmentUncheckedCreateWithoutDepartmentInput = {
   id?: string
   grievanceId: string
   officerId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -685,21 +779,21 @@ export type AssignmentCreateWithoutGrievanceInput = {
   id?: string
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
   officer: Prisma.UserCreateNestedOneWithoutAssignmentsInput
   department: Prisma.DepartmentCreateNestedOneWithoutAssignmentsInput
+  assignedBy?: Prisma.UserCreateNestedOneWithoutAssignmentsCreatedInput
 }
 
 export type AssignmentUncheckedCreateWithoutGrievanceInput = {
   id?: string
   officerId: string
   departmentId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -735,9 +829,21 @@ export type AssignmentCreateManyOfficerInput = {
   id?: string
   grievanceId: string
   departmentId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
+  assignedAt?: Date | string
+  completedAt?: Date | string | null
+  reason?: string | null
+}
+
+export type AssignmentCreateManyAssignedByInput = {
+  id?: string
+  grievanceId: string
+  officerId: string
+  departmentId: string
+  type: $Enums.AssignmentType
+  status?: $Enums.AssignmentStatus
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -747,21 +853,21 @@ export type AssignmentUpdateWithoutOfficerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutAssignmentsNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutAssignmentsNestedInput
+  assignedBy?: Prisma.UserUpdateOneWithoutAssignmentsCreatedNestedInput
 }
 
 export type AssignmentUncheckedUpdateWithoutOfficerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -771,9 +877,45 @@ export type AssignmentUncheckedUpdateManyWithoutOfficerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AssignmentUpdateWithoutAssignedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
+  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+  assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grievance?: Prisma.GrievanceUpdateOneRequiredWithoutAssignmentsNestedInput
+  officer?: Prisma.UserUpdateOneRequiredWithoutAssignmentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutAssignmentsNestedInput
+}
+
+export type AssignmentUncheckedUpdateWithoutAssignedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  officerId?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
+  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+  assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AssignmentUncheckedUpdateManyWithoutAssignedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  officerId?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
+  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -783,9 +925,9 @@ export type AssignmentCreateManyDepartmentInput = {
   id?: string
   grievanceId: string
   officerId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -795,21 +937,21 @@ export type AssignmentUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutAssignmentsNestedInput
   officer?: Prisma.UserUpdateOneRequiredWithoutAssignmentsNestedInput
+  assignedBy?: Prisma.UserUpdateOneWithoutAssignmentsCreatedNestedInput
 }
 
 export type AssignmentUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
   officerId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -819,9 +961,9 @@ export type AssignmentUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
   officerId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -831,9 +973,9 @@ export type AssignmentCreateManyGrievanceInput = {
   id?: string
   officerId: string
   departmentId: string
+  assignedById?: string | null
   type: $Enums.AssignmentType
   status?: $Enums.AssignmentStatus
-  assignedById?: string | null
   assignedAt?: Date | string
   completedAt?: Date | string | null
   reason?: string | null
@@ -843,21 +985,21 @@ export type AssignmentUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   officer?: Prisma.UserUpdateOneRequiredWithoutAssignmentsNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutAssignmentsNestedInput
+  assignedBy?: Prisma.UserUpdateOneWithoutAssignmentsCreatedNestedInput
 }
 
 export type AssignmentUncheckedUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   officerId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -867,9 +1009,9 @@ export type AssignmentUncheckedUpdateManyWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   officerId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumAssignmentTypeFieldUpdateOperationsInput | $Enums.AssignmentType
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  assignedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -882,15 +1024,16 @@ export type AssignmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   grievanceId?: boolean
   officerId?: boolean
   departmentId?: boolean
+  assignedById?: boolean
   type?: boolean
   status?: boolean
-  assignedById?: boolean
   assignedAt?: boolean
   completedAt?: boolean
   reason?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   officer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  assignedBy?: boolean | Prisma.Assignment$assignedByArgs<ExtArgs>
 }, ExtArgs["result"]["assignment"]>
 
 export type AssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -898,15 +1041,16 @@ export type AssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   grievanceId?: boolean
   officerId?: boolean
   departmentId?: boolean
+  assignedById?: boolean
   type?: boolean
   status?: boolean
-  assignedById?: boolean
   assignedAt?: boolean
   completedAt?: boolean
   reason?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   officer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  assignedBy?: boolean | Prisma.Assignment$assignedByArgs<ExtArgs>
 }, ExtArgs["result"]["assignment"]>
 
 export type AssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -914,15 +1058,16 @@ export type AssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   grievanceId?: boolean
   officerId?: boolean
   departmentId?: boolean
+  assignedById?: boolean
   type?: boolean
   status?: boolean
-  assignedById?: boolean
   assignedAt?: boolean
   completedAt?: boolean
   reason?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   officer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  assignedBy?: boolean | Prisma.Assignment$assignedByArgs<ExtArgs>
 }, ExtArgs["result"]["assignment"]>
 
 export type AssignmentSelectScalar = {
@@ -930,29 +1075,32 @@ export type AssignmentSelectScalar = {
   grievanceId?: boolean
   officerId?: boolean
   departmentId?: boolean
+  assignedById?: boolean
   type?: boolean
   status?: boolean
-  assignedById?: boolean
   assignedAt?: boolean
   completedAt?: boolean
   reason?: boolean
 }
 
-export type AssignmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "officerId" | "departmentId" | "type" | "status" | "assignedById" | "assignedAt" | "completedAt" | "reason", ExtArgs["result"]["assignment"]>
+export type AssignmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "officerId" | "departmentId" | "assignedById" | "type" | "status" | "assignedAt" | "completedAt" | "reason", ExtArgs["result"]["assignment"]>
 export type AssignmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   officer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  assignedBy?: boolean | Prisma.Assignment$assignedByArgs<ExtArgs>
 }
 export type AssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   officer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  assignedBy?: boolean | Prisma.Assignment$assignedByArgs<ExtArgs>
 }
 export type AssignmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   officer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  assignedBy?: boolean | Prisma.Assignment$assignedByArgs<ExtArgs>
 }
 
 export type $AssignmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -961,15 +1109,16 @@ export type $AssignmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     grievance: Prisma.$GrievancePayload<ExtArgs>
     officer: Prisma.$UserPayload<ExtArgs>
     department: Prisma.$DepartmentPayload<ExtArgs>
+    assignedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     grievanceId: string
     officerId: string
     departmentId: string
+    assignedById: string | null
     type: $Enums.AssignmentType
     status: $Enums.AssignmentStatus
-    assignedById: string | null
     assignedAt: Date
     completedAt: Date | null
     reason: string | null
@@ -1370,6 +1519,7 @@ export interface Prisma__AssignmentClient<T, Null = never, ExtArgs extends runti
   grievance<T extends Prisma.GrievanceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GrievanceDefaultArgs<ExtArgs>>): Prisma.Prisma__GrievanceClient<runtime.Types.Result.GetResult<Prisma.$GrievancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   officer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  assignedBy<T extends Prisma.Assignment$assignedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Assignment$assignedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1403,9 +1553,9 @@ export interface AssignmentFieldRefs {
   readonly grievanceId: Prisma.FieldRef<"Assignment", 'String'>
   readonly officerId: Prisma.FieldRef<"Assignment", 'String'>
   readonly departmentId: Prisma.FieldRef<"Assignment", 'String'>
+  readonly assignedById: Prisma.FieldRef<"Assignment", 'String'>
   readonly type: Prisma.FieldRef<"Assignment", 'AssignmentType'>
   readonly status: Prisma.FieldRef<"Assignment", 'AssignmentStatus'>
-  readonly assignedById: Prisma.FieldRef<"Assignment", 'String'>
   readonly assignedAt: Prisma.FieldRef<"Assignment", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Assignment", 'DateTime'>
   readonly reason: Prisma.FieldRef<"Assignment", 'String'>
@@ -1807,6 +1957,25 @@ export type AssignmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many Assignments to delete.
    */
   limit?: number
+}
+
+/**
+ * Assignment.assignedBy
+ */
+export type Assignment$assignedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

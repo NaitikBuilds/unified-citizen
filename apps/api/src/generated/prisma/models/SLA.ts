@@ -39,6 +39,7 @@ export type SLASumAggregateOutputType = {
 export type SLAMinAggregateOutputType = {
   id: string | null
   grievanceId: string | null
+  policyId: string | null
   departmentId: string | null
   responseTimeHours: number | null
   resolutionTimeHours: number | null
@@ -55,6 +56,7 @@ export type SLAMinAggregateOutputType = {
 export type SLAMaxAggregateOutputType = {
   id: string | null
   grievanceId: string | null
+  policyId: string | null
   departmentId: string | null
   responseTimeHours: number | null
   resolutionTimeHours: number | null
@@ -71,6 +73,7 @@ export type SLAMaxAggregateOutputType = {
 export type SLACountAggregateOutputType = {
   id: number
   grievanceId: number
+  policyId: number
   departmentId: number
   responseTimeHours: number
   resolutionTimeHours: number
@@ -99,6 +102,7 @@ export type SLASumAggregateInputType = {
 export type SLAMinAggregateInputType = {
   id?: true
   grievanceId?: true
+  policyId?: true
   departmentId?: true
   responseTimeHours?: true
   resolutionTimeHours?: true
@@ -115,6 +119,7 @@ export type SLAMinAggregateInputType = {
 export type SLAMaxAggregateInputType = {
   id?: true
   grievanceId?: true
+  policyId?: true
   departmentId?: true
   responseTimeHours?: true
   resolutionTimeHours?: true
@@ -131,6 +136,7 @@ export type SLAMaxAggregateInputType = {
 export type SLACountAggregateInputType = {
   id?: true
   grievanceId?: true
+  policyId?: true
   departmentId?: true
   responseTimeHours?: true
   resolutionTimeHours?: true
@@ -234,6 +240,7 @@ export type SLAGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type SLAGroupByOutputType = {
   id: string
   grievanceId: string
+  policyId: string | null
   departmentId: string
   responseTimeHours: number
   resolutionTimeHours: number
@@ -273,6 +280,7 @@ export type SLAWhereInput = {
   NOT?: Prisma.SLAWhereInput | Prisma.SLAWhereInput[]
   id?: Prisma.StringFilter<"SLA"> | string
   grievanceId?: Prisma.StringFilter<"SLA"> | string
+  policyId?: Prisma.StringNullableFilter<"SLA"> | string | null
   departmentId?: Prisma.StringFilter<"SLA"> | string
   responseTimeHours?: Prisma.IntFilter<"SLA"> | number
   resolutionTimeHours?: Prisma.IntFilter<"SLA"> | number
@@ -285,12 +293,14 @@ export type SLAWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"SLA"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SLA"> | Date | string
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
+  policy?: Prisma.XOR<Prisma.SLAPolicyNullableScalarRelationFilter, Prisma.SLAPolicyWhereInput> | null
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
 }
 
 export type SLAOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  policyId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   responseTimeHours?: Prisma.SortOrder
   resolutionTimeHours?: Prisma.SortOrder
@@ -303,6 +313,7 @@ export type SLAOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   grievance?: Prisma.GrievanceOrderByWithRelationInput
+  policy?: Prisma.SLAPolicyOrderByWithRelationInput
   department?: Prisma.DepartmentOrderByWithRelationInput
 }
 
@@ -312,6 +323,7 @@ export type SLAWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SLAWhereInput | Prisma.SLAWhereInput[]
   OR?: Prisma.SLAWhereInput[]
   NOT?: Prisma.SLAWhereInput | Prisma.SLAWhereInput[]
+  policyId?: Prisma.StringNullableFilter<"SLA"> | string | null
   departmentId?: Prisma.StringFilter<"SLA"> | string
   responseTimeHours?: Prisma.IntFilter<"SLA"> | number
   resolutionTimeHours?: Prisma.IntFilter<"SLA"> | number
@@ -324,12 +336,14 @@ export type SLAWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"SLA"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SLA"> | Date | string
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
+  policy?: Prisma.XOR<Prisma.SLAPolicyNullableScalarRelationFilter, Prisma.SLAPolicyWhereInput> | null
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
 }, "id" | "grievanceId">
 
 export type SLAOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  policyId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   responseTimeHours?: Prisma.SortOrder
   resolutionTimeHours?: Prisma.SortOrder
@@ -354,6 +368,7 @@ export type SLAScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SLAScalarWhereWithAggregatesInput | Prisma.SLAScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SLA"> | string
   grievanceId?: Prisma.StringWithAggregatesFilter<"SLA"> | string
+  policyId?: Prisma.StringNullableWithAggregatesFilter<"SLA"> | string | null
   departmentId?: Prisma.StringWithAggregatesFilter<"SLA"> | string
   responseTimeHours?: Prisma.IntWithAggregatesFilter<"SLA"> | number
   resolutionTimeHours?: Prisma.IntWithAggregatesFilter<"SLA"> | number
@@ -380,12 +395,14 @@ export type SLACreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   grievance: Prisma.GrievanceCreateNestedOneWithoutSlaInput
+  policy?: Prisma.SLAPolicyCreateNestedOneWithoutSlasInput
   department: Prisma.DepartmentCreateNestedOneWithoutSlasInput
 }
 
 export type SLAUncheckedCreateInput = {
   id?: string
   grievanceId: string
+  policyId?: string | null
   departmentId: string
   responseTimeHours: number
   resolutionTimeHours: number
@@ -412,12 +429,14 @@ export type SLAUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutSlaNestedInput
+  policy?: Prisma.SLAPolicyUpdateOneWithoutSlasNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSlasNestedInput
 }
 
 export type SLAUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  policyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
@@ -434,6 +453,7 @@ export type SLAUncheckedUpdateInput = {
 export type SLACreateManyInput = {
   id?: string
   grievanceId: string
+  policyId?: string | null
   departmentId: string
   responseTimeHours: number
   resolutionTimeHours: number
@@ -464,6 +484,7 @@ export type SLAUpdateManyMutationInput = {
 export type SLAUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  policyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
@@ -495,6 +516,7 @@ export type SLANullableScalarRelationFilter = {
 export type SLACountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  policyId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   responseTimeHours?: Prisma.SortOrder
   resolutionTimeHours?: Prisma.SortOrder
@@ -516,6 +538,7 @@ export type SLAAvgOrderByAggregateInput = {
 export type SLAMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  policyId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   responseTimeHours?: Prisma.SortOrder
   resolutionTimeHours?: Prisma.SortOrder
@@ -532,6 +555,7 @@ export type SLAMaxOrderByAggregateInput = {
 export type SLAMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  policyId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   responseTimeHours?: Prisma.SortOrder
   resolutionTimeHours?: Prisma.SortOrder
@@ -624,12 +648,46 @@ export type SLAUncheckedUpdateOneWithoutGrievanceNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SLAUpdateToOneWithWhereWithoutGrievanceInput, Prisma.SLAUpdateWithoutGrievanceInput>, Prisma.SLAUncheckedUpdateWithoutGrievanceInput>
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type SLACreateNestedManyWithoutPolicyInput = {
+  create?: Prisma.XOR<Prisma.SLACreateWithoutPolicyInput, Prisma.SLAUncheckedCreateWithoutPolicyInput> | Prisma.SLACreateWithoutPolicyInput[] | Prisma.SLAUncheckedCreateWithoutPolicyInput[]
+  connectOrCreate?: Prisma.SLACreateOrConnectWithoutPolicyInput | Prisma.SLACreateOrConnectWithoutPolicyInput[]
+  createMany?: Prisma.SLACreateManyPolicyInputEnvelope
+  connect?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+}
+
+export type SLAUncheckedCreateNestedManyWithoutPolicyInput = {
+  create?: Prisma.XOR<Prisma.SLACreateWithoutPolicyInput, Prisma.SLAUncheckedCreateWithoutPolicyInput> | Prisma.SLACreateWithoutPolicyInput[] | Prisma.SLAUncheckedCreateWithoutPolicyInput[]
+  connectOrCreate?: Prisma.SLACreateOrConnectWithoutPolicyInput | Prisma.SLACreateOrConnectWithoutPolicyInput[]
+  createMany?: Prisma.SLACreateManyPolicyInputEnvelope
+  connect?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+}
+
+export type SLAUpdateManyWithoutPolicyNestedInput = {
+  create?: Prisma.XOR<Prisma.SLACreateWithoutPolicyInput, Prisma.SLAUncheckedCreateWithoutPolicyInput> | Prisma.SLACreateWithoutPolicyInput[] | Prisma.SLAUncheckedCreateWithoutPolicyInput[]
+  connectOrCreate?: Prisma.SLACreateOrConnectWithoutPolicyInput | Prisma.SLACreateOrConnectWithoutPolicyInput[]
+  upsert?: Prisma.SLAUpsertWithWhereUniqueWithoutPolicyInput | Prisma.SLAUpsertWithWhereUniqueWithoutPolicyInput[]
+  createMany?: Prisma.SLACreateManyPolicyInputEnvelope
+  set?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  disconnect?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  delete?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  connect?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  update?: Prisma.SLAUpdateWithWhereUniqueWithoutPolicyInput | Prisma.SLAUpdateWithWhereUniqueWithoutPolicyInput[]
+  updateMany?: Prisma.SLAUpdateManyWithWhereWithoutPolicyInput | Prisma.SLAUpdateManyWithWhereWithoutPolicyInput[]
+  deleteMany?: Prisma.SLAScalarWhereInput | Prisma.SLAScalarWhereInput[]
+}
+
+export type SLAUncheckedUpdateManyWithoutPolicyNestedInput = {
+  create?: Prisma.XOR<Prisma.SLACreateWithoutPolicyInput, Prisma.SLAUncheckedCreateWithoutPolicyInput> | Prisma.SLACreateWithoutPolicyInput[] | Prisma.SLAUncheckedCreateWithoutPolicyInput[]
+  connectOrCreate?: Prisma.SLACreateOrConnectWithoutPolicyInput | Prisma.SLACreateOrConnectWithoutPolicyInput[]
+  upsert?: Prisma.SLAUpsertWithWhereUniqueWithoutPolicyInput | Prisma.SLAUpsertWithWhereUniqueWithoutPolicyInput[]
+  createMany?: Prisma.SLACreateManyPolicyInputEnvelope
+  set?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  disconnect?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  delete?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  connect?: Prisma.SLAWhereUniqueInput | Prisma.SLAWhereUniqueInput[]
+  update?: Prisma.SLAUpdateWithWhereUniqueWithoutPolicyInput | Prisma.SLAUpdateWithWhereUniqueWithoutPolicyInput[]
+  updateMany?: Prisma.SLAUpdateManyWithWhereWithoutPolicyInput | Prisma.SLAUpdateManyWithWhereWithoutPolicyInput[]
+  deleteMany?: Prisma.SLAScalarWhereInput | Prisma.SLAScalarWhereInput[]
 }
 
 export type EnumSLAStatusFieldUpdateOperationsInput = {
@@ -649,11 +707,13 @@ export type SLACreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   grievance: Prisma.GrievanceCreateNestedOneWithoutSlaInput
+  policy?: Prisma.SLAPolicyCreateNestedOneWithoutSlasInput
 }
 
 export type SLAUncheckedCreateWithoutDepartmentInput = {
   id?: string
   grievanceId: string
+  policyId?: string | null
   responseTimeHours: number
   resolutionTimeHours: number
   responseDueAt: Date | string
@@ -698,6 +758,7 @@ export type SLAScalarWhereInput = {
   NOT?: Prisma.SLAScalarWhereInput | Prisma.SLAScalarWhereInput[]
   id?: Prisma.StringFilter<"SLA"> | string
   grievanceId?: Prisma.StringFilter<"SLA"> | string
+  policyId?: Prisma.StringNullableFilter<"SLA"> | string | null
   departmentId?: Prisma.StringFilter<"SLA"> | string
   responseTimeHours?: Prisma.IntFilter<"SLA"> | number
   resolutionTimeHours?: Prisma.IntFilter<"SLA"> | number
@@ -723,11 +784,13 @@ export type SLACreateWithoutGrievanceInput = {
   breachedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  policy?: Prisma.SLAPolicyCreateNestedOneWithoutSlasInput
   department: Prisma.DepartmentCreateNestedOneWithoutSlasInput
 }
 
 export type SLAUncheckedCreateWithoutGrievanceInput = {
   id?: string
+  policyId?: string | null
   departmentId: string
   responseTimeHours: number
   resolutionTimeHours: number
@@ -769,11 +832,13 @@ export type SLAUpdateWithoutGrievanceInput = {
   breachedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  policy?: Prisma.SLAPolicyUpdateOneWithoutSlasNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSlasNestedInput
 }
 
 export type SLAUncheckedUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  policyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
@@ -787,9 +852,68 @@ export type SLAUncheckedUpdateWithoutGrievanceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type SLACreateWithoutPolicyInput = {
+  id?: string
+  responseTimeHours: number
+  resolutionTimeHours: number
+  responseDueAt: Date | string
+  resolutionDueAt: Date | string
+  status?: $Enums.SLAStatus
+  responseCompletedAt?: Date | string | null
+  resolutionCompletedAt?: Date | string | null
+  breachedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  grievance: Prisma.GrievanceCreateNestedOneWithoutSlaInput
+  department: Prisma.DepartmentCreateNestedOneWithoutSlasInput
+}
+
+export type SLAUncheckedCreateWithoutPolicyInput = {
+  id?: string
+  grievanceId: string
+  departmentId: string
+  responseTimeHours: number
+  resolutionTimeHours: number
+  responseDueAt: Date | string
+  resolutionDueAt: Date | string
+  status?: $Enums.SLAStatus
+  responseCompletedAt?: Date | string | null
+  resolutionCompletedAt?: Date | string | null
+  breachedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SLACreateOrConnectWithoutPolicyInput = {
+  where: Prisma.SLAWhereUniqueInput
+  create: Prisma.XOR<Prisma.SLACreateWithoutPolicyInput, Prisma.SLAUncheckedCreateWithoutPolicyInput>
+}
+
+export type SLACreateManyPolicyInputEnvelope = {
+  data: Prisma.SLACreateManyPolicyInput | Prisma.SLACreateManyPolicyInput[]
+  skipDuplicates?: boolean
+}
+
+export type SLAUpsertWithWhereUniqueWithoutPolicyInput = {
+  where: Prisma.SLAWhereUniqueInput
+  update: Prisma.XOR<Prisma.SLAUpdateWithoutPolicyInput, Prisma.SLAUncheckedUpdateWithoutPolicyInput>
+  create: Prisma.XOR<Prisma.SLACreateWithoutPolicyInput, Prisma.SLAUncheckedCreateWithoutPolicyInput>
+}
+
+export type SLAUpdateWithWhereUniqueWithoutPolicyInput = {
+  where: Prisma.SLAWhereUniqueInput
+  data: Prisma.XOR<Prisma.SLAUpdateWithoutPolicyInput, Prisma.SLAUncheckedUpdateWithoutPolicyInput>
+}
+
+export type SLAUpdateManyWithWhereWithoutPolicyInput = {
+  where: Prisma.SLAScalarWhereInput
+  data: Prisma.XOR<Prisma.SLAUpdateManyMutationInput, Prisma.SLAUncheckedUpdateManyWithoutPolicyInput>
+}
+
 export type SLACreateManyDepartmentInput = {
   id?: string
   grievanceId: string
+  policyId?: string | null
   responseTimeHours: number
   resolutionTimeHours: number
   responseDueAt: Date | string
@@ -815,11 +939,13 @@ export type SLAUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutSlaNestedInput
+  policy?: Prisma.SLAPolicyUpdateOneWithoutSlasNestedInput
 }
 
 export type SLAUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  policyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   responseDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -835,6 +961,71 @@ export type SLAUncheckedUpdateWithoutDepartmentInput = {
 export type SLAUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  policyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
+  resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
+  responseDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolutionDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumSLAStatusFieldUpdateOperationsInput | $Enums.SLAStatus
+  responseCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolutionCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  breachedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SLACreateManyPolicyInput = {
+  id?: string
+  grievanceId: string
+  departmentId: string
+  responseTimeHours: number
+  resolutionTimeHours: number
+  responseDueAt: Date | string
+  resolutionDueAt: Date | string
+  status?: $Enums.SLAStatus
+  responseCompletedAt?: Date | string | null
+  resolutionCompletedAt?: Date | string | null
+  breachedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SLAUpdateWithoutPolicyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
+  resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
+  responseDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolutionDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumSLAStatusFieldUpdateOperationsInput | $Enums.SLAStatus
+  responseCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolutionCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  breachedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  grievance?: Prisma.GrievanceUpdateOneRequiredWithoutSlaNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutSlasNestedInput
+}
+
+export type SLAUncheckedUpdateWithoutPolicyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
+  resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
+  responseDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolutionDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumSLAStatusFieldUpdateOperationsInput | $Enums.SLAStatus
+  responseCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolutionCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  breachedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SLAUncheckedUpdateManyWithoutPolicyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   responseTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   resolutionTimeHours?: Prisma.IntFieldUpdateOperationsInput | number
   responseDueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -852,6 +1043,7 @@ export type SLAUncheckedUpdateManyWithoutDepartmentInput = {
 export type SLASelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
+  policyId?: boolean
   departmentId?: boolean
   responseTimeHours?: boolean
   resolutionTimeHours?: boolean
@@ -864,12 +1056,14 @@ export type SLASelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   createdAt?: boolean
   updatedAt?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
+  policy?: boolean | Prisma.SLA$policyArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sLA"]>
 
 export type SLASelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
+  policyId?: boolean
   departmentId?: boolean
   responseTimeHours?: boolean
   resolutionTimeHours?: boolean
@@ -882,12 +1076,14 @@ export type SLASelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   createdAt?: boolean
   updatedAt?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
+  policy?: boolean | Prisma.SLA$policyArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sLA"]>
 
 export type SLASelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
+  policyId?: boolean
   departmentId?: boolean
   responseTimeHours?: boolean
   resolutionTimeHours?: boolean
@@ -900,12 +1096,14 @@ export type SLASelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   createdAt?: boolean
   updatedAt?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
+  policy?: boolean | Prisma.SLA$policyArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sLA"]>
 
 export type SLASelectScalar = {
   id?: boolean
   grievanceId?: boolean
+  policyId?: boolean
   departmentId?: boolean
   responseTimeHours?: boolean
   resolutionTimeHours?: boolean
@@ -919,17 +1117,20 @@ export type SLASelectScalar = {
   updatedAt?: boolean
 }
 
-export type SLAOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "departmentId" | "responseTimeHours" | "resolutionTimeHours" | "responseDueAt" | "resolutionDueAt" | "status" | "responseCompletedAt" | "resolutionCompletedAt" | "breachedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["sLA"]>
+export type SLAOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "policyId" | "departmentId" | "responseTimeHours" | "resolutionTimeHours" | "responseDueAt" | "resolutionDueAt" | "status" | "responseCompletedAt" | "resolutionCompletedAt" | "breachedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["sLA"]>
 export type SLAInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
+  policy?: boolean | Prisma.SLA$policyArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 export type SLAIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
+  policy?: boolean | Prisma.SLA$policyArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 export type SLAIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
+  policy?: boolean | Prisma.SLA$policyArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 
@@ -937,11 +1138,13 @@ export type $SLAPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name: "SLA"
   objects: {
     grievance: Prisma.$GrievancePayload<ExtArgs>
+    policy: Prisma.$SLAPolicyPayload<ExtArgs> | null
     department: Prisma.$DepartmentPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     grievanceId: string
+    policyId: string | null
     departmentId: string
     responseTimeHours: number
     resolutionTimeHours: number
@@ -1348,6 +1551,7 @@ readonly fields: SLAFieldRefs;
 export interface Prisma__SLAClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   grievance<T extends Prisma.GrievanceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GrievanceDefaultArgs<ExtArgs>>): Prisma.Prisma__GrievanceClient<runtime.Types.Result.GetResult<Prisma.$GrievancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  policy<T extends Prisma.SLA$policyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SLA$policyArgs<ExtArgs>>): Prisma.Prisma__SLAPolicyClient<runtime.Types.Result.GetResult<Prisma.$SLAPolicyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1380,6 +1584,7 @@ export interface Prisma__SLAClient<T, Null = never, ExtArgs extends runtime.Type
 export interface SLAFieldRefs {
   readonly id: Prisma.FieldRef<"SLA", 'String'>
   readonly grievanceId: Prisma.FieldRef<"SLA", 'String'>
+  readonly policyId: Prisma.FieldRef<"SLA", 'String'>
   readonly departmentId: Prisma.FieldRef<"SLA", 'String'>
   readonly responseTimeHours: Prisma.FieldRef<"SLA", 'Int'>
   readonly resolutionTimeHours: Prisma.FieldRef<"SLA", 'Int'>
@@ -1789,6 +1994,25 @@ export type SLADeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many SLAS to delete.
    */
   limit?: number
+}
+
+/**
+ * SLA.policy
+ */
+export type SLA$policyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SLAPolicy
+   */
+  select?: Prisma.SLAPolicySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SLAPolicy
+   */
+  omit?: Prisma.SLAPolicyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SLAPolicyInclude<ExtArgs> | null
+  where?: Prisma.SLAPolicyWhereInput
 }
 
 /**

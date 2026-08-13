@@ -407,6 +407,7 @@ export const ModelName = {
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   RefreshToken: 'RefreshToken',
+  SLAPolicy: 'SLAPolicy',
   SLA: 'SLA',
   Feedback: 'Feedback',
   Escalation: 'Escalation'
@@ -425,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "department" | "grievance" | "assignment" | "aIClassification" | "comment" | "attachment" | "notification" | "auditLog" | "refreshToken" | "sLA" | "feedback" | "escalation"
+    modelProps: "user" | "department" | "grievance" | "assignment" | "aIClassification" | "comment" | "attachment" | "notification" | "auditLog" | "refreshToken" | "sLAPolicy" | "sLA" | "feedback" | "escalation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1169,6 +1170,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SLAPolicy: {
+      payload: Prisma.$SLAPolicyPayload<ExtArgs>
+      fields: Prisma.SLAPolicyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SLAPolicyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SLAPolicyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>
+        }
+        findFirst: {
+          args: Prisma.SLAPolicyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SLAPolicyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>
+        }
+        findMany: {
+          args: Prisma.SLAPolicyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>[]
+        }
+        create: {
+          args: Prisma.SLAPolicyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>
+        }
+        createMany: {
+          args: Prisma.SLAPolicyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SLAPolicyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>[]
+        }
+        delete: {
+          args: Prisma.SLAPolicyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>
+        }
+        update: {
+          args: Prisma.SLAPolicyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>
+        }
+        deleteMany: {
+          args: Prisma.SLAPolicyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SLAPolicyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SLAPolicyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>[]
+        }
+        upsert: {
+          args: Prisma.SLAPolicyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SLAPolicyPayload>
+        }
+        aggregate: {
+          args: Prisma.SLAPolicyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSLAPolicy>
+        }
+        groupBy: {
+          args: Prisma.SLAPolicyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SLAPolicyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SLAPolicyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SLAPolicyCountAggregateOutputType> | number
+        }
+      }
+    }
     SLA: {
       payload: Prisma.$SLAPayload<ExtArgs>
       fields: Prisma.SLAFieldRefs
@@ -1484,9 +1559,9 @@ export const AssignmentScalarFieldEnum = {
   grievanceId: 'grievanceId',
   officerId: 'officerId',
   departmentId: 'departmentId',
+  assignedById: 'assignedById',
   type: 'type',
   status: 'status',
-  assignedById: 'assignedById',
   assignedAt: 'assignedAt',
   completedAt: 'completedAt',
   reason: 'reason'
@@ -1578,9 +1653,27 @@ export const RefreshTokenScalarFieldEnum = {
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
+export const SLAPolicyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  departmentId: 'departmentId',
+  category: 'category',
+  priority: 'priority',
+  responseTimeHours: 'responseTimeHours',
+  resolutionTimeHours: 'resolutionTimeHours',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SLAPolicyScalarFieldEnum = (typeof SLAPolicyScalarFieldEnum)[keyof typeof SLAPolicyScalarFieldEnum]
+
+
 export const SLAScalarFieldEnum = {
   id: 'id',
   grievanceId: 'grievanceId',
+  policyId: 'policyId',
   departmentId: 'departmentId',
   responseTimeHours: 'responseTimeHours',
   resolutionTimeHours: 'resolutionTimeHours',
@@ -2034,6 +2127,7 @@ export type GlobalOmitConfig = {
   notification?: Prisma.NotificationOmit
   auditLog?: Prisma.AuditLogOmit
   refreshToken?: Prisma.RefreshTokenOmit
+  sLAPolicy?: Prisma.SLAPolicyOmit
   sLA?: Prisma.SLAOmit
   feedback?: Prisma.FeedbackOmit
   escalation?: Prisma.EscalationOmit

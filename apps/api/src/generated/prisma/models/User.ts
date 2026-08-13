@@ -221,6 +221,7 @@ export type UserWhereInput = {
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   assignments?: Prisma.AssignmentListRelationFilter
+  assignmentsCreated?: Prisma.AssignmentListRelationFilter
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   feedback?: Prisma.FeedbackListRelationFilter
   escalationsCreated?: Prisma.EscalationListRelationFilter
@@ -243,6 +244,7 @@ export type UserOrderByWithRelationInput = {
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   assignments?: Prisma.AssignmentOrderByRelationAggregateInput
+  assignmentsCreated?: Prisma.AssignmentOrderByRelationAggregateInput
   refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
   feedback?: Prisma.FeedbackOrderByRelationAggregateInput
   escalationsCreated?: Prisma.EscalationOrderByRelationAggregateInput
@@ -268,6 +270,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   assignments?: Prisma.AssignmentListRelationFilter
+  assignmentsCreated?: Prisma.AssignmentListRelationFilter
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   feedback?: Prisma.FeedbackListRelationFilter
   escalationsCreated?: Prisma.EscalationListRelationFilter
@@ -319,6 +322,7 @@ export type UserCreateInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -340,6 +344,7 @@ export type UserUncheckedCreateInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -361,6 +366,7 @@ export type UserUpdateInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -382,6 +388,7 @@ export type UserUncheckedUpdateInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -556,12 +563,28 @@ export type UserCreateNestedOneWithoutAssignmentsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutAssignmentsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutAssignmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignmentsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneRequiredWithoutAssignmentsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsInput, Prisma.UserUncheckedCreateWithoutAssignmentsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignmentsInput
   upsert?: Prisma.UserUpsertWithoutAssignmentsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.UserUpdateWithoutAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutAssignmentsInput>
+}
+
+export type UserUpdateOneWithoutAssignmentsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutAssignmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignmentsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutAssignmentsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignmentsCreatedInput, Prisma.UserUpdateWithoutAssignmentsCreatedInput>, Prisma.UserUncheckedUpdateWithoutAssignmentsCreatedInput>
 }
 
 export type UserCreateNestedOneWithoutCommentsInput = {
@@ -681,6 +704,7 @@ export type UserCreateWithoutDepartmentInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -701,6 +725,7 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -762,6 +787,7 @@ export type UserCreateWithoutGrievancesInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -782,6 +808,7 @@ export type UserUncheckedCreateWithoutGrievancesInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -818,6 +845,7 @@ export type UserUpdateWithoutGrievancesInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -838,6 +866,7 @@ export type UserUncheckedUpdateWithoutGrievancesInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -858,6 +887,7 @@ export type UserCreateWithoutAssignmentsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -878,6 +908,7 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -886,6 +917,53 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
 export type UserCreateOrConnectWithoutAssignmentsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsInput, Prisma.UserUncheckedCreateWithoutAssignmentsInput>
+}
+
+export type UserCreateWithoutAssignmentsCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
+  grievances?: Prisma.GrievanceCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutAssignmentsCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutCitizenInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutAssignmentsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutAssignmentsCreatedInput>
 }
 
 export type UserUpsertWithoutAssignmentsInput = {
@@ -914,6 +992,7 @@ export type UserUpdateWithoutAssignmentsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -934,6 +1013,60 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUpsertWithoutAssignmentsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAssignmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutAssignmentsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutAssignmentsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAssignmentsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAssignmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutAssignmentsCreatedInput>
+}
+
+export type UserUpdateWithoutAssignmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
+  grievances?: Prisma.GrievanceUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAssignmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutCitizenNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -954,6 +1087,7 @@ export type UserCreateWithoutCommentsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -974,6 +1108,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1010,6 +1145,7 @@ export type UserUpdateWithoutCommentsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -1030,6 +1166,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1050,6 +1187,7 @@ export type UserCreateWithoutAttachmentsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -1070,6 +1208,7 @@ export type UserUncheckedCreateWithoutAttachmentsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1106,6 +1245,7 @@ export type UserUpdateWithoutAttachmentsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -1126,6 +1266,7 @@ export type UserUncheckedUpdateWithoutAttachmentsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1146,6 +1287,7 @@ export type UserCreateWithoutNotificationsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -1166,6 +1308,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1202,6 +1345,7 @@ export type UserUpdateWithoutNotificationsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -1222,6 +1366,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1242,6 +1387,7 @@ export type UserCreateWithoutAuditLogsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
@@ -1262,6 +1408,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1298,6 +1445,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -1318,6 +1466,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1339,6 +1488,7 @@ export type UserCreateWithoutRefreshTokensInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
@@ -1359,6 +1509,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
@@ -1395,6 +1546,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
@@ -1415,6 +1567,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -1435,6 +1588,7 @@ export type UserCreateWithoutFeedbackInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationCreateNestedManyWithoutCreatedByInput
 }
@@ -1455,6 +1609,7 @@ export type UserUncheckedCreateWithoutFeedbackInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   escalationsCreated?: Prisma.EscalationUncheckedCreateNestedManyWithoutCreatedByInput
 }
@@ -1491,6 +1646,7 @@ export type UserUpdateWithoutFeedbackInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
 }
@@ -1511,6 +1667,7 @@ export type UserUncheckedUpdateWithoutFeedbackInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -1531,6 +1688,7 @@ export type UserCreateWithoutEscalationsCreatedInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
@@ -1551,6 +1709,7 @@ export type UserUncheckedCreateWithoutEscalationsCreatedInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploadedByInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutOfficerInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1587,6 +1746,7 @@ export type UserUpdateWithoutEscalationsCreatedInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
@@ -1607,6 +1767,7 @@ export type UserUncheckedUpdateWithoutEscalationsCreatedInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1637,6 +1798,7 @@ export type UserUpdateWithoutDepartmentInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUpdateManyWithoutCreatedByNestedInput
@@ -1657,6 +1819,7 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutOfficerNestedInput
+  assignmentsCreated?: Prisma.AssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   escalationsCreated?: Prisma.EscalationUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1685,6 +1848,7 @@ export type UserCountOutputType = {
   auditLogs: number
   attachments: number
   assignments: number
+  assignmentsCreated: number
   refreshTokens: number
   feedback: number
   escalationsCreated: number
@@ -1697,6 +1861,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   attachments?: boolean | UserCountOutputTypeCountAttachmentsArgs
   assignments?: boolean | UserCountOutputTypeCountAssignmentsArgs
+  assignmentsCreated?: boolean | UserCountOutputTypeCountAssignmentsCreatedArgs
   refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
   feedback?: boolean | UserCountOutputTypeCountFeedbackArgs
   escalationsCreated?: boolean | UserCountOutputTypeCountEscalationsCreatedArgs
@@ -1757,6 +1922,13 @@ export type UserCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Type
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountAssignmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RefreshTokenWhereInput
 }
@@ -1793,6 +1965,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
   assignments?: boolean | Prisma.User$assignmentsArgs<ExtArgs>
+  assignmentsCreated?: boolean | Prisma.User$assignmentsCreatedArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   feedback?: boolean | Prisma.User$feedbackArgs<ExtArgs>
   escalationsCreated?: boolean | Prisma.User$escalationsCreatedArgs<ExtArgs>
@@ -1846,6 +2019,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
   assignments?: boolean | Prisma.User$assignmentsArgs<ExtArgs>
+  assignmentsCreated?: boolean | Prisma.User$assignmentsCreatedArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   feedback?: boolean | Prisma.User$feedbackArgs<ExtArgs>
   escalationsCreated?: boolean | Prisma.User$escalationsCreatedArgs<ExtArgs>
@@ -1868,6 +2042,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     assignments: Prisma.$AssignmentPayload<ExtArgs>[]
+    assignmentsCreated: Prisma.$AssignmentPayload<ExtArgs>[]
     refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
     feedback: Prisma.$FeedbackPayload<ExtArgs>[]
     escalationsCreated: Prisma.$EscalationPayload<ExtArgs>[]
@@ -2283,6 +2458,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.User$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignments<T extends Prisma.User$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignmentsCreated<T extends Prisma.User$assignmentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refreshTokens<T extends Prisma.User$refreshTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   feedback<T extends Prisma.User$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   escalationsCreated<T extends Prisma.User$escalationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$escalationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EscalationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2867,6 +3043,30 @@ export type User$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.Intern
  * User.assignments
  */
 export type User$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Assignment
+   */
+  select?: Prisma.AssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Assignment
+   */
+  omit?: Prisma.AssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssignmentInclude<ExtArgs> | null
+  where?: Prisma.AssignmentWhereInput
+  orderBy?: Prisma.AssignmentOrderByWithRelationInput | Prisma.AssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.AssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssignmentScalarFieldEnum | Prisma.AssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.assignmentsCreated
+ */
+export type User$assignmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Assignment
    */

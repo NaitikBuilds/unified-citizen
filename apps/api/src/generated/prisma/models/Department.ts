@@ -194,6 +194,7 @@ export type DepartmentWhereInput = {
   grievances?: Prisma.GrievanceListRelationFilter
   assignments?: Prisma.AssignmentListRelationFilter
   slas?: Prisma.SLAListRelationFilter
+  slaPolicies?: Prisma.SLAPolicyListRelationFilter
 }
 
 export type DepartmentOrderByWithRelationInput = {
@@ -207,6 +208,7 @@ export type DepartmentOrderByWithRelationInput = {
   grievances?: Prisma.GrievanceOrderByRelationAggregateInput
   assignments?: Prisma.AssignmentOrderByRelationAggregateInput
   slas?: Prisma.SLAOrderByRelationAggregateInput
+  slaPolicies?: Prisma.SLAPolicyOrderByRelationAggregateInput
 }
 
 export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -223,6 +225,7 @@ export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
   grievances?: Prisma.GrievanceListRelationFilter
   assignments?: Prisma.AssignmentListRelationFilter
   slas?: Prisma.SLAListRelationFilter
+  slaPolicies?: Prisma.SLAPolicyListRelationFilter
 }, "id" | "name" | "code">
 
 export type DepartmentOrderByWithAggregationInput = {
@@ -260,6 +263,7 @@ export type DepartmentCreateInput = {
   grievances?: Prisma.GrievanceCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLACreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateInput = {
@@ -273,6 +277,7 @@ export type DepartmentUncheckedCreateInput = {
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLAUncheckedCreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUpdateInput = {
@@ -286,6 +291,7 @@ export type DepartmentUpdateInput = {
   grievances?: Prisma.GrievanceUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateInput = {
@@ -299,6 +305,7 @@ export type DepartmentUncheckedUpdateInput = {
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUncheckedUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateManyInput = {
@@ -411,6 +418,20 @@ export type DepartmentUpdateOneRequiredWithoutAssignmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.DepartmentUpdateWithoutAssignmentsInput>, Prisma.DepartmentUncheckedUpdateWithoutAssignmentsInput>
 }
 
+export type DepartmentCreateNestedOneWithoutSlaPoliciesInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutSlaPoliciesInput, Prisma.DepartmentUncheckedCreateWithoutSlaPoliciesInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutSlaPoliciesInput
+  connect?: Prisma.DepartmentWhereUniqueInput
+}
+
+export type DepartmentUpdateOneRequiredWithoutSlaPoliciesNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutSlaPoliciesInput, Prisma.DepartmentUncheckedCreateWithoutSlaPoliciesInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutSlaPoliciesInput
+  upsert?: Prisma.DepartmentUpsertWithoutSlaPoliciesInput
+  connect?: Prisma.DepartmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutSlaPoliciesInput, Prisma.DepartmentUpdateWithoutSlaPoliciesInput>, Prisma.DepartmentUncheckedUpdateWithoutSlaPoliciesInput>
+}
+
 export type DepartmentCreateNestedOneWithoutSlasInput = {
   create?: Prisma.XOR<Prisma.DepartmentCreateWithoutSlasInput, Prisma.DepartmentUncheckedCreateWithoutSlasInput>
   connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutSlasInput
@@ -435,6 +456,7 @@ export type DepartmentCreateWithoutUsersInput = {
   grievances?: Prisma.GrievanceCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLACreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutUsersInput = {
@@ -447,6 +469,7 @@ export type DepartmentUncheckedCreateWithoutUsersInput = {
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLAUncheckedCreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutUsersInput = {
@@ -475,6 +498,7 @@ export type DepartmentUpdateWithoutUsersInput = {
   grievances?: Prisma.GrievanceUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutUsersInput = {
@@ -487,6 +511,7 @@ export type DepartmentUncheckedUpdateWithoutUsersInput = {
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUncheckedUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutGrievancesInput = {
@@ -499,6 +524,7 @@ export type DepartmentCreateWithoutGrievancesInput = {
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLACreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutGrievancesInput = {
@@ -511,6 +537,7 @@ export type DepartmentUncheckedCreateWithoutGrievancesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLAUncheckedCreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutGrievancesInput = {
@@ -539,6 +566,7 @@ export type DepartmentUpdateWithoutGrievancesInput = {
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutGrievancesInput = {
@@ -551,6 +579,7 @@ export type DepartmentUncheckedUpdateWithoutGrievancesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUncheckedUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutAssignmentsInput = {
@@ -563,6 +592,7 @@ export type DepartmentCreateWithoutAssignmentsInput = {
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLACreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutAssignmentsInput = {
@@ -575,6 +605,7 @@ export type DepartmentUncheckedCreateWithoutAssignmentsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutDepartmentInput
   slas?: Prisma.SLAUncheckedCreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutAssignmentsInput = {
@@ -603,6 +634,7 @@ export type DepartmentUpdateWithoutAssignmentsInput = {
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutAssignmentsInput = {
@@ -614,6 +646,75 @@ export type DepartmentUncheckedUpdateWithoutAssignmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput
+  slas?: Prisma.SLAUncheckedUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentCreateWithoutSlaPoliciesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
+  grievances?: Prisma.GrievanceCreateNestedManyWithoutDepartmentInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutDepartmentInput
+  slas?: Prisma.SLACreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentUncheckedCreateWithoutSlaPoliciesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
+  grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutDepartmentInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutDepartmentInput
+  slas?: Prisma.SLAUncheckedCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentCreateOrConnectWithoutSlaPoliciesInput = {
+  where: Prisma.DepartmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutSlaPoliciesInput, Prisma.DepartmentUncheckedCreateWithoutSlaPoliciesInput>
+}
+
+export type DepartmentUpsertWithoutSlaPoliciesInput = {
+  update: Prisma.XOR<Prisma.DepartmentUpdateWithoutSlaPoliciesInput, Prisma.DepartmentUncheckedUpdateWithoutSlaPoliciesInput>
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutSlaPoliciesInput, Prisma.DepartmentUncheckedCreateWithoutSlaPoliciesInput>
+  where?: Prisma.DepartmentWhereInput
+}
+
+export type DepartmentUpdateToOneWithWhereWithoutSlaPoliciesInput = {
+  where?: Prisma.DepartmentWhereInput
+  data: Prisma.XOR<Prisma.DepartmentUpdateWithoutSlaPoliciesInput, Prisma.DepartmentUncheckedUpdateWithoutSlaPoliciesInput>
+}
+
+export type DepartmentUpdateWithoutSlaPoliciesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
+  grievances?: Prisma.GrievanceUpdateManyWithoutDepartmentNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutDepartmentNestedInput
+  slas?: Prisma.SLAUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentUncheckedUpdateWithoutSlaPoliciesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
+  grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutDepartmentNestedInput
   slas?: Prisma.SLAUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
@@ -627,6 +728,7 @@ export type DepartmentCreateWithoutSlasInput = {
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
   grievances?: Prisma.GrievanceCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentCreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutSlasInput = {
@@ -639,6 +741,7 @@ export type DepartmentUncheckedCreateWithoutSlasInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutDepartmentInput
   assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutDepartmentInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutSlasInput = {
@@ -667,6 +770,7 @@ export type DepartmentUpdateWithoutSlasInput = {
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
   grievances?: Prisma.GrievanceUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutSlasInput = {
@@ -679,6 +783,7 @@ export type DepartmentUncheckedUpdateWithoutSlasInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutDepartmentNestedInput
+  slaPolicies?: Prisma.SLAPolicyUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 
@@ -691,6 +796,7 @@ export type DepartmentCountOutputType = {
   grievances: number
   assignments: number
   slas: number
+  slaPolicies: number
 }
 
 export type DepartmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -698,6 +804,7 @@ export type DepartmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extens
   grievances?: boolean | DepartmentCountOutputTypeCountGrievancesArgs
   assignments?: boolean | DepartmentCountOutputTypeCountAssignmentsArgs
   slas?: boolean | DepartmentCountOutputTypeCountSlasArgs
+  slaPolicies?: boolean | DepartmentCountOutputTypeCountSlaPoliciesArgs
 }
 
 /**
@@ -738,6 +845,13 @@ export type DepartmentCountOutputTypeCountSlasArgs<ExtArgs extends runtime.Types
   where?: Prisma.SLAWhereInput
 }
 
+/**
+ * DepartmentCountOutputType without action
+ */
+export type DepartmentCountOutputTypeCountSlaPoliciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SLAPolicyWhereInput
+}
+
 
 export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -750,6 +864,7 @@ export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   grievances?: boolean | Prisma.Department$grievancesArgs<ExtArgs>
   assignments?: boolean | Prisma.Department$assignmentsArgs<ExtArgs>
   slas?: boolean | Prisma.Department$slasArgs<ExtArgs>
+  slaPolicies?: boolean | Prisma.Department$slaPoliciesArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["department"]>
 
@@ -786,6 +901,7 @@ export type DepartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   grievances?: boolean | Prisma.Department$grievancesArgs<ExtArgs>
   assignments?: boolean | Prisma.Department$assignmentsArgs<ExtArgs>
   slas?: boolean | Prisma.Department$slasArgs<ExtArgs>
+  slaPolicies?: boolean | Prisma.Department$slaPoliciesArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -798,6 +914,7 @@ export type $DepartmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     grievances: Prisma.$GrievancePayload<ExtArgs>[]
     assignments: Prisma.$AssignmentPayload<ExtArgs>[]
     slas: Prisma.$SLAPayload<ExtArgs>[]
+    slaPolicies: Prisma.$SLAPolicyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1204,6 +1321,7 @@ export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends runti
   grievances<T extends Prisma.Department$grievancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$grievancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GrievancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignments<T extends Prisma.Department$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   slas<T extends Prisma.Department$slasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$slasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SLAPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  slaPolicies<T extends Prisma.Department$slaPoliciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$slaPoliciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SLAPolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1725,6 +1843,30 @@ export type Department$slasArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.SLAScalarFieldEnum | Prisma.SLAScalarFieldEnum[]
+}
+
+/**
+ * Department.slaPolicies
+ */
+export type Department$slaPoliciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SLAPolicy
+   */
+  select?: Prisma.SLAPolicySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SLAPolicy
+   */
+  omit?: Prisma.SLAPolicyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SLAPolicyInclude<ExtArgs> | null
+  where?: Prisma.SLAPolicyWhereInput
+  orderBy?: Prisma.SLAPolicyOrderByWithRelationInput | Prisma.SLAPolicyOrderByWithRelationInput[]
+  cursor?: Prisma.SLAPolicyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SLAPolicyScalarFieldEnum | Prisma.SLAPolicyScalarFieldEnum[]
 }
 
 /**
