@@ -39,17 +39,18 @@ export type GrievanceSumAggregateOutputType = {
 export type GrievanceMinAggregateOutputType = {
   id: string | null
   ticketId: string | null
+  citizenId: string | null
   title: string | null
   description: string | null
   category: string | null
   subcategory: string | null
-  status: $Enums.GrievanceStatus | null
   priority: $Enums.GrievancePriority | null
+  status: $Enums.GrievanceStatus | null
+  departmentId: string | null
   location: string | null
+  address: string | null
   latitude: number | null
   longitude: number | null
-  citizenId: string | null
-  departmentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   resolvedAt: Date | null
@@ -58,17 +59,18 @@ export type GrievanceMinAggregateOutputType = {
 export type GrievanceMaxAggregateOutputType = {
   id: string | null
   ticketId: string | null
+  citizenId: string | null
   title: string | null
   description: string | null
   category: string | null
   subcategory: string | null
-  status: $Enums.GrievanceStatus | null
   priority: $Enums.GrievancePriority | null
+  status: $Enums.GrievanceStatus | null
+  departmentId: string | null
   location: string | null
+  address: string | null
   latitude: number | null
   longitude: number | null
-  citizenId: string | null
-  departmentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   resolvedAt: Date | null
@@ -77,17 +79,18 @@ export type GrievanceMaxAggregateOutputType = {
 export type GrievanceCountAggregateOutputType = {
   id: number
   ticketId: number
+  citizenId: number
   title: number
   description: number
   category: number
   subcategory: number
-  status: number
   priority: number
+  status: number
+  departmentId: number
   location: number
+  address: number
   latitude: number
   longitude: number
-  citizenId: number
-  departmentId: number
   createdAt: number
   updatedAt: number
   resolvedAt: number
@@ -108,17 +111,18 @@ export type GrievanceSumAggregateInputType = {
 export type GrievanceMinAggregateInputType = {
   id?: true
   ticketId?: true
+  citizenId?: true
   title?: true
   description?: true
   category?: true
   subcategory?: true
-  status?: true
   priority?: true
+  status?: true
+  departmentId?: true
   location?: true
+  address?: true
   latitude?: true
   longitude?: true
-  citizenId?: true
-  departmentId?: true
   createdAt?: true
   updatedAt?: true
   resolvedAt?: true
@@ -127,17 +131,18 @@ export type GrievanceMinAggregateInputType = {
 export type GrievanceMaxAggregateInputType = {
   id?: true
   ticketId?: true
+  citizenId?: true
   title?: true
   description?: true
   category?: true
   subcategory?: true
-  status?: true
   priority?: true
+  status?: true
+  departmentId?: true
   location?: true
+  address?: true
   latitude?: true
   longitude?: true
-  citizenId?: true
-  departmentId?: true
   createdAt?: true
   updatedAt?: true
   resolvedAt?: true
@@ -146,17 +151,18 @@ export type GrievanceMaxAggregateInputType = {
 export type GrievanceCountAggregateInputType = {
   id?: true
   ticketId?: true
+  citizenId?: true
   title?: true
   description?: true
   category?: true
   subcategory?: true
-  status?: true
   priority?: true
+  status?: true
+  departmentId?: true
   location?: true
+  address?: true
   latitude?: true
   longitude?: true
-  citizenId?: true
-  departmentId?: true
   createdAt?: true
   updatedAt?: true
   resolvedAt?: true
@@ -252,17 +258,18 @@ export type GrievanceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type GrievanceGroupByOutputType = {
   id: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category: string | null
   subcategory: string | null
-  status: $Enums.GrievanceStatus
   priority: $Enums.GrievancePriority
+  status: $Enums.GrievanceStatus
+  departmentId: string | null
   location: string | null
+  address: string | null
   latitude: number | null
   longitude: number | null
-  citizenId: string
-  departmentId: string | null
   createdAt: Date
   updatedAt: Date
   resolvedAt: Date | null
@@ -294,17 +301,18 @@ export type GrievanceWhereInput = {
   NOT?: Prisma.GrievanceWhereInput | Prisma.GrievanceWhereInput[]
   id?: Prisma.StringFilter<"Grievance"> | string
   ticketId?: Prisma.StringFilter<"Grievance"> | string
+  citizenId?: Prisma.StringFilter<"Grievance"> | string
   title?: Prisma.StringFilter<"Grievance"> | string
   description?: Prisma.StringFilter<"Grievance"> | string
   category?: Prisma.StringNullableFilter<"Grievance"> | string | null
   subcategory?: Prisma.StringNullableFilter<"Grievance"> | string | null
-  status?: Prisma.EnumGrievanceStatusFilter<"Grievance"> | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFilter<"Grievance"> | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFilter<"Grievance"> | $Enums.GrievanceStatus
+  departmentId?: Prisma.StringNullableFilter<"Grievance"> | string | null
   location?: Prisma.StringNullableFilter<"Grievance"> | string | null
+  address?: Prisma.StringNullableFilter<"Grievance"> | string | null
   latitude?: Prisma.FloatNullableFilter<"Grievance"> | number | null
   longitude?: Prisma.FloatNullableFilter<"Grievance"> | number | null
-  citizenId?: Prisma.StringFilter<"Grievance"> | string
-  departmentId?: Prisma.StringNullableFilter<"Grievance"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Grievance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Grievance"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"Grievance"> | Date | string | null
@@ -315,6 +323,7 @@ export type GrievanceWhereInput = {
   attachments?: Prisma.AttachmentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   aiClassification?: Prisma.XOR<Prisma.AIClassificationNullableScalarRelationFilter, Prisma.AIClassificationWhereInput> | null
+  auditLogs?: Prisma.AuditLogListRelationFilter
   sla?: Prisma.XOR<Prisma.SLANullableScalarRelationFilter, Prisma.SLAWhereInput> | null
   feedback?: Prisma.FeedbackListRelationFilter
   escalations?: Prisma.EscalationListRelationFilter
@@ -323,17 +332,18 @@ export type GrievanceWhereInput = {
 export type GrievanceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
+  citizenId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   subcategory?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
-  citizenId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -344,6 +354,7 @@ export type GrievanceOrderByWithRelationInput = {
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   aiClassification?: Prisma.AIClassificationOrderByWithRelationInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   sla?: Prisma.SLAOrderByWithRelationInput
   feedback?: Prisma.FeedbackOrderByRelationAggregateInput
   escalations?: Prisma.EscalationOrderByRelationAggregateInput
@@ -355,17 +366,18 @@ export type GrievanceWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.GrievanceWhereInput | Prisma.GrievanceWhereInput[]
   OR?: Prisma.GrievanceWhereInput[]
   NOT?: Prisma.GrievanceWhereInput | Prisma.GrievanceWhereInput[]
+  citizenId?: Prisma.StringFilter<"Grievance"> | string
   title?: Prisma.StringFilter<"Grievance"> | string
   description?: Prisma.StringFilter<"Grievance"> | string
   category?: Prisma.StringNullableFilter<"Grievance"> | string | null
   subcategory?: Prisma.StringNullableFilter<"Grievance"> | string | null
-  status?: Prisma.EnumGrievanceStatusFilter<"Grievance"> | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFilter<"Grievance"> | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFilter<"Grievance"> | $Enums.GrievanceStatus
+  departmentId?: Prisma.StringNullableFilter<"Grievance"> | string | null
   location?: Prisma.StringNullableFilter<"Grievance"> | string | null
+  address?: Prisma.StringNullableFilter<"Grievance"> | string | null
   latitude?: Prisma.FloatNullableFilter<"Grievance"> | number | null
   longitude?: Prisma.FloatNullableFilter<"Grievance"> | number | null
-  citizenId?: Prisma.StringFilter<"Grievance"> | string
-  departmentId?: Prisma.StringNullableFilter<"Grievance"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Grievance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Grievance"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"Grievance"> | Date | string | null
@@ -376,6 +388,7 @@ export type GrievanceWhereUniqueInput = Prisma.AtLeast<{
   attachments?: Prisma.AttachmentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   aiClassification?: Prisma.XOR<Prisma.AIClassificationNullableScalarRelationFilter, Prisma.AIClassificationWhereInput> | null
+  auditLogs?: Prisma.AuditLogListRelationFilter
   sla?: Prisma.XOR<Prisma.SLANullableScalarRelationFilter, Prisma.SLAWhereInput> | null
   feedback?: Prisma.FeedbackListRelationFilter
   escalations?: Prisma.EscalationListRelationFilter
@@ -384,17 +397,18 @@ export type GrievanceWhereUniqueInput = Prisma.AtLeast<{
 export type GrievanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
+  citizenId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   subcategory?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
-  citizenId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -411,17 +425,18 @@ export type GrievanceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.GrievanceScalarWhereWithAggregatesInput | Prisma.GrievanceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Grievance"> | string
   ticketId?: Prisma.StringWithAggregatesFilter<"Grievance"> | string
+  citizenId?: Prisma.StringWithAggregatesFilter<"Grievance"> | string
   title?: Prisma.StringWithAggregatesFilter<"Grievance"> | string
   description?: Prisma.StringWithAggregatesFilter<"Grievance"> | string
   category?: Prisma.StringNullableWithAggregatesFilter<"Grievance"> | string | null
   subcategory?: Prisma.StringNullableWithAggregatesFilter<"Grievance"> | string | null
-  status?: Prisma.EnumGrievanceStatusWithAggregatesFilter<"Grievance"> | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityWithAggregatesFilter<"Grievance"> | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusWithAggregatesFilter<"Grievance"> | $Enums.GrievanceStatus
+  departmentId?: Prisma.StringNullableWithAggregatesFilter<"Grievance"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Grievance"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Grievance"> | string | null
   latitude?: Prisma.FloatNullableWithAggregatesFilter<"Grievance"> | number | null
   longitude?: Prisma.FloatNullableWithAggregatesFilter<"Grievance"> | number | null
-  citizenId?: Prisma.StringWithAggregatesFilter<"Grievance"> | string
-  departmentId?: Prisma.StringNullableWithAggregatesFilter<"Grievance"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Grievance"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Grievance"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Grievance"> | Date | string | null
@@ -434,9 +449,10 @@ export type GrievanceCreateInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -449,6 +465,7 @@ export type GrievanceCreateInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -457,17 +474,18 @@ export type GrievanceCreateInput = {
 export type GrievanceUncheckedCreateInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -476,6 +494,7 @@ export type GrievanceUncheckedCreateInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -488,9 +507,10 @@ export type GrievanceUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,6 +523,7 @@ export type GrievanceUpdateInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -511,17 +532,18 @@ export type GrievanceUpdateInput = {
 export type GrievanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -530,6 +552,7 @@ export type GrievanceUncheckedUpdateInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -538,17 +561,18 @@ export type GrievanceUncheckedUpdateInput = {
 export type GrievanceCreateManyInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -561,9 +585,10 @@ export type GrievanceUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -574,17 +599,18 @@ export type GrievanceUpdateManyMutationInput = {
 export type GrievanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -603,17 +629,18 @@ export type GrievanceOrderByRelationAggregateInput = {
 export type GrievanceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
+  citizenId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  citizenId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
@@ -627,17 +654,18 @@ export type GrievanceAvgOrderByAggregateInput = {
 export type GrievanceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
+  citizenId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  citizenId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
@@ -646,17 +674,18 @@ export type GrievanceMaxOrderByAggregateInput = {
 export type GrievanceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
+  citizenId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  citizenId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
@@ -761,12 +790,12 @@ export type GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.GrievanceScalarWhereInput | Prisma.GrievanceScalarWhereInput[]
 }
 
-export type EnumGrievanceStatusFieldUpdateOperationsInput = {
-  set?: $Enums.GrievanceStatus
-}
-
 export type EnumGrievancePriorityFieldUpdateOperationsInput = {
   set?: $Enums.GrievancePriority
+}
+
+export type EnumGrievanceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.GrievanceStatus
 }
 
 export type NullableFloatFieldUpdateOperationsInput = {
@@ -855,6 +884,22 @@ export type GrievanceUpdateOneWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GrievanceUpdateToOneWithWhereWithoutNotificationsInput, Prisma.GrievanceUpdateWithoutNotificationsInput>, Prisma.GrievanceUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type GrievanceCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.GrievanceCreateWithoutAuditLogsInput, Prisma.GrievanceUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.GrievanceCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.GrievanceWhereUniqueInput
+}
+
+export type GrievanceUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.GrievanceCreateWithoutAuditLogsInput, Prisma.GrievanceUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.GrievanceCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.GrievanceUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.GrievanceWhereInput | boolean
+  delete?: Prisma.GrievanceWhereInput | boolean
+  connect?: Prisma.GrievanceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GrievanceUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.GrievanceUpdateWithoutAuditLogsInput>, Prisma.GrievanceUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type GrievanceCreateNestedOneWithoutSlaInput = {
   create?: Prisma.XOR<Prisma.GrievanceCreateWithoutSlaInput, Prisma.GrievanceUncheckedCreateWithoutSlaInput>
   connectOrCreate?: Prisma.GrievanceCreateOrConnectWithoutSlaInput
@@ -904,9 +949,10 @@ export type GrievanceCreateWithoutCitizenInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -918,6 +964,7 @@ export type GrievanceCreateWithoutCitizenInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -930,12 +977,13 @@ export type GrievanceUncheckedCreateWithoutCitizenInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -944,6 +992,7 @@ export type GrievanceUncheckedCreateWithoutCitizenInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -981,17 +1030,18 @@ export type GrievanceScalarWhereInput = {
   NOT?: Prisma.GrievanceScalarWhereInput | Prisma.GrievanceScalarWhereInput[]
   id?: Prisma.StringFilter<"Grievance"> | string
   ticketId?: Prisma.StringFilter<"Grievance"> | string
+  citizenId?: Prisma.StringFilter<"Grievance"> | string
   title?: Prisma.StringFilter<"Grievance"> | string
   description?: Prisma.StringFilter<"Grievance"> | string
   category?: Prisma.StringNullableFilter<"Grievance"> | string | null
   subcategory?: Prisma.StringNullableFilter<"Grievance"> | string | null
-  status?: Prisma.EnumGrievanceStatusFilter<"Grievance"> | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFilter<"Grievance"> | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFilter<"Grievance"> | $Enums.GrievanceStatus
+  departmentId?: Prisma.StringNullableFilter<"Grievance"> | string | null
   location?: Prisma.StringNullableFilter<"Grievance"> | string | null
+  address?: Prisma.StringNullableFilter<"Grievance"> | string | null
   latitude?: Prisma.FloatNullableFilter<"Grievance"> | number | null
   longitude?: Prisma.FloatNullableFilter<"Grievance"> | number | null
-  citizenId?: Prisma.StringFilter<"Grievance"> | string
-  departmentId?: Prisma.StringNullableFilter<"Grievance"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Grievance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Grievance"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"Grievance"> | Date | string | null
@@ -1004,9 +1054,10 @@ export type GrievanceCreateWithoutDepartmentInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1018,6 +1069,7 @@ export type GrievanceCreateWithoutDepartmentInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -1026,16 +1078,17 @@ export type GrievanceCreateWithoutDepartmentInput = {
 export type GrievanceUncheckedCreateWithoutDepartmentInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1044,6 +1097,7 @@ export type GrievanceUncheckedCreateWithoutDepartmentInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -1082,9 +1136,10 @@ export type GrievanceCreateWithoutAssignmentsInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1096,6 +1151,7 @@ export type GrievanceCreateWithoutAssignmentsInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -1104,17 +1160,18 @@ export type GrievanceCreateWithoutAssignmentsInput = {
 export type GrievanceUncheckedCreateWithoutAssignmentsInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1122,6 +1179,7 @@ export type GrievanceUncheckedCreateWithoutAssignmentsInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -1150,9 +1208,10 @@ export type GrievanceUpdateWithoutAssignmentsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1164,6 +1223,7 @@ export type GrievanceUpdateWithoutAssignmentsInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -1172,17 +1232,18 @@ export type GrievanceUpdateWithoutAssignmentsInput = {
 export type GrievanceUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1190,6 +1251,7 @@ export type GrievanceUncheckedUpdateWithoutAssignmentsInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -1202,9 +1264,10 @@ export type GrievanceCreateWithoutAiClassificationInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1216,6 +1279,7 @@ export type GrievanceCreateWithoutAiClassificationInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutGrievanceInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -1224,17 +1288,18 @@ export type GrievanceCreateWithoutAiClassificationInput = {
 export type GrievanceUncheckedCreateWithoutAiClassificationInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1242,6 +1307,7 @@ export type GrievanceUncheckedCreateWithoutAiClassificationInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutGrievanceInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -1270,9 +1336,10 @@ export type GrievanceUpdateWithoutAiClassificationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1284,6 +1351,7 @@ export type GrievanceUpdateWithoutAiClassificationInput = {
   comments?: Prisma.CommentUpdateManyWithoutGrievanceNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -1292,17 +1360,18 @@ export type GrievanceUpdateWithoutAiClassificationInput = {
 export type GrievanceUncheckedUpdateWithoutAiClassificationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1310,6 +1379,7 @@ export type GrievanceUncheckedUpdateWithoutAiClassificationInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutGrievanceNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -1322,9 +1392,10 @@ export type GrievanceCreateWithoutCommentsInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1336,6 +1407,7 @@ export type GrievanceCreateWithoutCommentsInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -1344,17 +1416,18 @@ export type GrievanceCreateWithoutCommentsInput = {
 export type GrievanceUncheckedCreateWithoutCommentsInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1362,6 +1435,7 @@ export type GrievanceUncheckedCreateWithoutCommentsInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -1390,9 +1464,10 @@ export type GrievanceUpdateWithoutCommentsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1404,6 +1479,7 @@ export type GrievanceUpdateWithoutCommentsInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -1412,17 +1488,18 @@ export type GrievanceUpdateWithoutCommentsInput = {
 export type GrievanceUncheckedUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1430,6 +1507,7 @@ export type GrievanceUncheckedUpdateWithoutCommentsInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -1442,9 +1520,10 @@ export type GrievanceCreateWithoutAttachmentsInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1456,6 +1535,7 @@ export type GrievanceCreateWithoutAttachmentsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -1464,17 +1544,18 @@ export type GrievanceCreateWithoutAttachmentsInput = {
 export type GrievanceUncheckedCreateWithoutAttachmentsInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1482,6 +1563,7 @@ export type GrievanceUncheckedCreateWithoutAttachmentsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -1510,9 +1592,10 @@ export type GrievanceUpdateWithoutAttachmentsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1524,6 +1607,7 @@ export type GrievanceUpdateWithoutAttachmentsInput = {
   comments?: Prisma.CommentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -1532,17 +1616,18 @@ export type GrievanceUpdateWithoutAttachmentsInput = {
 export type GrievanceUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1550,6 +1635,7 @@ export type GrievanceUncheckedUpdateWithoutAttachmentsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -1562,9 +1648,10 @@ export type GrievanceCreateWithoutNotificationsInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1576,6 +1663,7 @@ export type GrievanceCreateWithoutNotificationsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutGrievanceInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
@@ -1584,17 +1672,18 @@ export type GrievanceCreateWithoutNotificationsInput = {
 export type GrievanceUncheckedCreateWithoutNotificationsInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1602,6 +1691,7 @@ export type GrievanceUncheckedCreateWithoutNotificationsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutGrievanceInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
@@ -1630,9 +1720,10 @@ export type GrievanceUpdateWithoutNotificationsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1644,6 +1735,7 @@ export type GrievanceUpdateWithoutNotificationsInput = {
   comments?: Prisma.CommentUpdateManyWithoutGrievanceNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -1652,23 +1744,153 @@ export type GrievanceUpdateWithoutNotificationsInput = {
 export type GrievanceUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutGrievanceNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutGrievanceNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
+  aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
+  sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
+  escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
+}
+
+export type GrievanceCreateWithoutAuditLogsInput = {
+  id?: string
+  ticketId: string
+  title: string
+  description: string
+  category?: string | null
+  subcategory?: string | null
+  priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  location?: string | null
+  address?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  resolvedAt?: Date | string | null
+  citizen: Prisma.UserCreateNestedOneWithoutGrievancesInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutGrievancesInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutGrievanceInput
+  comments?: Prisma.CommentCreateNestedManyWithoutGrievanceInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
+  aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
+  escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
+}
+
+export type GrievanceUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  ticketId: string
+  citizenId: string
+  title: string
+  description: string
+  category?: string | null
+  subcategory?: string | null
+  priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
+  location?: string | null
+  address?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  resolvedAt?: Date | string | null
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutGrievanceInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutGrievanceInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
+  aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
+  escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
+}
+
+export type GrievanceCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.GrievanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.GrievanceCreateWithoutAuditLogsInput, Prisma.GrievanceUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type GrievanceUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.GrievanceUpdateWithoutAuditLogsInput, Prisma.GrievanceUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.GrievanceCreateWithoutAuditLogsInput, Prisma.GrievanceUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.GrievanceWhereInput
+}
+
+export type GrievanceUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.GrievanceWhereInput
+  data: Prisma.XOR<Prisma.GrievanceUpdateWithoutAuditLogsInput, Prisma.GrievanceUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type GrievanceUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  citizen?: Prisma.UserUpdateOneRequiredWithoutGrievancesNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutGrievancesNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutGrievanceNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutGrievanceNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
+  aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
+  escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
+}
+
+export type GrievanceUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutGrievanceNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutGrievanceNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -1682,9 +1904,10 @@ export type GrievanceCreateWithoutSlaInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1697,6 +1920,7 @@ export type GrievanceCreateWithoutSlaInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
 }
@@ -1704,17 +1928,18 @@ export type GrievanceCreateWithoutSlaInput = {
 export type GrievanceUncheckedCreateWithoutSlaInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1723,6 +1948,7 @@ export type GrievanceUncheckedCreateWithoutSlaInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
 }
@@ -1750,9 +1976,10 @@ export type GrievanceUpdateWithoutSlaInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1765,6 +1992,7 @@ export type GrievanceUpdateWithoutSlaInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
 }
@@ -1772,17 +2000,18 @@ export type GrievanceUpdateWithoutSlaInput = {
 export type GrievanceUncheckedUpdateWithoutSlaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1791,6 +2020,7 @@ export type GrievanceUncheckedUpdateWithoutSlaInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
 }
@@ -1802,9 +2032,10 @@ export type GrievanceCreateWithoutFeedbackInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1817,6 +2048,7 @@ export type GrievanceCreateWithoutFeedbackInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   escalations?: Prisma.EscalationCreateNestedManyWithoutGrievanceInput
 }
@@ -1824,17 +2056,18 @@ export type GrievanceCreateWithoutFeedbackInput = {
 export type GrievanceUncheckedCreateWithoutFeedbackInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1843,6 +2076,7 @@ export type GrievanceUncheckedCreateWithoutFeedbackInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   escalations?: Prisma.EscalationUncheckedCreateNestedManyWithoutGrievanceInput
 }
@@ -1870,9 +2104,10 @@ export type GrievanceUpdateWithoutFeedbackInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1885,6 +2120,7 @@ export type GrievanceUpdateWithoutFeedbackInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
 }
@@ -1892,17 +2128,18 @@ export type GrievanceUpdateWithoutFeedbackInput = {
 export type GrievanceUncheckedUpdateWithoutFeedbackInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1911,6 +2148,7 @@ export type GrievanceUncheckedUpdateWithoutFeedbackInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
 }
@@ -1922,9 +2160,10 @@ export type GrievanceCreateWithoutEscalationsInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
   createdAt?: Date | string
@@ -1937,6 +2176,7 @@ export type GrievanceCreateWithoutEscalationsInput = {
   attachments?: Prisma.AttachmentCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLACreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackCreateNestedManyWithoutGrievanceInput
 }
@@ -1944,17 +2184,18 @@ export type GrievanceCreateWithoutEscalationsInput = {
 export type GrievanceUncheckedCreateWithoutEscalationsInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -1963,6 +2204,7 @@ export type GrievanceUncheckedCreateWithoutEscalationsInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutGrievanceInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutGrievanceInput
   aiClassification?: Prisma.AIClassificationUncheckedCreateNestedOneWithoutGrievanceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutGrievanceInput
   sla?: Prisma.SLAUncheckedCreateNestedOneWithoutGrievanceInput
   feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutGrievanceInput
 }
@@ -1990,9 +2232,10 @@ export type GrievanceUpdateWithoutEscalationsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2005,6 +2248,7 @@ export type GrievanceUpdateWithoutEscalationsInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
 }
@@ -2012,17 +2256,18 @@ export type GrievanceUpdateWithoutEscalationsInput = {
 export type GrievanceUncheckedUpdateWithoutEscalationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2031,6 +2276,7 @@ export type GrievanceUncheckedUpdateWithoutEscalationsInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
 }
@@ -2042,12 +2288,13 @@ export type GrievanceCreateManyCitizenInput = {
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
+  departmentId?: string | null
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  departmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -2060,9 +2307,10 @@ export type GrievanceUpdateWithoutCitizenInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2074,6 +2322,7 @@ export type GrievanceUpdateWithoutCitizenInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -2086,12 +2335,13 @@ export type GrievanceUncheckedUpdateWithoutCitizenInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2100,6 +2350,7 @@ export type GrievanceUncheckedUpdateWithoutCitizenInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -2112,12 +2363,13 @@ export type GrievanceUncheckedUpdateManyWithoutCitizenInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2126,16 +2378,17 @@ export type GrievanceUncheckedUpdateManyWithoutCitizenInput = {
 export type GrievanceCreateManyDepartmentInput = {
   id?: string
   ticketId: string
+  citizenId: string
   title: string
   description: string
   category?: string | null
   subcategory?: string | null
-  status?: $Enums.GrievanceStatus
   priority?: $Enums.GrievancePriority
+  status?: $Enums.GrievanceStatus
   location?: string | null
+  address?: string | null
   latitude?: number | null
   longitude?: number | null
-  citizenId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
@@ -2148,9 +2401,10 @@ export type GrievanceUpdateWithoutDepartmentInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2162,6 +2416,7 @@ export type GrievanceUpdateWithoutDepartmentInput = {
   attachments?: Prisma.AttachmentUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUpdateManyWithoutGrievanceNestedInput
@@ -2170,16 +2425,17 @@ export type GrievanceUpdateWithoutDepartmentInput = {
 export type GrievanceUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2188,6 +2444,7 @@ export type GrievanceUncheckedUpdateWithoutDepartmentInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutGrievanceNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutGrievanceNestedInput
   aiClassification?: Prisma.AIClassificationUncheckedUpdateOneWithoutGrievanceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutGrievanceNestedInput
   sla?: Prisma.SLAUncheckedUpdateOneWithoutGrievanceNestedInput
   feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutGrievanceNestedInput
   escalations?: Prisma.EscalationUncheckedUpdateManyWithoutGrievanceNestedInput
@@ -2196,16 +2453,17 @@ export type GrievanceUncheckedUpdateWithoutDepartmentInput = {
 export type GrievanceUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subcategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   priority?: Prisma.EnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority
+  status?: Prisma.EnumGrievanceStatusFieldUpdateOperationsInput | $Enums.GrievanceStatus
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  citizenId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2221,6 +2479,7 @@ export type GrievanceCountOutputType = {
   comments: number
   attachments: number
   notifications: number
+  auditLogs: number
   feedback: number
   escalations: number
 }
@@ -2230,6 +2489,7 @@ export type GrievanceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   comments?: boolean | GrievanceCountOutputTypeCountCommentsArgs
   attachments?: boolean | GrievanceCountOutputTypeCountAttachmentsArgs
   notifications?: boolean | GrievanceCountOutputTypeCountNotificationsArgs
+  auditLogs?: boolean | GrievanceCountOutputTypeCountAuditLogsArgs
   feedback?: boolean | GrievanceCountOutputTypeCountFeedbackArgs
   escalations?: boolean | GrievanceCountOutputTypeCountEscalationsArgs
 }
@@ -2275,6 +2535,13 @@ export type GrievanceCountOutputTypeCountNotificationsArgs<ExtArgs extends runti
 /**
  * GrievanceCountOutputType without action
  */
+export type GrievanceCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * GrievanceCountOutputType without action
+ */
 export type GrievanceCountOutputTypeCountFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FeedbackWhereInput
 }
@@ -2290,17 +2557,18 @@ export type GrievanceCountOutputTypeCountEscalationsArgs<ExtArgs extends runtime
 export type GrievanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   ticketId?: boolean
+  citizenId?: boolean
   title?: boolean
   description?: boolean
   category?: boolean
   subcategory?: boolean
-  status?: boolean
   priority?: boolean
+  status?: boolean
+  departmentId?: boolean
   location?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
-  citizenId?: boolean
-  departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
@@ -2311,6 +2579,7 @@ export type GrievanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   attachments?: boolean | Prisma.Grievance$attachmentsArgs<ExtArgs>
   notifications?: boolean | Prisma.Grievance$notificationsArgs<ExtArgs>
   aiClassification?: boolean | Prisma.Grievance$aiClassificationArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Grievance$auditLogsArgs<ExtArgs>
   sla?: boolean | Prisma.Grievance$slaArgs<ExtArgs>
   feedback?: boolean | Prisma.Grievance$feedbackArgs<ExtArgs>
   escalations?: boolean | Prisma.Grievance$escalationsArgs<ExtArgs>
@@ -2320,17 +2589,18 @@ export type GrievanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type GrievanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   ticketId?: boolean
+  citizenId?: boolean
   title?: boolean
   description?: boolean
   category?: boolean
   subcategory?: boolean
-  status?: boolean
   priority?: boolean
+  status?: boolean
+  departmentId?: boolean
   location?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
-  citizenId?: boolean
-  departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
@@ -2341,17 +2611,18 @@ export type GrievanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type GrievanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   ticketId?: boolean
+  citizenId?: boolean
   title?: boolean
   description?: boolean
   category?: boolean
   subcategory?: boolean
-  status?: boolean
   priority?: boolean
+  status?: boolean
+  departmentId?: boolean
   location?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
-  citizenId?: boolean
-  departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
@@ -2362,23 +2633,24 @@ export type GrievanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type GrievanceSelectScalar = {
   id?: boolean
   ticketId?: boolean
+  citizenId?: boolean
   title?: boolean
   description?: boolean
   category?: boolean
   subcategory?: boolean
-  status?: boolean
   priority?: boolean
+  status?: boolean
+  departmentId?: boolean
   location?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
-  citizenId?: boolean
-  departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
 }
 
-export type GrievanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ticketId" | "title" | "description" | "category" | "subcategory" | "status" | "priority" | "location" | "latitude" | "longitude" | "citizenId" | "departmentId" | "createdAt" | "updatedAt" | "resolvedAt", ExtArgs["result"]["grievance"]>
+export type GrievanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ticketId" | "citizenId" | "title" | "description" | "category" | "subcategory" | "priority" | "status" | "departmentId" | "location" | "address" | "latitude" | "longitude" | "createdAt" | "updatedAt" | "resolvedAt", ExtArgs["result"]["grievance"]>
 export type GrievanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   citizen?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.Grievance$departmentArgs<ExtArgs>
@@ -2387,6 +2659,7 @@ export type GrievanceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   attachments?: boolean | Prisma.Grievance$attachmentsArgs<ExtArgs>
   notifications?: boolean | Prisma.Grievance$notificationsArgs<ExtArgs>
   aiClassification?: boolean | Prisma.Grievance$aiClassificationArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Grievance$auditLogsArgs<ExtArgs>
   sla?: boolean | Prisma.Grievance$slaArgs<ExtArgs>
   feedback?: boolean | Prisma.Grievance$feedbackArgs<ExtArgs>
   escalations?: boolean | Prisma.Grievance$escalationsArgs<ExtArgs>
@@ -2411,6 +2684,7 @@ export type $GrievancePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     aiClassification: Prisma.$AIClassificationPayload<ExtArgs> | null
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     sla: Prisma.$SLAPayload<ExtArgs> | null
     feedback: Prisma.$FeedbackPayload<ExtArgs>[]
     escalations: Prisma.$EscalationPayload<ExtArgs>[]
@@ -2418,17 +2692,18 @@ export type $GrievancePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     ticketId: string
+    citizenId: string
     title: string
     description: string
     category: string | null
     subcategory: string | null
-    status: $Enums.GrievanceStatus
     priority: $Enums.GrievancePriority
+    status: $Enums.GrievanceStatus
+    departmentId: string | null
     location: string | null
+    address: string | null
     latitude: number | null
     longitude: number | null
-    citizenId: string
-    departmentId: string | null
     createdAt: Date
     updatedAt: Date
     resolvedAt: Date | null
@@ -2833,6 +3108,7 @@ export interface Prisma__GrievanceClient<T, Null = never, ExtArgs extends runtim
   attachments<T extends Prisma.Grievance$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.Grievance$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiClassification<T extends Prisma.Grievance$aiClassificationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$aiClassificationArgs<ExtArgs>>): Prisma.Prisma__AIClassificationClient<runtime.Types.Result.GetResult<Prisma.$AIClassificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  auditLogs<T extends Prisma.Grievance$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sla<T extends Prisma.Grievance$slaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$slaArgs<ExtArgs>>): Prisma.Prisma__SLAClient<runtime.Types.Result.GetResult<Prisma.$SLAPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   feedback<T extends Prisma.Grievance$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   escalations<T extends Prisma.Grievance$escalationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Grievance$escalationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EscalationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2867,17 +3143,18 @@ export interface Prisma__GrievanceClient<T, Null = never, ExtArgs extends runtim
 export interface GrievanceFieldRefs {
   readonly id: Prisma.FieldRef<"Grievance", 'String'>
   readonly ticketId: Prisma.FieldRef<"Grievance", 'String'>
+  readonly citizenId: Prisma.FieldRef<"Grievance", 'String'>
   readonly title: Prisma.FieldRef<"Grievance", 'String'>
   readonly description: Prisma.FieldRef<"Grievance", 'String'>
   readonly category: Prisma.FieldRef<"Grievance", 'String'>
   readonly subcategory: Prisma.FieldRef<"Grievance", 'String'>
-  readonly status: Prisma.FieldRef<"Grievance", 'GrievanceStatus'>
   readonly priority: Prisma.FieldRef<"Grievance", 'GrievancePriority'>
+  readonly status: Prisma.FieldRef<"Grievance", 'GrievanceStatus'>
+  readonly departmentId: Prisma.FieldRef<"Grievance", 'String'>
   readonly location: Prisma.FieldRef<"Grievance", 'String'>
+  readonly address: Prisma.FieldRef<"Grievance", 'String'>
   readonly latitude: Prisma.FieldRef<"Grievance", 'Float'>
   readonly longitude: Prisma.FieldRef<"Grievance", 'Float'>
-  readonly citizenId: Prisma.FieldRef<"Grievance", 'String'>
-  readonly departmentId: Prisma.FieldRef<"Grievance", 'String'>
   readonly createdAt: Prisma.FieldRef<"Grievance", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Grievance", 'DateTime'>
   readonly resolvedAt: Prisma.FieldRef<"Grievance", 'DateTime'>
@@ -3413,6 +3690,30 @@ export type Grievance$aiClassificationArgs<ExtArgs extends runtime.Types.Extensi
    */
   include?: Prisma.AIClassificationInclude<ExtArgs> | null
   where?: Prisma.AIClassificationWhereInput
+}
+
+/**
+ * Grievance.auditLogs
+ */
+export type Grievance$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

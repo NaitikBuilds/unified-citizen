@@ -36,33 +36,33 @@ export type AttachmentSumAggregateOutputType = {
 
 export type AttachmentMinAggregateOutputType = {
   id: string | null
-  fileName: string | null
-  fileUrl: string | null
-  fileType: string | null
-  fileSize: number | null
   grievanceId: string | null
+  fileName: string | null
+  fileType: string | null
+  fileUrl: string | null
+  fileSize: number | null
   uploadedById: string | null
   createdAt: Date | null
 }
 
 export type AttachmentMaxAggregateOutputType = {
   id: string | null
-  fileName: string | null
-  fileUrl: string | null
-  fileType: string | null
-  fileSize: number | null
   grievanceId: string | null
+  fileName: string | null
+  fileType: string | null
+  fileUrl: string | null
+  fileSize: number | null
   uploadedById: string | null
   createdAt: Date | null
 }
 
 export type AttachmentCountAggregateOutputType = {
   id: number
-  fileName: number
-  fileUrl: number
-  fileType: number
-  fileSize: number
   grievanceId: number
+  fileName: number
+  fileType: number
+  fileUrl: number
+  fileSize: number
   uploadedById: number
   createdAt: number
   _all: number
@@ -79,33 +79,33 @@ export type AttachmentSumAggregateInputType = {
 
 export type AttachmentMinAggregateInputType = {
   id?: true
-  fileName?: true
-  fileUrl?: true
-  fileType?: true
-  fileSize?: true
   grievanceId?: true
+  fileName?: true
+  fileType?: true
+  fileUrl?: true
+  fileSize?: true
   uploadedById?: true
   createdAt?: true
 }
 
 export type AttachmentMaxAggregateInputType = {
   id?: true
-  fileName?: true
-  fileUrl?: true
-  fileType?: true
-  fileSize?: true
   grievanceId?: true
+  fileName?: true
+  fileType?: true
+  fileUrl?: true
+  fileSize?: true
   uploadedById?: true
   createdAt?: true
 }
 
 export type AttachmentCountAggregateInputType = {
   id?: true
-  fileName?: true
-  fileUrl?: true
-  fileType?: true
-  fileSize?: true
   grievanceId?: true
+  fileName?: true
+  fileType?: true
+  fileUrl?: true
+  fileSize?: true
   uploadedById?: true
   createdAt?: true
   _all?: true
@@ -199,11 +199,11 @@ export type AttachmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 
 export type AttachmentGroupByOutputType = {
   id: string
-  fileName: string
-  fileUrl: string
-  fileType: string | null
-  fileSize: number | null
   grievanceId: string | null
+  fileName: string
+  fileType: string | null
+  fileUrl: string
+  fileSize: number | null
   uploadedById: string
   createdAt: Date
   _count: AttachmentCountAggregateOutputType | null
@@ -233,11 +233,11 @@ export type AttachmentWhereInput = {
   OR?: Prisma.AttachmentWhereInput[]
   NOT?: Prisma.AttachmentWhereInput | Prisma.AttachmentWhereInput[]
   id?: Prisma.StringFilter<"Attachment"> | string
-  fileName?: Prisma.StringFilter<"Attachment"> | string
-  fileUrl?: Prisma.StringFilter<"Attachment"> | string
-  fileType?: Prisma.StringNullableFilter<"Attachment"> | string | null
-  fileSize?: Prisma.IntNullableFilter<"Attachment"> | number | null
   grievanceId?: Prisma.StringNullableFilter<"Attachment"> | string | null
+  fileName?: Prisma.StringFilter<"Attachment"> | string
+  fileType?: Prisma.StringNullableFilter<"Attachment"> | string | null
+  fileUrl?: Prisma.StringFilter<"Attachment"> | string
+  fileSize?: Prisma.IntNullableFilter<"Attachment"> | number | null
   uploadedById?: Prisma.StringFilter<"Attachment"> | string
   createdAt?: Prisma.DateTimeFilter<"Attachment"> | Date | string
   grievance?: Prisma.XOR<Prisma.GrievanceNullableScalarRelationFilter, Prisma.GrievanceWhereInput> | null
@@ -246,11 +246,11 @@ export type AttachmentWhereInput = {
 
 export type AttachmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
-  fileSize?: Prisma.SortOrderInput | Prisma.SortOrder
   grievanceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileSize?: Prisma.SortOrderInput | Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   grievance?: Prisma.GrievanceOrderByWithRelationInput
@@ -262,11 +262,11 @@ export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AttachmentWhereInput | Prisma.AttachmentWhereInput[]
   OR?: Prisma.AttachmentWhereInput[]
   NOT?: Prisma.AttachmentWhereInput | Prisma.AttachmentWhereInput[]
-  fileName?: Prisma.StringFilter<"Attachment"> | string
-  fileUrl?: Prisma.StringFilter<"Attachment"> | string
-  fileType?: Prisma.StringNullableFilter<"Attachment"> | string | null
-  fileSize?: Prisma.IntNullableFilter<"Attachment"> | number | null
   grievanceId?: Prisma.StringNullableFilter<"Attachment"> | string | null
+  fileName?: Prisma.StringFilter<"Attachment"> | string
+  fileType?: Prisma.StringNullableFilter<"Attachment"> | string | null
+  fileUrl?: Prisma.StringFilter<"Attachment"> | string
+  fileSize?: Prisma.IntNullableFilter<"Attachment"> | number | null
   uploadedById?: Prisma.StringFilter<"Attachment"> | string
   createdAt?: Prisma.DateTimeFilter<"Attachment"> | Date | string
   grievance?: Prisma.XOR<Prisma.GrievanceNullableScalarRelationFilter, Prisma.GrievanceWhereInput> | null
@@ -275,11 +275,11 @@ export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
 
 export type AttachmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
-  fileSize?: Prisma.SortOrderInput | Prisma.SortOrder
   grievanceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileSize?: Prisma.SortOrderInput | Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AttachmentCountOrderByAggregateInput
@@ -294,11 +294,11 @@ export type AttachmentScalarWhereWithAggregatesInput = {
   OR?: Prisma.AttachmentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AttachmentScalarWhereWithAggregatesInput | Prisma.AttachmentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
-  fileName?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
-  fileUrl?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
-  fileType?: Prisma.StringNullableWithAggregatesFilter<"Attachment"> | string | null
-  fileSize?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
   grievanceId?: Prisma.StringNullableWithAggregatesFilter<"Attachment"> | string | null
+  fileName?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
+  fileType?: Prisma.StringNullableWithAggregatesFilter<"Attachment"> | string | null
+  fileUrl?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
+  fileSize?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
   uploadedById?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Attachment"> | Date | string
 }
@@ -306,8 +306,8 @@ export type AttachmentScalarWhereWithAggregatesInput = {
 export type AttachmentCreateInput = {
   id?: string
   fileName: string
-  fileUrl: string
   fileType?: string | null
+  fileUrl: string
   fileSize?: number | null
   createdAt?: Date | string
   grievance?: Prisma.GrievanceCreateNestedOneWithoutAttachmentsInput
@@ -316,11 +316,11 @@ export type AttachmentCreateInput = {
 
 export type AttachmentUncheckedCreateInput = {
   id?: string
-  fileName: string
-  fileUrl: string
-  fileType?: string | null
-  fileSize?: number | null
   grievanceId?: string | null
+  fileName: string
+  fileType?: string | null
+  fileUrl: string
+  fileSize?: number | null
   uploadedById: string
   createdAt?: Date | string
 }
@@ -328,8 +328,8 @@ export type AttachmentUncheckedCreateInput = {
 export type AttachmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievance?: Prisma.GrievanceUpdateOneWithoutAttachmentsNestedInput
@@ -338,22 +338,22 @@ export type AttachmentUpdateInput = {
 
 export type AttachmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   grievanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttachmentCreateManyInput = {
   id?: string
-  fileName: string
-  fileUrl: string
-  fileType?: string | null
-  fileSize?: number | null
   grievanceId?: string | null
+  fileName: string
+  fileType?: string | null
+  fileUrl: string
+  fileSize?: number | null
   uploadedById: string
   createdAt?: Date | string
 }
@@ -361,19 +361,19 @@ export type AttachmentCreateManyInput = {
 export type AttachmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttachmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   grievanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -390,11 +390,11 @@ export type AttachmentOrderByRelationAggregateInput = {
 
 export type AttachmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileType?: Prisma.SortOrder
-  fileSize?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileSize?: Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -405,22 +405,22 @@ export type AttachmentAvgOrderByAggregateInput = {
 
 export type AttachmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileType?: Prisma.SortOrder
-  fileSize?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileSize?: Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type AttachmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileType?: Prisma.SortOrder
-  fileSize?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileSize?: Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -524,8 +524,8 @@ export type NullableIntFieldUpdateOperationsInput = {
 export type AttachmentCreateWithoutUploadedByInput = {
   id?: string
   fileName: string
-  fileUrl: string
   fileType?: string | null
+  fileUrl: string
   fileSize?: number | null
   createdAt?: Date | string
   grievance?: Prisma.GrievanceCreateNestedOneWithoutAttachmentsInput
@@ -533,11 +533,11 @@ export type AttachmentCreateWithoutUploadedByInput = {
 
 export type AttachmentUncheckedCreateWithoutUploadedByInput = {
   id?: string
-  fileName: string
-  fileUrl: string
-  fileType?: string | null
-  fileSize?: number | null
   grievanceId?: string | null
+  fileName: string
+  fileType?: string | null
+  fileUrl: string
+  fileSize?: number | null
   createdAt?: Date | string
 }
 
@@ -572,11 +572,11 @@ export type AttachmentScalarWhereInput = {
   OR?: Prisma.AttachmentScalarWhereInput[]
   NOT?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
   id?: Prisma.StringFilter<"Attachment"> | string
-  fileName?: Prisma.StringFilter<"Attachment"> | string
-  fileUrl?: Prisma.StringFilter<"Attachment"> | string
-  fileType?: Prisma.StringNullableFilter<"Attachment"> | string | null
-  fileSize?: Prisma.IntNullableFilter<"Attachment"> | number | null
   grievanceId?: Prisma.StringNullableFilter<"Attachment"> | string | null
+  fileName?: Prisma.StringFilter<"Attachment"> | string
+  fileType?: Prisma.StringNullableFilter<"Attachment"> | string | null
+  fileUrl?: Prisma.StringFilter<"Attachment"> | string
+  fileSize?: Prisma.IntNullableFilter<"Attachment"> | number | null
   uploadedById?: Prisma.StringFilter<"Attachment"> | string
   createdAt?: Prisma.DateTimeFilter<"Attachment"> | Date | string
 }
@@ -584,8 +584,8 @@ export type AttachmentScalarWhereInput = {
 export type AttachmentCreateWithoutGrievanceInput = {
   id?: string
   fileName: string
-  fileUrl: string
   fileType?: string | null
+  fileUrl: string
   fileSize?: number | null
   createdAt?: Date | string
   uploadedBy: Prisma.UserCreateNestedOneWithoutAttachmentsInput
@@ -594,8 +594,8 @@ export type AttachmentCreateWithoutGrievanceInput = {
 export type AttachmentUncheckedCreateWithoutGrievanceInput = {
   id?: string
   fileName: string
-  fileUrl: string
   fileType?: string | null
+  fileUrl: string
   fileSize?: number | null
   uploadedById: string
   createdAt?: Date | string
@@ -629,19 +629,19 @@ export type AttachmentUpdateManyWithWhereWithoutGrievanceInput = {
 
 export type AttachmentCreateManyUploadedByInput = {
   id?: string
-  fileName: string
-  fileUrl: string
-  fileType?: string | null
-  fileSize?: number | null
   grievanceId?: string | null
+  fileName: string
+  fileType?: string | null
+  fileUrl: string
+  fileSize?: number | null
   createdAt?: Date | string
 }
 
 export type AttachmentUpdateWithoutUploadedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievance?: Prisma.GrievanceUpdateOneWithoutAttachmentsNestedInput
@@ -649,29 +649,29 @@ export type AttachmentUpdateWithoutUploadedByInput = {
 
 export type AttachmentUncheckedUpdateWithoutUploadedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   grievanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttachmentUncheckedUpdateManyWithoutUploadedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   grievanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttachmentCreateManyGrievanceInput = {
   id?: string
   fileName: string
-  fileUrl: string
   fileType?: string | null
+  fileUrl: string
   fileSize?: number | null
   uploadedById: string
   createdAt?: Date | string
@@ -680,8 +680,8 @@ export type AttachmentCreateManyGrievanceInput = {
 export type AttachmentUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutAttachmentsNestedInput
@@ -690,8 +690,8 @@ export type AttachmentUpdateWithoutGrievanceInput = {
 export type AttachmentUncheckedUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -700,8 +700,8 @@ export type AttachmentUncheckedUpdateWithoutGrievanceInput = {
 export type AttachmentUncheckedUpdateManyWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -711,11 +711,11 @@ export type AttachmentUncheckedUpdateManyWithoutGrievanceInput = {
 
 export type AttachmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  fileName?: boolean
-  fileUrl?: boolean
-  fileType?: boolean
-  fileSize?: boolean
   grievanceId?: boolean
+  fileName?: boolean
+  fileType?: boolean
+  fileUrl?: boolean
+  fileSize?: boolean
   uploadedById?: boolean
   createdAt?: boolean
   grievance?: boolean | Prisma.Attachment$grievanceArgs<ExtArgs>
@@ -724,11 +724,11 @@ export type AttachmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type AttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  fileName?: boolean
-  fileUrl?: boolean
-  fileType?: boolean
-  fileSize?: boolean
   grievanceId?: boolean
+  fileName?: boolean
+  fileType?: boolean
+  fileUrl?: boolean
+  fileSize?: boolean
   uploadedById?: boolean
   createdAt?: boolean
   grievance?: boolean | Prisma.Attachment$grievanceArgs<ExtArgs>
@@ -737,11 +737,11 @@ export type AttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
 
 export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  fileName?: boolean
-  fileUrl?: boolean
-  fileType?: boolean
-  fileSize?: boolean
   grievanceId?: boolean
+  fileName?: boolean
+  fileType?: boolean
+  fileUrl?: boolean
+  fileSize?: boolean
   uploadedById?: boolean
   createdAt?: boolean
   grievance?: boolean | Prisma.Attachment$grievanceArgs<ExtArgs>
@@ -750,16 +750,16 @@ export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 
 export type AttachmentSelectScalar = {
   id?: boolean
-  fileName?: boolean
-  fileUrl?: boolean
-  fileType?: boolean
-  fileSize?: boolean
   grievanceId?: boolean
+  fileName?: boolean
+  fileType?: boolean
+  fileUrl?: boolean
+  fileSize?: boolean
   uploadedById?: boolean
   createdAt?: boolean
 }
 
-export type AttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fileName" | "fileUrl" | "fileType" | "fileSize" | "grievanceId" | "uploadedById" | "createdAt", ExtArgs["result"]["attachment"]>
+export type AttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "fileName" | "fileType" | "fileUrl" | "fileSize" | "uploadedById" | "createdAt", ExtArgs["result"]["attachment"]>
 export type AttachmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.Attachment$grievanceArgs<ExtArgs>
   uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -781,11 +781,11 @@ export type $AttachmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    fileName: string
-    fileUrl: string
-    fileType: string | null
-    fileSize: number | null
     grievanceId: string | null
+    fileName: string
+    fileType: string | null
+    fileUrl: string
+    fileSize: number | null
     uploadedById: string
     createdAt: Date
   }, ExtArgs["result"]["attachment"]>
@@ -1214,11 +1214,11 @@ export interface Prisma__AttachmentClient<T, Null = never, ExtArgs extends runti
  */
 export interface AttachmentFieldRefs {
   readonly id: Prisma.FieldRef<"Attachment", 'String'>
-  readonly fileName: Prisma.FieldRef<"Attachment", 'String'>
-  readonly fileUrl: Prisma.FieldRef<"Attachment", 'String'>
-  readonly fileType: Prisma.FieldRef<"Attachment", 'String'>
-  readonly fileSize: Prisma.FieldRef<"Attachment", 'Int'>
   readonly grievanceId: Prisma.FieldRef<"Attachment", 'String'>
+  readonly fileName: Prisma.FieldRef<"Attachment", 'String'>
+  readonly fileType: Prisma.FieldRef<"Attachment", 'String'>
+  readonly fileUrl: Prisma.FieldRef<"Attachment", 'String'>
+  readonly fileSize: Prisma.FieldRef<"Attachment", 'Int'>
   readonly uploadedById: Prisma.FieldRef<"Attachment", 'String'>
   readonly createdAt: Prisma.FieldRef<"Attachment", 'DateTime'>
 }

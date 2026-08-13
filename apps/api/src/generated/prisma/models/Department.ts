@@ -27,8 +27,9 @@ export type AggregateDepartment = {
 export type DepartmentMinAggregateOutputType = {
   id: string | null
   name: string | null
-  description: string | null
   code: string | null
+  description: string | null
+  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -36,8 +37,9 @@ export type DepartmentMinAggregateOutputType = {
 export type DepartmentMaxAggregateOutputType = {
   id: string | null
   name: string | null
-  description: string | null
   code: string | null
+  description: string | null
+  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -45,8 +47,9 @@ export type DepartmentMaxAggregateOutputType = {
 export type DepartmentCountAggregateOutputType = {
   id: number
   name: number
-  description: number
   code: number
+  description: number
+  isActive: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -56,8 +59,9 @@ export type DepartmentCountAggregateOutputType = {
 export type DepartmentMinAggregateInputType = {
   id?: true
   name?: true
-  description?: true
   code?: true
+  description?: true
+  isActive?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -65,8 +69,9 @@ export type DepartmentMinAggregateInputType = {
 export type DepartmentMaxAggregateInputType = {
   id?: true
   name?: true
-  description?: true
   code?: true
+  description?: true
+  isActive?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -74,8 +79,9 @@ export type DepartmentMaxAggregateInputType = {
 export type DepartmentCountAggregateInputType = {
   id?: true
   name?: true
-  description?: true
   code?: true
+  description?: true
+  isActive?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -156,8 +162,9 @@ export type DepartmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type DepartmentGroupByOutputType = {
   id: string
   name: string
+  code: string
   description: string | null
-  code: string | null
+  isActive: boolean
   createdAt: Date
   updatedAt: Date
   _count: DepartmentCountAggregateOutputType | null
@@ -186,8 +193,9 @@ export type DepartmentWhereInput = {
   NOT?: Prisma.DepartmentWhereInput | Prisma.DepartmentWhereInput[]
   id?: Prisma.StringFilter<"Department"> | string
   name?: Prisma.StringFilter<"Department"> | string
+  code?: Prisma.StringFilter<"Department"> | string
   description?: Prisma.StringNullableFilter<"Department"> | string | null
-  code?: Prisma.StringNullableFilter<"Department"> | string | null
+  isActive?: Prisma.BoolFilter<"Department"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Department"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Department"> | Date | string
   users?: Prisma.UserListRelationFilter
@@ -200,8 +208,9 @@ export type DepartmentWhereInput = {
 export type DepartmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  code?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
@@ -219,6 +228,7 @@ export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DepartmentWhereInput[]
   NOT?: Prisma.DepartmentWhereInput | Prisma.DepartmentWhereInput[]
   description?: Prisma.StringNullableFilter<"Department"> | string | null
+  isActive?: Prisma.BoolFilter<"Department"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Department"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Department"> | Date | string
   users?: Prisma.UserListRelationFilter
@@ -231,8 +241,9 @@ export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
 export type DepartmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  code?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DepartmentCountOrderByAggregateInput
@@ -246,8 +257,9 @@ export type DepartmentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DepartmentScalarWhereWithAggregatesInput | Prisma.DepartmentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Department"> | string
   name?: Prisma.StringWithAggregatesFilter<"Department"> | string
+  code?: Prisma.StringWithAggregatesFilter<"Department"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Department"> | string | null
-  code?: Prisma.StringNullableWithAggregatesFilter<"Department"> | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"Department"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Department"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Department"> | Date | string
 }
@@ -255,8 +267,9 @@ export type DepartmentScalarWhereWithAggregatesInput = {
 export type DepartmentCreateInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
@@ -269,8 +282,9 @@ export type DepartmentCreateInput = {
 export type DepartmentUncheckedCreateInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
@@ -283,8 +297,9 @@ export type DepartmentUncheckedCreateInput = {
 export type DepartmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
@@ -297,8 +312,9 @@ export type DepartmentUpdateInput = {
 export type DepartmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
@@ -311,8 +327,9 @@ export type DepartmentUncheckedUpdateInput = {
 export type DepartmentCreateManyInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -320,8 +337,9 @@ export type DepartmentCreateManyInput = {
 export type DepartmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -329,8 +347,9 @@ export type DepartmentUpdateManyMutationInput = {
 export type DepartmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -343,8 +362,9 @@ export type DepartmentNullableScalarRelationFilter = {
 export type DepartmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -352,8 +372,9 @@ export type DepartmentCountOrderByAggregateInput = {
 export type DepartmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -361,8 +382,9 @@ export type DepartmentMaxOrderByAggregateInput = {
 export type DepartmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -386,6 +408,10 @@ export type DepartmentUpdateOneWithoutUsersNestedInput = {
   delete?: Prisma.DepartmentWhereInput | boolean
   connect?: Prisma.DepartmentWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutUsersInput, Prisma.DepartmentUpdateWithoutUsersInput>, Prisma.DepartmentUncheckedUpdateWithoutUsersInput>
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DepartmentCreateNestedOneWithoutGrievancesInput = {
@@ -449,8 +475,9 @@ export type DepartmentUpdateOneRequiredWithoutSlasNestedInput = {
 export type DepartmentCreateWithoutUsersInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   grievances?: Prisma.GrievanceCreateNestedManyWithoutDepartmentInput
@@ -462,8 +489,9 @@ export type DepartmentCreateWithoutUsersInput = {
 export type DepartmentUncheckedCreateWithoutUsersInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   grievances?: Prisma.GrievanceUncheckedCreateNestedManyWithoutDepartmentInput
@@ -491,8 +519,9 @@ export type DepartmentUpdateToOneWithWhereWithoutUsersInput = {
 export type DepartmentUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievances?: Prisma.GrievanceUpdateManyWithoutDepartmentNestedInput
@@ -504,8 +533,9 @@ export type DepartmentUpdateWithoutUsersInput = {
 export type DepartmentUncheckedUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grievances?: Prisma.GrievanceUncheckedUpdateManyWithoutDepartmentNestedInput
@@ -517,8 +547,9 @@ export type DepartmentUncheckedUpdateWithoutUsersInput = {
 export type DepartmentCreateWithoutGrievancesInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
@@ -530,8 +561,9 @@ export type DepartmentCreateWithoutGrievancesInput = {
 export type DepartmentUncheckedCreateWithoutGrievancesInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
@@ -559,8 +591,9 @@ export type DepartmentUpdateToOneWithWhereWithoutGrievancesInput = {
 export type DepartmentUpdateWithoutGrievancesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
@@ -572,8 +605,9 @@ export type DepartmentUpdateWithoutGrievancesInput = {
 export type DepartmentUncheckedUpdateWithoutGrievancesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
@@ -585,8 +619,9 @@ export type DepartmentUncheckedUpdateWithoutGrievancesInput = {
 export type DepartmentCreateWithoutAssignmentsInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
@@ -598,8 +633,9 @@ export type DepartmentCreateWithoutAssignmentsInput = {
 export type DepartmentUncheckedCreateWithoutAssignmentsInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
@@ -627,8 +663,9 @@ export type DepartmentUpdateToOneWithWhereWithoutAssignmentsInput = {
 export type DepartmentUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
@@ -640,8 +677,9 @@ export type DepartmentUpdateWithoutAssignmentsInput = {
 export type DepartmentUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
@@ -653,8 +691,9 @@ export type DepartmentUncheckedUpdateWithoutAssignmentsInput = {
 export type DepartmentCreateWithoutSlaPoliciesInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
@@ -666,8 +705,9 @@ export type DepartmentCreateWithoutSlaPoliciesInput = {
 export type DepartmentUncheckedCreateWithoutSlaPoliciesInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
@@ -695,8 +735,9 @@ export type DepartmentUpdateToOneWithWhereWithoutSlaPoliciesInput = {
 export type DepartmentUpdateWithoutSlaPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
@@ -708,8 +749,9 @@ export type DepartmentUpdateWithoutSlaPoliciesInput = {
 export type DepartmentUncheckedUpdateWithoutSlaPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
@@ -721,8 +763,9 @@ export type DepartmentUncheckedUpdateWithoutSlaPoliciesInput = {
 export type DepartmentCreateWithoutSlasInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutDepartmentInput
@@ -734,8 +777,9 @@ export type DepartmentCreateWithoutSlasInput = {
 export type DepartmentUncheckedCreateWithoutSlasInput = {
   id?: string
   name: string
+  code: string
   description?: string | null
-  code?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutDepartmentInput
@@ -763,8 +807,9 @@ export type DepartmentUpdateToOneWithWhereWithoutSlasInput = {
 export type DepartmentUpdateWithoutSlasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutDepartmentNestedInput
@@ -776,8 +821,9 @@ export type DepartmentUpdateWithoutSlasInput = {
 export type DepartmentUncheckedUpdateWithoutSlasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutDepartmentNestedInput
@@ -856,8 +902,9 @@ export type DepartmentCountOutputTypeCountSlaPoliciesArgs<ExtArgs extends runtim
 export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  description?: boolean
   code?: boolean
+  description?: boolean
+  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   users?: boolean | Prisma.Department$usersArgs<ExtArgs>
@@ -871,8 +918,9 @@ export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type DepartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  description?: boolean
   code?: boolean
+  description?: boolean
+  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["department"]>
@@ -880,8 +928,9 @@ export type DepartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type DepartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  description?: boolean
   code?: boolean
+  description?: boolean
+  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["department"]>
@@ -889,13 +938,14 @@ export type DepartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type DepartmentSelectScalar = {
   id?: boolean
   name?: boolean
-  description?: boolean
   code?: boolean
+  description?: boolean
+  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DepartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "code" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
+export type DepartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "code" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
 export type DepartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Department$usersArgs<ExtArgs>
   grievances?: boolean | Prisma.Department$grievancesArgs<ExtArgs>
@@ -919,8 +969,9 @@ export type $DepartmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    code: string
     description: string | null
-    code: string | null
+    isActive: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["department"]>
@@ -1353,8 +1404,9 @@ export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends runti
 export interface DepartmentFieldRefs {
   readonly id: Prisma.FieldRef<"Department", 'String'>
   readonly name: Prisma.FieldRef<"Department", 'String'>
-  readonly description: Prisma.FieldRef<"Department", 'String'>
   readonly code: Prisma.FieldRef<"Department", 'String'>
+  readonly description: Prisma.FieldRef<"Department", 'String'>
+  readonly isActive: Prisma.FieldRef<"Department", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Department", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Department", 'DateTime'>
 }

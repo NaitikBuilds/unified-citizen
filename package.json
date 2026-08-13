@@ -17,5 +17,12 @@
     "prisma@7.9.1": true,
     "@prisma/engines@7.9.1": true,
     "esbuild@0.28.2": true
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0"
   }
 }

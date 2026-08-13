@@ -32,6 +32,7 @@ export type EscalationMinAggregateOutputType = {
   reason: string | null
   createdById: string | null
   createdAt: Date | null
+  escalatedAt: Date | null
   resolvedAt: Date | null
 }
 
@@ -43,6 +44,7 @@ export type EscalationMaxAggregateOutputType = {
   reason: string | null
   createdById: string | null
   createdAt: Date | null
+  escalatedAt: Date | null
   resolvedAt: Date | null
 }
 
@@ -54,6 +56,7 @@ export type EscalationCountAggregateOutputType = {
   reason: number
   createdById: number
   createdAt: number
+  escalatedAt: number
   resolvedAt: number
   _all: number
 }
@@ -67,6 +70,7 @@ export type EscalationMinAggregateInputType = {
   reason?: true
   createdById?: true
   createdAt?: true
+  escalatedAt?: true
   resolvedAt?: true
 }
 
@@ -78,6 +82,7 @@ export type EscalationMaxAggregateInputType = {
   reason?: true
   createdById?: true
   createdAt?: true
+  escalatedAt?: true
   resolvedAt?: true
 }
 
@@ -89,6 +94,7 @@ export type EscalationCountAggregateInputType = {
   reason?: true
   createdById?: true
   createdAt?: true
+  escalatedAt?: true
   resolvedAt?: true
   _all?: true
 }
@@ -173,6 +179,7 @@ export type EscalationGroupByOutputType = {
   reason: string
   createdById: string | null
   createdAt: Date
+  escalatedAt: Date
   resolvedAt: Date | null
   _count: EscalationCountAggregateOutputType | null
   _min: EscalationMinAggregateOutputType | null
@@ -205,6 +212,7 @@ export type EscalationWhereInput = {
   reason?: Prisma.StringFilter<"Escalation"> | string
   createdById?: Prisma.StringNullableFilter<"Escalation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Escalation"> | Date | string
+  escalatedAt?: Prisma.DateTimeFilter<"Escalation"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"Escalation"> | Date | string | null
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -218,6 +226,7 @@ export type EscalationOrderByWithRelationInput = {
   reason?: Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  escalatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   grievance?: Prisma.GrievanceOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
@@ -234,6 +243,7 @@ export type EscalationWhereUniqueInput = Prisma.AtLeast<{
   reason?: Prisma.StringFilter<"Escalation"> | string
   createdById?: Prisma.StringNullableFilter<"Escalation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Escalation"> | Date | string
+  escalatedAt?: Prisma.DateTimeFilter<"Escalation"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"Escalation"> | Date | string | null
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -247,6 +257,7 @@ export type EscalationOrderByWithAggregationInput = {
   reason?: Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  escalatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EscalationCountOrderByAggregateInput
   _max?: Prisma.EscalationMaxOrderByAggregateInput
@@ -264,6 +275,7 @@ export type EscalationScalarWhereWithAggregatesInput = {
   reason?: Prisma.StringWithAggregatesFilter<"Escalation"> | string
   createdById?: Prisma.StringNullableWithAggregatesFilter<"Escalation"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Escalation"> | Date | string
+  escalatedAt?: Prisma.DateTimeWithAggregatesFilter<"Escalation"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Escalation"> | Date | string | null
 }
 
@@ -273,6 +285,7 @@ export type EscalationCreateInput = {
   status?: $Enums.EscalationStatus
   reason: string
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
   grievance: Prisma.GrievanceCreateNestedOneWithoutEscalationsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutEscalationsCreatedInput
@@ -286,6 +299,7 @@ export type EscalationUncheckedCreateInput = {
   reason: string
   createdById?: string | null
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
 }
 
@@ -295,6 +309,7 @@ export type EscalationUpdateInput = {
   status?: Prisma.EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutEscalationsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutEscalationsCreatedNestedInput
@@ -308,6 +323,7 @@ export type EscalationUncheckedUpdateInput = {
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -319,6 +335,7 @@ export type EscalationCreateManyInput = {
   reason: string
   createdById?: string | null
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
 }
 
@@ -328,6 +345,7 @@ export type EscalationUpdateManyMutationInput = {
   status?: Prisma.EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -339,6 +357,7 @@ export type EscalationUncheckedUpdateManyInput = {
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -360,6 +379,7 @@ export type EscalationCountOrderByAggregateInput = {
   reason?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  escalatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
 }
 
@@ -371,6 +391,7 @@ export type EscalationMaxOrderByAggregateInput = {
   reason?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  escalatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
 }
 
@@ -382,6 +403,7 @@ export type EscalationMinOrderByAggregateInput = {
   reason?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  escalatedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
 }
 
@@ -483,6 +505,7 @@ export type EscalationCreateWithoutCreatedByInput = {
   status?: $Enums.EscalationStatus
   reason: string
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
   grievance: Prisma.GrievanceCreateNestedOneWithoutEscalationsInput
 }
@@ -494,6 +517,7 @@ export type EscalationUncheckedCreateWithoutCreatedByInput = {
   status?: $Enums.EscalationStatus
   reason: string
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
 }
 
@@ -534,6 +558,7 @@ export type EscalationScalarWhereInput = {
   reason?: Prisma.StringFilter<"Escalation"> | string
   createdById?: Prisma.StringNullableFilter<"Escalation"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Escalation"> | Date | string
+  escalatedAt?: Prisma.DateTimeFilter<"Escalation"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"Escalation"> | Date | string | null
 }
 
@@ -543,6 +568,7 @@ export type EscalationCreateWithoutGrievanceInput = {
   status?: $Enums.EscalationStatus
   reason: string
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
   createdBy?: Prisma.UserCreateNestedOneWithoutEscalationsCreatedInput
 }
@@ -554,6 +580,7 @@ export type EscalationUncheckedCreateWithoutGrievanceInput = {
   reason: string
   createdById?: string | null
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
 }
 
@@ -590,6 +617,7 @@ export type EscalationCreateManyCreatedByInput = {
   status?: $Enums.EscalationStatus
   reason: string
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
 }
 
@@ -599,6 +627,7 @@ export type EscalationUpdateWithoutCreatedByInput = {
   status?: Prisma.EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutEscalationsNestedInput
 }
@@ -610,6 +639,7 @@ export type EscalationUncheckedUpdateWithoutCreatedByInput = {
   status?: Prisma.EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -620,6 +650,7 @@ export type EscalationUncheckedUpdateManyWithoutCreatedByInput = {
   status?: Prisma.EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -630,6 +661,7 @@ export type EscalationCreateManyGrievanceInput = {
   reason: string
   createdById?: string | null
   createdAt?: Date | string
+  escalatedAt?: Date | string
   resolvedAt?: Date | string | null
 }
 
@@ -639,6 +671,7 @@ export type EscalationUpdateWithoutGrievanceInput = {
   status?: Prisma.EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.UserUpdateOneWithoutEscalationsCreatedNestedInput
 }
@@ -650,6 +683,7 @@ export type EscalationUncheckedUpdateWithoutGrievanceInput = {
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -660,6 +694,7 @@ export type EscalationUncheckedUpdateManyWithoutGrievanceInput = {
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escalatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
@@ -673,6 +708,7 @@ export type EscalationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   reason?: boolean
   createdById?: boolean
   createdAt?: boolean
+  escalatedAt?: boolean
   resolvedAt?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Escalation$createdByArgs<ExtArgs>
@@ -686,6 +722,7 @@ export type EscalationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   reason?: boolean
   createdById?: boolean
   createdAt?: boolean
+  escalatedAt?: boolean
   resolvedAt?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Escalation$createdByArgs<ExtArgs>
@@ -699,6 +736,7 @@ export type EscalationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   reason?: boolean
   createdById?: boolean
   createdAt?: boolean
+  escalatedAt?: boolean
   resolvedAt?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Escalation$createdByArgs<ExtArgs>
@@ -712,10 +750,11 @@ export type EscalationSelectScalar = {
   reason?: boolean
   createdById?: boolean
   createdAt?: boolean
+  escalatedAt?: boolean
   resolvedAt?: boolean
 }
 
-export type EscalationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "level" | "status" | "reason" | "createdById" | "createdAt" | "resolvedAt", ExtArgs["result"]["escalation"]>
+export type EscalationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "level" | "status" | "reason" | "createdById" | "createdAt" | "escalatedAt" | "resolvedAt", ExtArgs["result"]["escalation"]>
 export type EscalationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Escalation$createdByArgs<ExtArgs>
@@ -743,6 +782,7 @@ export type $EscalationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     reason: string
     createdById: string | null
     createdAt: Date
+    escalatedAt: Date
     resolvedAt: Date | null
   }, ExtArgs["result"]["escalation"]>
   composites: {}
@@ -1176,6 +1216,7 @@ export interface EscalationFieldRefs {
   readonly reason: Prisma.FieldRef<"Escalation", 'String'>
   readonly createdById: Prisma.FieldRef<"Escalation", 'String'>
   readonly createdAt: Prisma.FieldRef<"Escalation", 'DateTime'>
+  readonly escalatedAt: Prisma.FieldRef<"Escalation", 'DateTime'>
   readonly resolvedAt: Prisma.FieldRef<"Escalation", 'DateTime'>
 }
     

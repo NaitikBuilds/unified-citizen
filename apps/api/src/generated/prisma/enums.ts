@@ -21,12 +21,13 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 export const GrievanceStatus = {
   SUBMITTED: 'SUBMITTED',
-  UNDER_REVIEW: 'UNDER_REVIEW',
+  AI_CLASSIFIED: 'AI_CLASSIFIED',
   ASSIGNED: 'ASSIGNED',
   IN_PROGRESS: 'IN_PROGRESS',
+  ESCALATED: 'ESCALATED',
   RESOLVED: 'RESOLVED',
   REJECTED: 'REJECTED',
-  CLOSED: 'CLOSED'
+  REOPENED: 'REOPENED'
 } as const
 
 export type GrievanceStatus = (typeof GrievanceStatus)[keyof typeof GrievanceStatus]

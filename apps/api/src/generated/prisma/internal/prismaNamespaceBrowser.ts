@@ -90,9 +90,9 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   phone: 'phone',
   role: 'role',
+  departmentId: 'departmentId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  departmentId: 'departmentId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -101,8 +101,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description',
   code: 'code',
+  description: 'description',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -113,17 +114,18 @@ export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof
 export const GrievanceScalarFieldEnum = {
   id: 'id',
   ticketId: 'ticketId',
+  citizenId: 'citizenId',
   title: 'title',
   description: 'description',
   category: 'category',
   subcategory: 'subcategory',
-  status: 'status',
   priority: 'priority',
+  status: 'status',
+  departmentId: 'departmentId',
   location: 'location',
+  address: 'address',
   latitude: 'latitude',
   longitude: 'longitude',
-  citizenId: 'citizenId',
-  departmentId: 'departmentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   resolvedAt: 'resolvedAt'
@@ -151,10 +153,13 @@ export type AssignmentScalarFieldEnum = (typeof AssignmentScalarFieldEnum)[keyof
 export const AIClassificationScalarFieldEnum = {
   id: 'id',
   grievanceId: 'grievanceId',
-  predictedCategory: 'predictedCategory',
-  predictedDepartment: 'predictedDepartment',
-  predictedPriority: 'predictedPriority',
+  category: 'category',
+  department: 'department',
+  priority: 'priority',
   confidence: 'confidence',
+  summary: 'summary',
+  duplicateScore: 'duplicateScore',
+  sentiment: 'sentiment',
   modelName: 'modelName',
   modelVersion: 'modelVersion',
   explanation: 'explanation',
@@ -167,9 +172,9 @@ export type AIClassificationScalarFieldEnum = (typeof AIClassificationScalarFiel
 
 export const CommentScalarFieldEnum = {
   id: 'id',
-  content: 'content',
   grievanceId: 'grievanceId',
-  authorId: 'authorId',
+  userId: 'userId',
+  message: 'message',
   isInternal: 'isInternal',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -180,11 +185,11 @@ export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeo
 
 export const AttachmentScalarFieldEnum = {
   id: 'id',
-  fileName: 'fileName',
-  fileUrl: 'fileUrl',
-  fileType: 'fileType',
-  fileSize: 'fileSize',
   grievanceId: 'grievanceId',
+  fileName: 'fileName',
+  fileType: 'fileType',
+  fileUrl: 'fileUrl',
+  fileSize: 'fileSize',
   uploadedById: 'uploadedById',
   createdAt: 'createdAt'
 } as const
@@ -194,12 +199,12 @@ export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof
 
 export const NotificationScalarFieldEnum = {
   id: 'id',
-  type: 'type',
-  title: 'title',
-  message: 'message',
-  isRead: 'isRead',
   userId: 'userId',
   grievanceId: 'grievanceId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  isRead: 'isRead',
   createdAt: 'createdAt'
 } as const
 
@@ -208,11 +213,12 @@ export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[k
 
 export const AuditLogScalarFieldEnum = {
   id: 'id',
-  action: 'action',
-  entity: 'entity',
-  entityId: 'entityId',
-  metadata: 'metadata',
   userId: 'userId',
+  grievanceId: 'grievanceId',
+  action: 'action',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  metadata: 'metadata',
   createdAt: 'createdAt'
 } as const
 
@@ -289,6 +295,7 @@ export const EscalationScalarFieldEnum = {
   reason: 'reason',
   createdById: 'createdById',
   createdAt: 'createdAt',
+  escalatedAt: 'escalatedAt',
   resolvedAt: 'resolvedAt'
 } as const
 

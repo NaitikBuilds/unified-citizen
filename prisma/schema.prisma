@@ -7,6 +7,10 @@ datasource db {
   provider = "postgresql"
 }
 
+// ============================================================
+// ENUMS
+// ============================================================
+
 enum UserRole {
   CITIZEN
   OFFICER
@@ -16,12 +20,13 @@ enum UserRole {
 
 enum GrievanceStatus {
   SUBMITTED
-  UNDER_REVIEW
+  AI_CLASSIFIED
   ASSIGNED
   IN_PROGRESS
+  ESCALATED
   RESOLVED
   REJECTED
-  CLOSED
+  REOPENED
 }
 
 enum GrievancePriority {
@@ -76,6 +81,10 @@ enum EscalationStatus {
   CANCELLED
 }
 
+// ============================================================
+// USER
+// ============================================================
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -84,32 +93,55 @@ model User {
   phone        String?
   role         UserRole @default(CITIZEN)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
 
-  grievances         Grievance[]    @relation("CitizenGrievances")
-  comments           Comment[]
-  notifications      Notification[]
-  auditLogs          AuditLog[]
-  attachments        Attachment[]
-  assignments        Assignment[]   @relation("AssignedOfficer")
-  assignmentsCreated Assignment[]   @relation("AssignmentCreatedBy")
-  refreshTokens      RefreshToken[]
-  feedback           Feedback[]
-  escalationsCreated Escalation[]   @relation("EscalationCreatedBy")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Citizen grievances
+  grievances Grievance[] @relation("CitizenGrievances")
+
+  // User-generated content
+  comments    Comment[]
+  attachments Attachment[]
+  feedback    Feedback[]
+
+  // Notifications
+  notifications Notification[]
+
+  // Audit history
+  auditLogs AuditLog[]
+
+  // Assignment relationships
+  // Officer receiving assignments
+  assignments Assignment[] @relation("AssignedOfficer")
+
+  // User who created/issued assignments
+  assignmentsCreated Assignment[] @relation("AssignmentCreatedBy")
+
+  // Authentication
+  refreshTokens RefreshToken[]
+
+  // Escalations created by this user
+  escalationsCreated Escalation[] @relation("EscalationCreatedBy")
 
   @@index([email])
   @@index([departmentId])
+  @@index([role])
 }
+
+// ============================================================
+// DEPARTMENT
+// ============================================================
 
 model Department {
   id          String  @id @default(cuid())
   name        String  @unique
+  code        String  @unique
   description String?
-  code        String? @unique
+
+  isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,42 +149,59 @@ model Department {
   users       User[]
   grievances  Grievance[]
   assignments Assignment[]
+
+  // SLA
   slas        SLA[]
   slaPolicies SLAPolicy[]
+
+  @@index([isActive])
 }
+
+// ============================================================
+// GRIEVANCE
+// ============================================================
 
 model Grievance {
   id       String @id @default(cuid())
   ticketId String @unique
 
-  title       String
-  description String
-
-  category    String?
-  subcategory String?
-
-  status   GrievanceStatus   @default(SUBMITTED)
-  priority GrievancePriority @default(MEDIUM)
-
-  location  String?
-  latitude  Float?
-  longitude Float?
-
+  // Citizen
   citizenId String
   citizen   User   @relation("CitizenGrievances", fields: [citizenId], references: [id])
 
+  // Basic information
+  title       String
+  description String
+
+  // Classification
+  category    String?
+  subcategory String?
+
+  priority GrievancePriority @default(MEDIUM)
+  status   GrievanceStatus   @default(SUBMITTED)
+
+  // Department
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
 
+  // Location
+  location  String?
+  address   String?
+  latitude  Float?
+  longitude Float?
+
+  // Related records
   assignments      Assignment[]
   comments         Comment[]
   attachments      Attachment[]
   notifications    Notification[]
   aiClassification AIClassification?
+  auditLogs        AuditLog[]
   sla              SLA?
   feedback         Feedback[]
   escalations      Escalation[]
 
+  // Timestamps
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   resolvedAt DateTime?
@@ -162,8 +211,13 @@ model Grievance {
   @@index([departmentId])
   @@index([status])
   @@index([priority])
+  @@index([category])
   @@index([createdAt])
 }
+
+// ============================================================
+// ASSIGNMENT
+// ============================================================
 
 model Assignment {
   id String @id @default(cuid())
@@ -171,12 +225,15 @@ model Assignment {
   grievanceId String
   grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 
+  // Officer receiving the assignment
   officerId String
   officer   User   @relation("AssignedOfficer", fields: [officerId], references: [id])
 
+  // Department responsible
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
 
+  // User/admin/system responsible for creating assignment
   assignedById String?
   assignedBy   User?   @relation("AssignmentCreatedBy", fields: [assignedById], references: [id], onDelete: SetNull)
 
@@ -195,57 +252,79 @@ model Assignment {
   @@index([status])
 }
 
+// ============================================================
+// AI CLASSIFICATION
+// ============================================================
+
 model AIClassification {
   id String @id @default(cuid())
 
   grievanceId String    @unique
   grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 
-  predictedCategory   String?
-  predictedDepartment String?
-  predictedPriority   GrievancePriority?
+  // AI predictions
+  category   String?
+  department String?
+  priority   GrievancePriority?
 
-  confidence Float?
+  // AI confidence / intelligence
+  confidence     Float?
+  summary        String?
+  duplicateScore Float?
+  sentiment      String?
 
+  // Model information
   modelName    String?
   modelVersion String?
-
-  explanation String?
+  explanation  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([department])
+  @@index([priority])
 }
+
+// ============================================================
+// COMMENT
+// ============================================================
 
 model Comment {
   id String @id @default(cuid())
 
-  content String
-
   grievanceId String
   grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 
-  authorId String
-  author   User   @relation(fields: [authorId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
+  message String
+
+  // Internal comments are visible only to authorized staff
   isInternal Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([grievanceId])
-  @@index([authorId])
+  @@index([userId])
 }
+
+// ============================================================
+// ATTACHMENT
+// ============================================================
 
 model Attachment {
   id String @id @default(cuid())
 
-  fileName String
-  fileUrl  String
-  fileType String?
-  fileSize Int?
-
   grievanceId String?
   grievance   Grievance? @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  fileName String
+  fileType String?
+  fileUrl  String
+  fileSize Int?
 
   uploadedById String
   uploadedBy   User   @relation(fields: [uploadedById], references: [id])
@@ -256,20 +335,24 @@ model Attachment {
   @@index([uploadedById])
 }
 
+// ============================================================
+// NOTIFICATION
+// ============================================================
+
 model Notification {
   id String @id @default(cuid())
-
-  type    NotificationType
-  title   String
-  message String
-
-  isRead Boolean @default(false)
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   grievanceId String?
   grievance   Grievance? @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  title   String
+  message String
+  type    NotificationType
+
+  isRead Boolean @default(false)
 
   createdAt DateTime @default(now())
 
@@ -279,24 +362,39 @@ model Notification {
   @@index([createdAt])
 }
 
+// ============================================================
+// AUDIT LOG
+// ============================================================
+
 model AuditLog {
   id String @id @default(cuid())
-
-  action   String
-  entity   String
-  entityId String?
-  metadata Json?
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  grievanceId String?
+  grievance   Grievance? @relation(fields: [grievanceId], references: [id], onDelete: SetNull)
+
+  action String
+
+  // Store previous and new states
+  oldValue Json?
+  newValue Json?
+
+  // Additional contextual data
+  metadata Json?
+
   createdAt DateTime @default(now())
 
-  @@index([entity])
-  @@index([entityId])
   @@index([userId])
+  @@index([grievanceId])
+  @@index([action])
   @@index([createdAt])
 }
+
+// ============================================================
+// REFRESH TOKEN
+// ============================================================
 
 model RefreshToken {
   id String @id @default(cuid())
@@ -315,6 +413,10 @@ model RefreshToken {
   @@index([expiresAt])
 }
 
+// ============================================================
+// SLA POLICY
+// ============================================================
+
 model SLAPolicy {
   id String @id @default(cuid())
 
@@ -324,14 +426,17 @@ model SLAPolicy {
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
 
+  // Optional policy targeting
   category String?
   priority GrievancePriority?
 
+  // SLA rules
   responseTimeHours   Int
   resolutionTimeHours Int
 
   isActive Boolean @default(true)
 
+  // Actual SLA instances created from this policy
   slas SLA[]
 
   createdAt DateTime @default(now())
@@ -343,21 +448,28 @@ model SLAPolicy {
   @@index([isActive])
 }
 
+// ============================================================
+// SLA
+// ============================================================
+
 model SLA {
   id String @id @default(cuid())
 
   grievanceId String    @unique
   grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 
+  // Policy used to calculate this SLA
   policyId String?
   policy   SLAPolicy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
 
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
 
+  // Config snapshot
   responseTimeHours   Int
   resolutionTimeHours Int
 
+  // Actual deadlines
   responseDueAt   DateTime
   resolutionDueAt DateTime
 
@@ -375,6 +487,10 @@ model SLA {
   @@index([status])
   @@index([resolutionDueAt])
 }
+
+// ============================================================
+// FEEDBACK
+// ============================================================
 
 model Feedback {
   id String @id @default(cuid())
@@ -395,6 +511,10 @@ model Feedback {
   @@index([userId])
 }
 
+// ============================================================
+// ESCALATION
+// ============================================================
+
 model Escalation {
   id String @id @default(cuid())
 
@@ -409,10 +529,12 @@ model Escalation {
   createdById String?
   createdBy   User?   @relation("EscalationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
-  createdAt  DateTime  @default(now())
-  resolvedAt DateTime?
+  createdAt   DateTime  @default(now())
+  escalatedAt DateTime  @default(now())
+  resolvedAt  DateTime?
 
   @@index([grievanceId])
   @@index([level])
   @@index([status])
+  @@index([escalatedAt])
 }
