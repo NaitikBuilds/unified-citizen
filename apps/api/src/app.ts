@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import path from "path";
-import grievanceRoutes from "./routes/grievance.routes.js"; // Adjust path if needed based on your structure
+import grievanceRoutes from "./routes/grievance.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
   })
 );
 
@@ -26,7 +28,8 @@ app.get("/api/v1/health", (_req, res) => {
   });
 });
 
-// Grievance routes
+// API Routes
 app.use("/api/grievances", grievanceRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 export default app;
