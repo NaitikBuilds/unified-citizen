@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
 import { prisma } from '../services/prisma.service.js';
+import { createSLAForGrievance } from '../services/sla.service.js';
 
 // POST /api/grievances
 export async function createGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -30,6 +31,9 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
         status: 'SUBMITTED',
       },
     });
+
+    // Automatically create SLA for the new grievance
+    await createSLAForGrievance(grievance.id, departmentId, grievance.priority);
 
     res.status(201).json({ message: 'Grievance created successfully', grievance });
   } catch (error) {
@@ -225,8 +229,6 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
     const role = req.user.role;
     const userId = req.user.userId;
 
-    // Citizens can only delete their own grievances if they are still in 'SUBMITTED' status (optional rule), 
-    // or Super Admins can delete any grievance.
     if (role === 'Citizen') {
       if (grievance.citizenId !== userId) {
         res.status(403).json({ error: 'Forbidden' });
@@ -275,13 +277,11 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    // Department Admin can only assign grievances within their own department
     if (role === 'Department Admin' && grievance.departmentId !== userDepartmentId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
 
-    // Verify that the officer exists and belongs to the appropriate department
     const officer = await prisma.user.findUnique({ where: { id: officerId } });
     if (!officer) {
       res.status(404).json({ error: 'Officer not found' });
@@ -301,6 +301,7 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 // POST /api/grievances/:id/comments
 export async function addGrievanceComment(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -401,6 +402,7 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 // POST /api/grievances/:id/attachments
 export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
