@@ -2,7 +2,10 @@ import { Router } from 'express';
 import { 
   createGrievance, 
   getGrievances, 
-  getGrievanceById 
+  getGrievanceById,
+  updateGrievance,
+  updateGrievanceStatus,
+  deleteGrievance
 } from '../controllers/grievance.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { requireRole } from '../middlewares/rbac.middleware.js';
@@ -15,5 +18,12 @@ router.post('/', authenticate, requireRole(['Citizen']), createGrievance);
 // Role-based grievance viewing
 router.get('/', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievances);
 router.get('/:id', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievanceById);
+
+// Grievance updates
+router.patch('/:id', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin']), updateGrievance);
+router.patch('/:id/status', authenticate, requireRole(['Department Officer', 'Department Admin', 'Super Admin']), updateGrievanceStatus);
+
+// Grievance deletion
+router.delete('/:id', authenticate, requireRole(['Citizen', 'Super Admin']), deleteGrievance);
 
 export default router;

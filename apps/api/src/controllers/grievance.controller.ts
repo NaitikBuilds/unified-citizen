@@ -206,3 +206,42 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function deleteGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    // Citizens can only delete their own grievances if they are still in 'SUBMITTED' status (optional rule), 
+    // or Super Admins can delete any grievance.
+    if (role === 'Citizen') {
+      if (grievance.citizenId !== userId) {
+        res.status(403).json({ error: 'Forbidden' });
+        return;
+      }
+      if (grievance.status !== 'SUBMITTED') {
+        res.status(400).json({ error: 'Cannot delete grievance after it has been processed' });
+        return;
+      }
+    }
+
+    await prisma.grievance.delete({ where: { id } });
+
+    res.json({ message: 'Grievance deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
