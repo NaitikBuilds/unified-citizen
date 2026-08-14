@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
 import { prisma } from '../services/prisma.service.js';
 import { createSLAForGrievance } from '../services/sla.service.js';
+import { logAudit } from '../services/audit.service.js';
 
 // POST /api/grievances
 export async function createGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -32,8 +33,8 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
       },
     });
 
-    // Automatically create SLA for the new grievance
     await createSLAForGrievance(grievance.id, departmentId, grievance.priority);
+    await logAudit(req.user.userId, 'CREATE_GRIEVANCE', `Created grievance ${grievance.id}`);
 
     res.status(201).json({ message: 'Grievance created successfully', grievance });
   } catch (error) {
@@ -105,7 +106,6 @@ export async function getGrievanceById(req: AuthenticatedRequest, res: Response)
     const userId = req.user.userId;
     const departmentId = req.user.departmentId;
 
-    // Authorization checks
     if (role === 'Citizen' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
@@ -158,6 +158,8 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response):
         ...(address !== undefined && { address }),
       },
     });
+    
+    await logAudit(req.user.userId, 'UPDATE_GRIEVANCE', `Updated grievance ${id}`);
 
     res.json({ message: 'Grievance updated successfully', grievance: updatedGrievance });
   } catch (error) {
@@ -204,6 +206,8 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
       where: { id },
       data: { status },
     });
+    
+    await logAudit(req.user.userId, 'UPDATE_STATUS', `Changed grievance ${id} status to ${status}`);
 
     res.json({ message: 'Grievance status updated successfully', grievance: updatedGrievance });
   } catch (error) {
@@ -211,6 +215,7 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
   }
 }
 
+// DELETE /api/grievances/:id
 export async function deleteGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     if (!req.user) {
@@ -241,6 +246,7 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
     }
 
     await prisma.grievance.delete({ where: { id } });
+    await logAudit(req.user.userId, 'DELETE_GRIEVANCE', `Deleted grievance ${id}`);
 
     res.json({ message: 'Grievance deleted successfully' });
   } catch (error) {
@@ -248,6 +254,7 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
   }
 }
 
+// PATCH /api/grievances/:id/assign
 export async function assignGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     if (!req.user) {
@@ -295,6 +302,8 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
         status: grievance.status === 'SUBMITTED' ? 'IN_PROGRESS' : grievance.status 
       },
     });
+    
+    await logAudit(req.user.userId, 'ASSIGN_GRIEVANCE', `Assigned grievance ${id} to officer ${officerId}`);
 
     res.json({ message: 'Grievance assigned successfully', grievance: updatedGrievance });
   } catch (error) {
@@ -346,11 +355,11 @@ export async function addGrievanceComment(req: AuthenticatedRequest, res: Respon
         isInternal: isInternal ?? false,
       },
       include: {
-        user: {
-          select: { id: true, name: true, role: true },
-        },
+        user: { select: { id: true, name: true, role: true } },
       },
     });
+    
+    await logAudit(req.user.userId, 'ADD_COMMENT', `Added comment to grievance ${id}`);
 
     res.status(201).json({ message: 'Comment added successfully', comment });
   } catch (error) {
@@ -390,9 +399,7 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
     const comments = await prisma.comment.findMany({
       where: whereClause,
       include: {
-        user: {
-          select: { id: true, name: true, role: true },
-        },
+        user: { select: { id: true, name: true, role: true } },
       },
       orderBy: { createdAt: 'asc' },
     });
@@ -443,11 +450,11 @@ export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: 
         uploadedById: userId,
       },
       include: {
-        uploadedBy: {
-          select: { id: true, name: true, role: true },
-        },
+        uploadedBy: { select: { id: true, name: true, role: true } },
       },
     });
+    
+    await logAudit(req.user.userId, 'UPLOAD_ATTACHMENT', `Uploaded attachment to grievance ${id}`);
 
     res.status(201).json({ message: 'File uploaded successfully', attachment });
   } catch (error) {
@@ -482,9 +489,7 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
     const attachments = await prisma.attachment.findMany({
       where: { grievanceId: id },
       include: {
-        uploadedBy: {
-          select: { id: true, name: true, role: true },
-        },
+        uploadedBy: { select: { id: true, name: true, role: true } },
       },
       orderBy: { createdAt: 'asc' },
     });
@@ -494,6 +499,7 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 // POST /api/grievances/:id/escalate
 export async function escalateGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -521,27 +527,26 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
       return;
     }
 
-    // Update grievance priority to CRITICAL and status to ESCALATED (or keep in progress with escalated flag)
     const updatedGrievance = await prisma.grievance.update({
       where: { id },
-      data: {
-        priority: 'CRITICAL',
-      },
+      data: { priority: 'CRITICAL' },
     });
 
-    // If there is an active SLA, mark it breached/escalated
     if (grievance.sla) {
       await prisma.sLA.update({
         where: { id: grievance.sla.id },
         data: { status: 'BREACHED' },
       });
     }
+    
+    await logAudit(req.user.userId, 'ESCALATE_GRIEVANCE', `Escalated grievance ${id} to CRITICAL priority`);
 
     res.json({ message: 'Grievance escalated successfully', grievance: updatedGrievance });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 // POST /api/grievances/:id/feedback
 export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -577,6 +582,8 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
         feedback,
       },
     });
+    
+    await logAudit(req.user.userId, 'ADD_FEEDBACK', `Added feedback to grievance ${id}`);
 
     res.json({ message: 'Feedback submitted successfully', grievance: updated });
   } catch (error) {
@@ -614,21 +621,20 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
 
     const updated = await prisma.grievance.update({
       where: { id },
-      data: {
-        status: 'IN_PROGRESS',
-      },
+      data: { status: 'IN_PROGRESS' },
     });
 
-    // Optionally add a comment noting the reopening reason
     if (reason) {
       await prisma.comment.create({
         data: {
-          content: `Grievance reopened by citizen. Reason: ${reason}`,
+          message: `Grievance reopened by citizen. Reason: ${reason}`,
           grievanceId: id,
-          authorId: req.user.userId,
+          userId: req.user.userId,
         },
       });
     }
+    
+    await logAudit(req.user.userId, 'REOPEN_GRIEVANCE', `Reopened grievance ${id}`);
 
     res.json({ message: 'Grievance reopened successfully', grievance: updated });
   } catch (error) {
