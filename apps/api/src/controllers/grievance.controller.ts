@@ -245,3 +245,59 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function assignGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const { officerId } = req.body;
+
+    if (!officerId) {
+      res.status(400).json({ error: 'Missing required field: officerId' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userDepartmentId = req.user.departmentId;
+
+    if (role !== 'Department Admin' && role !== 'Super Admin') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    // Department Admin can only assign grievances within their own department
+    if (role === 'Department Admin' && grievance.departmentId !== userDepartmentId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    // Verify that the officer exists and belongs to the appropriate department
+    const officer = await prisma.user.findUnique({ where: { id: officerId } });
+    if (!officer) {
+      res.status(404).json({ error: 'Officer not found' });
+      return;
+    }
+
+    const updatedGrievance = await prisma.grievance.update({
+      where: { id },
+      data: { 
+        assignedOfficerId: officerId,
+        status: grievance.status === 'SUBMITTED' ? 'IN_PROGRESS' : grievance.status 
+      },
+    });
+
+    res.json({ message: 'Grievance assigned successfully', grievance: updatedGrievance });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

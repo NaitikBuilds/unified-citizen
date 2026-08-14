@@ -5,7 +5,8 @@ import {
   getGrievanceById,
   updateGrievance,
   updateGrievanceStatus,
-  deleteGrievance
+  deleteGrievance,
+  assignGrievance
 } from '../controllers/grievance.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { requireRole } from '../middlewares/rbac.middleware.js';
@@ -22,6 +23,9 @@ router.get('/:id', authenticate, requireRole(['Citizen', 'Department Officer', '
 // Grievance updates
 router.patch('/:id', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin']), updateGrievance);
 router.patch('/:id/status', authenticate, requireRole(['Department Officer', 'Department Admin', 'Super Admin']), updateGrievanceStatus);
+
+// Grievance assignment
+router.post('/:id/assign', authenticate, requireRole(['Department Admin', 'Super Admin']), assignGrievance);
 
 // Grievance deletion
 router.delete('/:id', authenticate, requireRole(['Citizen', 'Super Admin']), deleteGrievance);
