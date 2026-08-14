@@ -116,3 +116,93 @@ export async function getGrievanceById(req: AuthenticatedRequest, res: Response)
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+// PATCH /api/grievances/:id
+export async function updateGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const { title, description, category, departmentId, latitude, longitude, address } = req.body;
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    if (role === 'Citizen' && grievance.citizenId !== userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const updatedGrievance = await prisma.grievance.update({
+      where: { id },
+      data: {
+        ...(title && { title }),
+        ...(description && { description }),
+        ...(category && { category }),
+        ...(departmentId && { departmentId }),
+        ...(latitude !== undefined && { latitude: latitude ? parseFloat(latitude) : null }),
+        ...(longitude !== undefined && { longitude: longitude ? parseFloat(longitude) : null }),
+        ...(address !== undefined && { address }),
+      },
+    });
+
+    res.json({ message: 'Grievance updated successfully', grievance: updatedGrievance });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// PATCH /api/grievances/:id/status
+export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      res.status(400).json({ error: 'Missing required field: status' });
+      return;
+    }
+
+    const role = req.user.role;
+    const departmentId = req.user.departmentId;
+
+    if (role === 'Citizen') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    if ((role === 'Department Officer' || role === 'Department Admin') && grievance.departmentId !== departmentId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const updatedGrievance = await prisma.grievance.update({
+      where: { id },
+      data: { status },
+    });
+
+    res.json({ message: 'Grievance status updated successfully', grievance: updatedGrievance });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
