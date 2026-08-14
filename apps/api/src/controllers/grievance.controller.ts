@@ -542,3 +542,96 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+// POST /api/grievances/:id/feedback
+export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const { rating, feedback } = req.body;
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    if (grievance.citizenId !== req.user.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    if (grievance.status !== 'RESOLVED' && grievance.status !== 'CLOSED') {
+      res.status(400).json({ error: 'Can only provide feedback on resolved or closed grievances' });
+      return;
+    }
+
+    const updated = await prisma.grievance.update({
+      where: { id },
+      data: {
+        rating: Number(rating),
+        feedback,
+      },
+    });
+
+    res.json({ message: 'Feedback submitted successfully', grievance: updated });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// POST /api/grievances/:id/reopen
+export async function reopenGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    if (grievance.citizenId !== req.user.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    if (grievance.status !== 'RESOLVED') {
+      res.status(400).json({ error: 'Only resolved grievances can be reopened' });
+      return;
+    }
+
+    const updated = await prisma.grievance.update({
+      where: { id },
+      data: {
+        status: 'IN_PROGRESS',
+      },
+    });
+
+    // Optionally add a comment noting the reopening reason
+    if (reason) {
+      await prisma.comment.create({
+        data: {
+          content: `Grievance reopened by citizen. Reason: ${reason}`,
+          grievanceId: id,
+          authorId: req.user.userId,
+        },
+      });
+    }
+
+    res.json({ message: 'Grievance reopened successfully', grievance: updated });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
