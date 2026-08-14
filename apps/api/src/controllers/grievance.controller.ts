@@ -401,3 +401,94 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+// POST /api/grievances/:id/attachments
+export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const file = req.file;
+
+    if (!file) {
+      res.status(400).json({ error: 'No file uploaded or invalid file type' });
+      return;
+    }
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    if (role === 'Citizen' && grievance.citizenId !== userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const attachment = await prisma.attachment.create({
+      data: {
+        grievanceId: id,
+        fileName: file.originalname,
+        fileType: file.mimetype,
+        fileUrl: `/uploads/${file.filename}`,
+        fileSize: file.size,
+        uploadedById: userId,
+      },
+      include: {
+        uploadedBy: {
+          select: { id: true, name: true, role: true },
+        },
+      },
+    });
+
+    res.status(201).json({ message: 'File uploaded successfully', attachment });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// GET /api/grievances/:id/attachments
+export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    if (role === 'Citizen' && grievance.citizenId !== userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const attachments = await prisma.attachment.findMany({
+      where: { grievanceId: id },
+      include: {
+        uploadedBy: {
+          select: { id: true, name: true, role: true },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    res.json({ attachments });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

@@ -8,10 +8,13 @@ import {
   deleteGrievance,
   assignGrievance,
   addGrievanceComment,
-  getGrievanceComments
+  getGrievanceComments,
+  uploadGrievanceAttachment,
+  getGrievanceAttachments
 } from '../controllers/grievance.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { requireRole } from '../middlewares/rbac.middleware.js';
+import { upload } from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
@@ -32,6 +35,10 @@ router.post('/:id/assign', authenticate, requireRole(['Department Admin', 'Super
 // Grievance comments
 router.post('/:id/comments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), addGrievanceComment);
 router.get('/:id/comments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievanceComments);
+
+// Grievance attachments
+router.post('/:id/attachments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), upload.single('file'), uploadGrievanceAttachment);
+router.get('/:id/attachments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievanceAttachments);
 
 // Grievance deletion
 router.delete('/:id', authenticate, requireRole(['Citizen', 'Super Admin']), deleteGrievance);
