@@ -301,3 +301,103 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+// POST /api/grievances/:id/comments
+export async function addGrievanceComment(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const { message, isInternal } = req.body;
+
+    if (!message || message.trim() === '') {
+      res.status(400).json({ error: 'Comment message is required' });
+      return;
+    }
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    if (role === 'Citizen') {
+      if (grievance.citizenId !== userId) {
+        res.status(403).json({ error: 'Forbidden' });
+        return;
+      }
+      if (isInternal) {
+        res.status(403).json({ error: 'Citizens cannot post internal comments' });
+        return;
+      }
+    }
+
+    const comment = await prisma.comment.create({
+      data: {
+        grievanceId: id,
+        userId,
+        message,
+        isInternal: isInternal ?? false,
+      },
+      include: {
+        user: {
+          select: { id: true, name: true, role: true },
+        },
+      },
+    });
+
+    res.status(201).json({ message: 'Comment added successfully', comment });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// GET /api/grievances/:id/comments
+export async function getGrievanceComments(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    if (role === 'Citizen' && grievance.citizenId !== userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const whereClause: any = { grievanceId: id };
+    if (role === 'Citizen') {
+      whereClause.isInternal = false;
+    }
+
+    const comments = await prisma.comment.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: { id: true, name: true, role: true },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    res.json({ comments });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
