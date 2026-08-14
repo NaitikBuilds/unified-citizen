@@ -10,7 +10,8 @@ import {
   addGrievanceComment,
   getGrievanceComments,
   uploadGrievanceAttachment,
-  getGrievanceAttachments
+  getGrievanceAttachments,
+  escalateGrievance
 } from '../controllers/grievance.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { requireRole } from '../middlewares/rbac.middleware.js';
@@ -31,6 +32,9 @@ router.patch('/:id/status', authenticate, requireRole(['Department Officer', 'De
 
 // Grievance assignment
 router.post('/:id/assign', authenticate, requireRole(['Department Admin', 'Super Admin']), assignGrievance);
+
+// Grievance escalation
+router.post('/:id/escalate', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin']), escalateGrievance);
 
 // Grievance comments
 router.post('/:id/comments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), addGrievanceComment);

@@ -494,3 +494,51 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+// POST /api/grievances/:id/escalate
+export async function escalateGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const grievance = await prisma.grievance.findUnique({
+      where: { id },
+      include: { sla: true },
+    });
+
+    if (!grievance) {
+      res.status(404).json({ error: 'Grievance not found' });
+      return;
+    }
+
+    const role = req.user.role;
+    const userId = req.user.userId;
+
+    if (role === 'Citizen' && grievance.citizenId !== userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    // Update grievance priority to CRITICAL and status to ESCALATED (or keep in progress with escalated flag)
+    const updatedGrievance = await prisma.grievance.update({
+      where: { id },
+      data: {
+        priority: 'CRITICAL',
+      },
+    });
+
+    // If there is an active SLA, mark it breached/escalated
+    if (grievance.sla) {
+      await prisma.sLA.update({
+        where: { id: grievance.sla.id },
+        data: { status: 'BREACHED' },
+      });
+    }
+
+    res.json({ message: 'Grievance escalated successfully', grievance: updatedGrievance });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
