@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { prisma } from '../services/prisma.service.js';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'super-secret-refresh-key';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from '../services/jwt.service.js';
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
@@ -25,7 +26,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // SECURITY FIX: Public registration always forces CITIZEN and null department
+    // SECURITY: Public registration strictly forces CITIZEN and null department
     const user = await prisma.user.create({
       data: {
         email,
@@ -64,13 +65,15 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const accessToken = jwt.sign(
-      { userId: user.id, role: user.role, email: user.email, departmentId: user.departmentId },
-      JWT_SECRET,
-      { expiresIn: '15m' }
-    );
-    
-    const refreshTokenRaw = jwt.sign({ userId: user.id }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+    const tokenPayload = {
+      userId: user.id,
+      role: user.role,
+      email: user.email,
+      departmentId: user.departmentId,
+    };
+
+    const accessToken = generateAccessToken(tokenPayload);
+    const refreshTokenRaw = generateRefreshToken(user.id);
     
     const tokenHash = crypto.createHash('sha256').update(refreshTokenRaw).digest('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
@@ -102,7 +105,7 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as { userId: string };
+    const payload = verifyRefreshToken(refreshToken);
     const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
 
     const storedToken = await prisma.refreshToken.findUnique({
@@ -120,11 +123,12 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const accessToken = jwt.sign(
-      { userId: user.id, role: user.role, email: user.email, departmentId: user.departmentId },
-      JWT_SECRET,
-      { expiresIn: '15m' }
-    );
+    const accessToken = generateAccessToken({
+      userId: user.id,
+      role: user.role,
+      email: user.email,
+      departmentId: user.departmentId,
+    });
 
     res.json({ accessToken });
   } catch (error) {
