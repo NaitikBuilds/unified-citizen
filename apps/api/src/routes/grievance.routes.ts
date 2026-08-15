@@ -17,40 +17,51 @@ import {
 } from '../controllers/grievance.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { requireRole } from '../middlewares/rbac.middleware.js';
+import { validate } from '../middlewares/validate.middleware.js';
 import { upload } from '../middlewares/upload.middleware.js';
+import { 
+  createGrievanceSchema, 
+  updateGrievanceStatusSchema, 
+  assignGrievanceSchema, 
+  addCommentSchema, 
+  addFeedbackSchema 
+} from '../validations/grievance.validation.js';
 
 const router = Router();
 
-// Citizens can create grievances
-router.post('/', authenticate, requireRole(['Citizen']), createGrievance);
+// Apply authentication to all grievance routes globally
+router.use(authenticate);
 
-// Role-based grievance viewing
-router.get('/', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievances);
-router.get('/:id', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievanceById);
+// Citizens can create grievances (Zod validated)
+router.post('/', requireRole(['CITIZEN']), validate(createGrievanceSchema), createGrievance);
+
+// Role-based grievance viewing (Aligned with schema enums)
+router.get('/', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievances);
+router.get('/:id', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievanceById);
 
 // Grievance updates
-router.patch('/:id', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin']), updateGrievance);
-router.patch('/:id/status', authenticate, requireRole(['Department Officer', 'Department Admin', 'Super Admin']), updateGrievanceStatus);
+router.patch('/:id', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), updateGrievance);
+router.patch('/:id/status', requireRole(['OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(updateGrievanceStatusSchema), updateGrievanceStatus);
 
-// Grievance assignment
-router.post('/:id/assign', authenticate, requireRole(['Department Admin', 'Super Admin']), assignGrievance);
+// Grievance assignment (Zod validated)
+router.post('/:id/assign', requireRole(['DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(assignGrievanceSchema), assignGrievance);
 
 // Grievance escalation
-router.post('/:id/escalate', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin']), escalateGrievance);
+router.post('/:id/escalate', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), escalateGrievance);
 
-// Feedback and Reopen
-router.post('/:id/feedback', authenticate, requireRole(['Citizen']), addGrievanceFeedback);
-router.post('/:id/reopen', authenticate, requireRole(['Citizen']), reopenGrievance);
+// Feedback and Reopen (Zod validated feedback)
+router.post('/:id/feedback', requireRole(['CITIZEN']), validate(addFeedbackSchema), addGrievanceFeedback);
+router.post('/:id/reopen', requireRole(['CITIZEN']), reopenGrievance);
 
-// Grievance comments
-router.post('/:id/comments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), addGrievanceComment);
-router.get('/:id/comments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievanceComments);
+// Grievance comments (Zod validated comment creation)
+router.post('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(addCommentSchema), addGrievanceComment);
+router.get('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievanceComments);
 
 // Grievance attachments
-router.post('/:id/attachments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), upload.single('file'), uploadGrievanceAttachment);
-router.get('/:id/attachments', authenticate, requireRole(['Citizen', 'Department Officer', 'Department Admin', 'Super Admin', 'Verifier']), getGrievanceAttachments);
+router.post('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), upload.single('file'), uploadGrievanceAttachment);
+router.get('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievanceAttachments);
 
 // Grievance deletion
-router.delete('/:id', authenticate, requireRole(['Citizen', 'Super Admin']), deleteGrievance);
+router.delete('/:id', requireRole(['CITIZEN', 'SUPER_ADMIN']), deleteGrievance);
 
 export default router;
