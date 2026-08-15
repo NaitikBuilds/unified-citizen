@@ -10,7 +10,7 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'super-secret-refre
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
-    const { email, password, name, role, departmentId } = req.body;
+    const { email, password, name } = req.body;
 
     if (!email || !password || !name) {
       res.status(400).json({ error: 'Missing required fields: email, password, name' });
@@ -25,13 +25,14 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // SECURITY FIX: Public registration always forces CITIZEN and null department
     const user = await prisma.user.create({
       data: {
         email,
         passwordHash: hashedPassword,
         name,
-        role: role ? role.toUpperCase() : 'CITIZEN',
-        departmentId: departmentId || null,
+        role: 'CITIZEN',
+        departmentId: null,
       },
     });
 
@@ -71,11 +72,9 @@ export async function login(req: Request, res: Response): Promise<void> {
     
     const refreshTokenRaw = jwt.sign({ userId: user.id }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
     
-    // Hash the refresh token before saving it to the database for security
     const tokenHash = crypto.createHash('sha256').update(refreshTokenRaw).digest('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-    // Save refresh token in database matching your Prisma schema
     await prisma.refreshToken.create({
       data: {
         tokenHash,
@@ -106,7 +105,6 @@ export async function refresh(req: Request, res: Response): Promise<void> {
     const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as { userId: string };
     const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
 
-    // Verify token exists in database and is not revoked/expired
     const storedToken = await prisma.refreshToken.findUnique({
       where: { tokenHash },
     });
@@ -140,13 +138,11 @@ export async function logout(req: AuthenticatedRequest, res: Response): Promise<
     
     if (refreshToken) {
       const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
-      // Revoke specific refresh token in database
       await prisma.refreshToken.updateMany({
         where: { tokenHash, revokedAt: null },
         data: { revokedAt: new Date() },
       });
     } else if (req.user) {
-      // Fallback: revoke all user tokens if requested
       await prisma.refreshToken.updateMany({
         where: { userId: req.user.userId, revokedAt: null },
         data: { revokedAt: new Date() },

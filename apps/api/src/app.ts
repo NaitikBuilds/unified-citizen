@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
 import grievanceRoutes from "./routes/grievance.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -31,11 +32,14 @@ app.get("/api/v1/health", (_req, res) => {
   });
 });
 
-// API Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/departments", departmentRoutes);
-app.use("/api/grievances", grievanceRoutes);
-app.use("/api/notifications", notificationRoutes);
+// API Routes with Versioning Prefix (/api/v1)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/departments", departmentRoutes);
+app.use("/api/v1/grievances", grievanceRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
+
+// Centralized Error Handler (must be registered after routes)
+app.use(errorHandler);
 
 export default app;
