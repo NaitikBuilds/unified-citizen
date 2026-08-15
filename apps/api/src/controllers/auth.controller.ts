@@ -1,46 +1,67 @@
-import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-import { prisma } from '../services/prisma.service.js';
-import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
+import { Request, Response } from "express";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import { prisma } from "../services/prisma.service.js";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '../services/jwt.service.js';
+} from "../services/jwt.service.js";
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
     const { email, password, name } = req.body;
 
-    if (!email || !password || !name) {
-      res.status(400).json({ error: 'Missing required fields: email, password, name' });
-      return;
-    }
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedName = name.trim();
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      res.status(400).json({ error: 'User already exists with this email' });
-      return;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // SECURITY: Public registration strictly forces CITIZEN and null department
-    const user = await prisma.user.create({
-      data: {
-        email,
-        passwordHash: hashedPassword,
-        name,
-        role: 'CITIZEN',
-        departmentId: null,
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email: normalizedEmail,
       },
     });
 
-    res.status(201).json({ message: 'User registered successfully', userId: user.id });
-  } catch (error) {
-    console.error('Register error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    if (existingUser) {
+      res.status(409).json({
+        error: "An account with this email already exists",
+      });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const user = await prisma.user.create({
+      data: {
+        email: normalizedEmail,
+        passwordHash: hashedPassword,
+        name: normalizedName,
+        role: "CITIZEN",
+        departmentId: null,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      userId: user.id,
+    });
+  } catch (error: any) {
+    console.error("Register error:", error);
+
+    // Prisma unique-constraint violation
+    if (error?.code === "P2002") {
+      res.status(409).json({
+        error: "An account with this email already exists",
+      });
+      return;
+    }
+
+    res.status(500).json({
+      error: "Internal server error",
+    });
   }
 }
 
@@ -49,19 +70,19 @@ export async function login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ error: 'Email and password are required' });
+      res.status(400).json({ error: "Email and password are required" });
       return;
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      res.status(401).json({ error: 'Invalid email or password' });
+      res.status(401).json({ error: "Invalid email or password" });
       return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
-      res.status(401).json({ error: 'Invalid email or password' });
+      res.status(401).json({ error: "Invalid email or password" });
       return;
     }
 
@@ -74,8 +95,11 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     const accessToken = generateAccessToken(tokenPayload);
     const refreshTokenRaw = generateRefreshToken(user.id);
-    
-    const tokenHash = crypto.createHash('sha256').update(refreshTokenRaw).digest('hex');
+
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshTokenRaw)
+      .digest("hex");
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
     await prisma.refreshToken.create({
@@ -89,11 +113,17 @@ export async function login(req: Request, res: Response): Promise<void> {
     res.json({
       accessToken,
       refreshToken: refreshTokenRaw,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role, departmentId: user.departmentId },
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        departmentId: user.departmentId,
+      },
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -101,12 +131,15 @@ export async function refresh(req: Request, res: Response): Promise<void> {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
-      res.status(400).json({ error: 'Refresh token required' });
+      res.status(400).json({ error: "Refresh token required" });
       return;
     }
 
     const payload = verifyRefreshToken(refreshToken);
-    const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
 
     // Use a transaction to safely lock and update token rotation atomically
     const result = await prisma.$transaction(async (tx) => {
@@ -115,17 +148,20 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       });
 
       if (!storedToken || storedToken.expiresAt < new Date()) {
-        throw new Error('Invalid or expired refresh token');
+        throw new Error("Invalid or expired refresh token");
       }
 
       // Handle already revoked token (Grace period check for concurrent race conditions)
       if (storedToken.revokedAt) {
-        const timeSinceRevocation = Date.now() - new Date(storedToken.revokedAt).getTime();
+        const timeSinceRevocation =
+          Date.now() - new Date(storedToken.revokedAt).getTime();
         const GRACE_PERIOD_MS = 10000; // 10 seconds grace period for concurrent requests
 
         if (timeSinceRevocation < GRACE_PERIOD_MS) {
-          const activeUser = await tx.user.findUnique({ where: { id: payload.userId } });
-          if (!activeUser) throw new Error('User not found');
+          const activeUser = await tx.user.findUnique({
+            where: { id: payload.userId },
+          });
+          if (!activeUser) throw new Error("User not found");
 
           const accessToken = generateAccessToken({
             userId: activeUser.id,
@@ -142,7 +178,9 @@ export async function refresh(req: Request, res: Response): Promise<void> {
           where: { userId: payload.userId, revokedAt: null },
           data: { revokedAt: new Date() },
         });
-        throw new Error('Security alert: Token reuse detected. Session terminated.');
+        throw new Error(
+          "Security alert: Token reuse detected. Session terminated.",
+        );
       }
 
       // Normal rotation: Revoke current token and issue new pair
@@ -152,7 +190,7 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       });
 
       const user = await tx.user.findUnique({ where: { id: payload.userId } });
-      if (!user) throw new Error('User not found');
+      if (!user) throw new Error("User not found");
 
       const accessToken = generateAccessToken({
         userId: user.id,
@@ -162,7 +200,10 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       });
 
       const newRefreshTokenRaw = generateRefreshToken(user.id);
-      const newTokenHash = crypto.createHash('sha256').update(newRefreshTokenRaw).digest('hex');
+      const newTokenHash = crypto
+        .createHash("sha256")
+        .update(newRefreshTokenRaw)
+        .digest("hex");
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
       await tx.refreshToken.create({
@@ -181,16 +222,24 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       ...(result.refreshToken && { refreshToken: result.refreshToken }),
     });
   } catch (error: any) {
-    res.status(403).json({ error: error.message || 'Invalid or expired refresh token' });
+    res
+      .status(403)
+      .json({ error: error.message || "Invalid or expired refresh token" });
   }
 }
 
-export async function logout(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function logout(
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> {
   try {
     const { refreshToken } = req.body;
-    
+
     if (refreshToken) {
-      const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
+      const tokenHash = crypto
+        .createHash("sha256")
+        .update(refreshToken)
+        .digest("hex");
       await prisma.refreshToken.updateMany({
         where: { tokenHash, revokedAt: null },
         data: { revokedAt: new Date() },
@@ -202,32 +251,42 @@ export async function logout(req: AuthenticatedRequest, res: Response): Promise<
       });
     }
 
-    res.json({ message: 'Logged out successfully' });
+    res.json({ message: "Logged out successfully" });
   } catch (error) {
-    console.error('Logout error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Logout error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 
-export async function getMe(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getMe(
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: "Unauthorized" });
       return;
     }
 
     const user = await prisma.user.findUnique({
       where: { id: req.user.userId },
-      select: { id: true, name: true, email: true, role: true, departmentId: true, createdAt: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        departmentId: true,
+        createdAt: true,
+      },
     });
 
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: "User not found" });
       return;
     }
 
     res.json({ user });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 }
