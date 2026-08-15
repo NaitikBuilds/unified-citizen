@@ -158,7 +158,11 @@ export async function refresh(req: Request, res: Response): Promise<void> {
         where: { tokenHash },
       });
 
-      if (!storedToken || storedToken.expiresAt < new Date()) {
+      if (
+        !storedToken ||
+        storedToken.userId !== payload.userId ||
+        storedToken.expiresAt <= new Date()
+      ) {
         throw new Error("Invalid or expired refresh token");
       }
 
