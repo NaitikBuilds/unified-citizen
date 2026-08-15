@@ -69,20 +69,27 @@ export async function login(req: Request, res: Response): Promise<void> {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      res.status(400).json({ error: "Email and password are required" });
-      return;
-    }
+    const normalizedEmail = email.trim().toLowerCase();
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: {
+        email: normalizedEmail,
+      },
+    });
+
     if (!user) {
-      res.status(401).json({ error: "Invalid email or password" });
+      res.status(401).json({
+        error: "Invalid email or password",
+      });
       return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+
     if (!isPasswordValid) {
-      res.status(401).json({ error: "Invalid email or password" });
+      res.status(401).json({
+        error: "Invalid email or password",
+      });
       return;
     }
 
@@ -100,7 +107,8 @@ export async function login(req: Request, res: Response): Promise<void> {
       .createHash("sha256")
       .update(refreshTokenRaw)
       .digest("hex");
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
     await prisma.refreshToken.create({
       data: {
@@ -110,7 +118,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       },
     });
 
-    res.json({
+    res.status(200).json({
       accessToken,
       refreshToken: refreshTokenRaw,
       user: {
@@ -123,7 +131,10 @@ export async function login(req: Request, res: Response): Promise<void> {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ error: "Internal server error" });
+
+    res.status(500).json({
+      error: "Internal server error",
+    });
   }
 }
 
