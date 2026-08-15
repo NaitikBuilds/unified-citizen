@@ -253,13 +253,27 @@ export async function logout(
     const { refreshToken } = req.body;
 
     if (refreshToken) {
+      if (!req.user) {
+        res.status(401).json({
+          error: "Unauthorized",
+        });
+        return;
+      }
+
       const tokenHash = crypto
         .createHash("sha256")
         .update(refreshToken)
         .digest("hex");
+
       await prisma.refreshToken.updateMany({
-        where: { tokenHash, revokedAt: null },
-        data: { revokedAt: new Date() },
+        where: {
+          tokenHash,
+          userId: req.user.userId,
+          revokedAt: null,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
       });
     } else if (req.user) {
       await prisma.refreshToken.updateMany({
