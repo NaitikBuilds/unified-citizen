@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken, TokenPayload } from '../utils/jwt.util.js';
+import { verifyAccessToken, TokenPayload } from '../utils/jwt.util.js';
 
 export interface AuthenticatedRequest extends Request {
   user?: TokenPayload;
@@ -16,7 +16,7 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = verifyToken(token);
+    const decoded = verifyAccessToken(token);
     req.user = decoded;
     next();
   } catch (err) {
