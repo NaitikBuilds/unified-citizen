@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
 import { prisma } from '../services/prisma.service.js';
 import { createSLAForGrievance } from '../services/sla.service.js';
+import { addCommentToGrievance as addCommentService, addAttachmentToGrievance as addAttachmentService, submitGrievanceFeedback as submitFeedbackService } from '../services/subresource.service.js';
 
 // POST /api/grievances
 export async function createGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -34,7 +35,6 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
       },
     });
 
-    // Automatically create SLA for the new grievance with a defined priority fallback
     await createSLAForGrievance(grievance.id, departmentId, grievance.priority);
 
     res.status(201).json({ message: 'Grievance created successfully', grievance });
@@ -289,7 +289,6 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    // Use the Assignment table model instead of a direct field if required, or assign via assignment relation
     const updatedGrievance = await prisma.grievance.update({
       where: { id },
       data: { 
@@ -297,7 +296,6 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       },
     });
 
-    // Create assignment record
     await prisma.assignment.create({
       data: {
         grievanceId: id,
@@ -331,42 +329,18 @@ export async function addGrievanceComment(req: AuthenticatedRequest, res: Respon
       return;
     }
 
-    const grievance = await prisma.grievance.findUnique({ where: { id } });
-    if (!grievance) {
-      res.status(404).json({ error: 'Grievance not found' });
-      return;
-    }
-
-    const role = req.user.role;
-    const userId = req.user.userId;
-
-    if (role === 'CITIZEN') {
-      if (grievance.citizenId !== userId) {
-        res.status(403).json({ error: 'Forbidden' });
-        return;
-      }
-      if (isInternal) {
-        res.status(403).json({ error: 'Citizens cannot post internal comments' });
-        return;
-      }
-    }
-
-    const comment = await prisma.comment.create({
-      data: {
-        grievanceId: id,
-        userId,
-        message,
-        isInternal: isInternal ?? false,
-      },
-      include: {
-        user: {
-          select: { id: true, name: true, role: true },
-        },
-      },
-    });
+    const comment = await addCommentService(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    }, message);
 
     res.status(201).json({ message: 'Comment added successfully', comment });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message?.includes('Forbidden')) {
+      res.status(403).json({ error: error.message });
+      return;
+    }
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -432,38 +406,18 @@ export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: 
       return;
     }
 
-    const grievance = await prisma.grievance.findUnique({ where: { id } });
-    if (!grievance) {
-      res.status(404).json({ error: 'Grievance not found' });
-      return;
-    }
-
-    const role = req.user.role;
-    const userId = req.user.userId;
-
-    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
-      res.status(403).json({ error: 'Forbidden' });
-      return;
-    }
-
-    const attachment = await prisma.attachment.create({
-      data: {
-        grievanceId: id,
-        fileName: file.originalname,
-        fileType: file.mimetype,
-        fileUrl: `/uploads/${file.filename}`,
-        fileSize: file.size,
-        uploadedById: userId,
-      },
-      include: {
-        uploadedBy: {
-          select: { id: true, name: true, role: true },
-        },
-      },
-    });
+    const attachment = await addAttachmentService(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    }, `/uploads/${file.filename}`, file.mimetype, file.originalname);
 
     res.status(201).json({ message: 'File uploaded successfully', attachment });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message?.includes('Forbidden')) {
+      res.status(403).json({ error: error.message });
+      return;
+    }
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -584,18 +538,18 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    // Save properly to the Feedback table defined in the Prisma schema
-    const newFeedback = await prisma.feedback.create({
-      data: {
-        grievanceId: id,
-        userId: req.user.userId,
-        rating: Number(rating) || 5,
-        comment: feedback || null,
-      },
-    });
+    const newFeedback = await submitFeedbackService(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    }, Number(rating) || 5, feedback);
 
     res.json({ message: 'Feedback submitted successfully', feedback: newFeedback });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message?.includes('Forbidden')) {
+      res.status(403).json({ error: error.message });
+      return;
+    }
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -641,7 +595,7 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
           message: `Grievance reopened by citizen. Reason: ${reason}`,
           grievanceId: id,
           userId: req.user.userId,
-        },
+        } as any,
       });
     }
 
