@@ -1,11 +1,12 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
 import { prisma } from '../services/prisma.service.js';
 import { createSLAForGrievance } from '../services/sla.service.js';
+import { createAuditLog } from '../services/audit.service.js';
 import { addCommentToGrievance as addCommentService, addAttachmentToGrievance as addAttachmentService, submitGrievanceFeedback as submitFeedbackService } from '../services/subresource.service.js';
 
 // POST /api/grievances
-export async function createGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function createGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -13,38 +14,46 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
     }
 
     const { title, description, category, departmentId, priority, latitude, longitude, address } = req.body;
+    const userId = req.user.userId;
 
-    if (!title || !description || !category || !departmentId) {
-      res.status(400).json({ error: 'Missing required fields: title, description, category, departmentId' });
-      return;
-    }
+    const result = await prisma.$transaction(async (tx) => {
+      const grievance = await tx.grievance.create({
+        data: {
+          ticketId: `GRV-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
+          title,
+          description,
+          category,
+          departmentId,
+          priority: priority || 'MEDIUM',
+          citizenId: userId,
+          latitude: latitude ? parseFloat(latitude) : null,
+          longitude: longitude ? parseFloat(longitude) : null,
+          address: address || null,
+          status: 'SUBMITTED',
+        },
+      });
 
-    const grievance = await prisma.grievance.create({
-      data: {
-        ticketId: `GRV-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
-        title,
-        description,
-        category,
-        departmentId,
-        priority: priority || 'MEDIUM',
-        citizenId: req.user.userId,
-        latitude: latitude ? parseFloat(latitude) : null,
-        longitude: longitude ? parseFloat(longitude) : null,
-        address: address || null,
-        status: 'SUBMITTED',
-      },
+      await createAuditLog({
+        userId,
+        grievanceId: grievance.id,
+        action: 'CREATE_GRIEVANCE',
+        newValue: { title, category, departmentId, status: 'SUBMITTED' },
+        tx,
+      });
+
+      return grievance;
     });
 
-    await createSLAForGrievance(grievance.id, departmentId, grievance.priority);
+    await createSLAForGrievance(result.id, departmentId, result.priority);
 
-    res.status(201).json({ message: 'Grievance created successfully', grievance });
+    res.status(201).json({ message: 'Grievance created successfully', grievance: result });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // GET /api/grievances
-export async function getGrievances(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getGrievances(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -77,12 +86,12 @@ export async function getGrievances(req: AuthenticatedRequest, res: Response): P
 
     res.json({ grievances });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // GET /api/grievances/:id
-export async function getGrievanceById(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getGrievanceById(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -118,12 +127,12 @@ export async function getGrievanceById(req: AuthenticatedRequest, res: Response)
 
     res.json({ grievance });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // PATCH /api/grievances/:id
-export async function updateGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function updateGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -132,6 +141,7 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response):
 
     const id = req.params.id as string;
     const { title, description, category, departmentId, latitude, longitude, address } = req.body;
+    const userId = req.user.userId;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
     if (!grievance) {
@@ -140,34 +150,45 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response):
     }
 
     const role = req.user.role;
-    const userId = req.user.userId;
-
     if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
 
-    const updatedGrievance = await prisma.grievance.update({
-      where: { id },
-      data: {
-        ...(title && { title }),
-        ...(description && { description }),
-        ...(category && { category }),
-        ...(departmentId && { departmentId }),
-        ...(latitude !== undefined && { latitude: latitude ? parseFloat(latitude) : null }),
-        ...(longitude !== undefined && { longitude: longitude ? parseFloat(longitude) : null }),
-        ...(address !== undefined && { address }),
-      },
+    const updatedGrievance = await prisma.$transaction(async (tx) => {
+      const updated = await tx.grievance.update({
+        where: { id },
+        data: {
+          ...(title && { title }),
+          ...(description && { description }),
+          ...(category && { category }),
+          ...(departmentId && { departmentId }),
+          ...(latitude !== undefined && { latitude: latitude ? parseFloat(latitude) : null }),
+          ...(longitude !== undefined && { longitude: longitude ? parseFloat(longitude) : null }),
+          ...(address !== undefined && { address }),
+        },
+      });
+
+      await createAuditLog({
+        userId,
+        grievanceId: id,
+        action: 'UPDATE_GRIEVANCE',
+        oldValue: grievance,
+        newValue: updated,
+        tx,
+      });
+
+      return updated;
     });
 
     res.json({ message: 'Grievance updated successfully', grievance: updatedGrievance });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // PATCH /api/grievances/:id/status
-export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -175,7 +196,8 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
     }
 
     const id = req.params.id as string;
-    const { status } = req.body;
+    const { status, comment } = req.body;
+    const userId = req.user.userId;
 
     if (!status) {
       res.status(400).json({ error: 'Missing required field: status' });
@@ -201,18 +223,32 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
       return;
     }
 
-    const updatedGrievance = await prisma.grievance.update({
-      where: { id },
-      data: { status },
+    const updatedGrievance = await prisma.$transaction(async (tx) => {
+      const updated = await tx.grievance.update({
+        where: { id },
+        data: { status },
+      });
+
+      await createAuditLog({
+        userId,
+        grievanceId: id,
+        action: 'UPDATE_STATUS',
+        oldValue: { status: grievance.status },
+        newValue: { status },
+        metadata: { comment: comment || 'Status updated manually' },
+        tx,
+      });
+
+      return updated;
     });
 
     res.json({ message: 'Grievance status updated successfully', grievance: updatedGrievance });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
-export async function deleteGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function deleteGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -220,6 +256,7 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
     }
 
     const id = req.params.id as string;
+    const userId = req.user.userId;
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
     if (!grievance) {
@@ -228,8 +265,6 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
     }
 
     const role = req.user.role;
-    const userId = req.user.userId;
-
     if (role === 'CITIZEN') {
       if (grievance.citizenId !== userId) {
         res.status(403).json({ error: 'Forbidden' });
@@ -241,15 +276,24 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
       }
     }
 
-    await prisma.grievance.delete({ where: { id } });
+    await prisma.$transaction(async (tx) => {
+      await tx.grievance.delete({ where: { id } });
+      await createAuditLog({
+        userId,
+        grievanceId: id,
+        action: 'DELETE_GRIEVANCE',
+        oldValue: grievance,
+        tx,
+      });
+    });
 
     res.json({ message: 'Grievance deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
-export async function assignGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function assignGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -258,6 +302,7 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
 
     const id = req.params.id as string;
     const { officerId } = req.body;
+    const userId = req.user.userId;
 
     if (!officerId) {
       res.status(400).json({ error: 'Missing required field: officerId' });
@@ -289,32 +334,44 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const updatedGrievance = await prisma.grievance.update({
-      where: { id },
-      data: { 
-        status: grievance.status === 'SUBMITTED' ? 'IN_PROGRESS' : grievance.status 
-      },
-    });
+    const result = await prisma.$transaction(async (tx) => {
+      const updatedGrievance = await tx.grievance.update({
+        where: { id },
+        data: { 
+          status: grievance.status === 'SUBMITTED' ? 'IN_PROGRESS' : grievance.status 
+        },
+      });
 
-    await prisma.assignment.create({
-      data: {
+      await tx.assignment.create({
+        data: {
+          grievanceId: id,
+          officerId,
+          departmentId: grievance.departmentId || officer.departmentId || '',
+          assignedById: userId,
+          type: 'MANUAL',
+          status: 'ACTIVE',
+        },
+      });
+
+      await createAuditLog({
+        userId,
         grievanceId: id,
-        officerId,
-        departmentId: grievance.departmentId || officer.departmentId || '',
-        assignedById: req.user.userId,
-        type: 'MANUAL',
-        status: 'ACTIVE',
-      },
+        action: 'ASSIGN_GRIEVANCE',
+        newValue: { officerId },
+        tx,
+      });
+
+      return updatedGrievance;
     });
 
-    res.json({ message: 'Grievance assigned successfully', grievance: updatedGrievance });
+    res.json({ message: 'Grievance assigned successfully', grievance: result });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // POST /api/grievances/:id/comments
-export async function addGrievanceComment(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function addGrievanceComment(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -322,7 +379,7 @@ export async function addGrievanceComment(req: AuthenticatedRequest, res: Respon
     }
 
     const id = req.params.id as string;
-    const { message, isInternal } = req.body;
+    const { message } = req.body;
 
     if (!message || message.trim() === '') {
       res.status(400).json({ error: 'Comment message is required' });
@@ -341,12 +398,12 @@ export async function addGrievanceComment(req: AuthenticatedRequest, res: Respon
       res.status(403).json({ error: error.message });
       return;
     }
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // GET /api/grievances/:id/comments
-export async function getGrievanceComments(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getGrievanceComments(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -386,12 +443,12 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
 
     res.json({ comments });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // POST /api/grievances/:id/attachments
-export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -418,12 +475,12 @@ export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: 
       res.status(403).json({ error: error.message });
       return;
     }
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // GET /api/grievances/:id/attachments
-export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -458,12 +515,12 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
 
     res.json({ attachments });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // POST /api/grievances/:id/escalate
-export async function escalateGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function escalateGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -471,6 +528,7 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
     }
 
     const id = req.params.id as string;
+    const userId = req.user.userId;
     const grievance = await prisma.grievance.findUnique({
       where: { id },
       include: { sla: true },
@@ -482,36 +540,47 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
     }
 
     const role = req.user.role;
-    const userId = req.user.userId;
-
     if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
 
-    const updatedGrievance = await prisma.grievance.update({
-      where: { id },
-      data: {
-        priority: 'CRITICAL',
-        status: 'ESCALATED',
-      },
-    });
-
-    if (grievance.sla) {
-      await prisma.sLA.update({
-        where: { id: grievance.sla.id },
-        data: { status: 'BREACHED' },
+    const updatedGrievance = await prisma.$transaction(async (tx) => {
+      const updated = await tx.grievance.update({
+        where: { id },
+        data: {
+          priority: 'CRITICAL',
+          status: 'ESCALATED',
+        },
       });
-    }
+
+      if (grievance.sla) {
+        await tx.sLA.update({
+          where: { id: grievance.sla.id },
+          data: { status: 'BREACHED' },
+        });
+      }
+
+      await createAuditLog({
+        userId,
+        grievanceId: id,
+        action: 'ESCALATE_GRIEVANCE',
+        oldValue: { status: grievance.status, priority: grievance.priority },
+        newValue: { status: 'ESCALATED', priority: 'CRITICAL' },
+        tx,
+      });
+
+      return updated;
+    });
 
     res.json({ message: 'Grievance escalated successfully', grievance: updatedGrievance });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // POST /api/grievances/:id/feedback
-export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -550,12 +619,12 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
       res.status(403).json({ error: error.message });
       return;
     }
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // POST /api/grievances/:id/reopen
-export async function reopenGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function reopenGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -564,6 +633,7 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
 
     const id = req.params.id as string;
     const { reason } = req.body;
+    const userId = req.user.userId;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
@@ -572,7 +642,7 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    if (grievance.citizenId !== req.user.userId) {
+    if (grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -582,25 +652,38 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const updated = await prisma.grievance.update({
-      where: { id },
-      data: {
-        status: 'REOPENED',
-      },
-    });
-
-    if (reason) {
-      await prisma.comment.create({
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedGrievance = await tx.grievance.update({
+        where: { id },
         data: {
-          message: `Grievance reopened by citizen. Reason: ${reason}`,
-          grievanceId: id,
-          userId: req.user.userId,
-        } as any,
+          status: 'REOPENED',
+        },
       });
-    }
+
+      if (reason) {
+        await tx.comment.create({
+          data: {
+            message: `Grievance reopened by citizen. Reason: ${reason}`,
+            grievanceId: id,
+            userId: userId,
+          } as any,
+        });
+      }
+
+      await createAuditLog({
+        userId,
+        grievanceId: id,
+        action: 'REOPEN_GRIEVANCE',
+        oldValue: { status: 'RESOLVED' },
+        newValue: { status: 'REOPENED', reason },
+        tx,
+      });
+
+      return updatedGrievance;
+    });
 
     res.json({ message: 'Grievance reopened successfully', grievance: updated });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }

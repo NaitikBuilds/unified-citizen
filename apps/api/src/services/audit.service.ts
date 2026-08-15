@@ -7,11 +7,14 @@ interface LogAuditParams {
   oldValue?: any;
   newValue?: any;
   metadata?: Record<string, any>;
+  tx?: any;
 }
 
 export async function createAuditLog(params: LogAuditParams): Promise<void> {
+  const db = params.tx || prisma;
+
   try {
-    await prisma.auditLog.create({
+    await db.auditLog.create({
       data: {
         userId: params.userId || null,
         grievanceId: params.grievanceId || null,
