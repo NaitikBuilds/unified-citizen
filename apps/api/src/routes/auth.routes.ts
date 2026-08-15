@@ -12,6 +12,7 @@ import {
   registerSchema,
   loginSchema,
   refreshSchema,
+  logoutSchema,
 } from "../validations/auth.validation.js";
 
 const router = Router();
@@ -22,7 +23,7 @@ router.post("/login", validate(loginSchema), login);
 
 router.post("/refresh", validate(refreshSchema), refresh);
 
-router.post("/logout", authenticate, logout);
+router.post("/logout", authenticate, validate(logoutSchema), logout);
 
 router.get("/me", authenticate, getMe);
 
