@@ -155,6 +155,14 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response, 
       return;
     }
 
+    if (
+      (role === 'OFFICER' || role === 'DEPARTMENT_ADMIN') &&
+      grievance.departmentId !== req.user.departmentId
+    ) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
     const updatedGrievance = await prisma.$transaction(async (tx) => {
       const updated = await tx.grievance.update({
         where: { id },
@@ -162,7 +170,7 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response, 
           ...(title && { title }),
           ...(description && { description }),
           ...(category && { category }),
-          ...(departmentId && { departmentId }),
+          ...(role === 'SUPER_ADMIN' && departmentId && { departmentId }),
           ...(latitude !== undefined && { latitude: latitude ? parseFloat(latitude) : null }),
           ...(longitude !== undefined && { longitude: longitude ? parseFloat(longitude) : null }),
           ...(address !== undefined && { address }),
