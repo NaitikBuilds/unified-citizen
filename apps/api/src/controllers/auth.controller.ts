@@ -108,31 +108,80 @@ export async function refresh(req: Request, res: Response): Promise<void> {
     const payload = verifyRefreshToken(refreshToken);
     const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
 
-    const storedToken = await prisma.refreshToken.findUnique({
-      where: { tokenHash },
+    // Use a transaction to safely lock and update token rotation atomically
+    const result = await prisma.$transaction(async (tx) => {
+      const storedToken = await tx.refreshToken.findUnique({
+        where: { tokenHash },
+      });
+
+      if (!storedToken || storedToken.expiresAt < new Date()) {
+        throw new Error('Invalid or expired refresh token');
+      }
+
+      // Handle already revoked token (Grace period check for concurrent race conditions)
+      if (storedToken.revokedAt) {
+        const timeSinceRevocation = Date.now() - new Date(storedToken.revokedAt).getTime();
+        const GRACE_PERIOD_MS = 10000; // 10 seconds grace period for concurrent requests
+
+        if (timeSinceRevocation < GRACE_PERIOD_MS) {
+          const activeUser = await tx.user.findUnique({ where: { id: payload.userId } });
+          if (!activeUser) throw new Error('User not found');
+
+          const accessToken = generateAccessToken({
+            userId: activeUser.id,
+            role: activeUser.role,
+            email: activeUser.email,
+            departmentId: activeUser.departmentId,
+          });
+
+          return { accessToken, refreshToken: null };
+        }
+
+        // Past grace period: Potential token theft/replay attack detected! Revoke all tokens for user.
+        await tx.refreshToken.updateMany({
+          where: { userId: payload.userId, revokedAt: null },
+          data: { revokedAt: new Date() },
+        });
+        throw new Error('Security alert: Token reuse detected. Session terminated.');
+      }
+
+      // Normal rotation: Revoke current token and issue new pair
+      await tx.refreshToken.update({
+        where: { id: storedToken.id },
+        data: { revokedAt: new Date() },
+      });
+
+      const user = await tx.user.findUnique({ where: { id: payload.userId } });
+      if (!user) throw new Error('User not found');
+
+      const accessToken = generateAccessToken({
+        userId: user.id,
+        role: user.role,
+        email: user.email,
+        departmentId: user.departmentId,
+      });
+
+      const newRefreshTokenRaw = generateRefreshToken(user.id);
+      const newTokenHash = crypto.createHash('sha256').update(newRefreshTokenRaw).digest('hex');
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+      await tx.refreshToken.create({
+        data: {
+          tokenHash: newTokenHash,
+          userId: user.id,
+          expiresAt,
+        },
+      });
+
+      return { accessToken, refreshToken: newRefreshTokenRaw };
     });
 
-    if (!storedToken || storedToken.revokedAt || storedToken.expiresAt < new Date()) {
-      res.status(403).json({ error: 'Invalid or revoked refresh token' });
-      return;
-    }
-
-    const user = await prisma.user.findUnique({ where: { id: payload.userId } });
-    if (!user) {
-      res.status(403).json({ error: 'User not found' });
-      return;
-    }
-
-    const accessToken = generateAccessToken({
-      userId: user.id,
-      role: user.role,
-      email: user.email,
-      departmentId: user.departmentId,
+    res.json({
+      accessToken: result.accessToken,
+      ...(result.refreshToken && { refreshToken: result.refreshToken }),
     });
-
-    res.json({ accessToken });
-  } catch (error) {
-    res.status(403).json({ error: 'Invalid or expired refresh token' });
+  } catch (error: any) {
+    res.status(403).json({ error: error.message || 'Invalid or expired refresh token' });
   }
 }
 
