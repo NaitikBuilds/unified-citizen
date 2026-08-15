@@ -29,7 +29,7 @@ export async function markNotificationAsRead(req: AuthenticatedRequest, res: Res
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const notification = await prisma.notification.findUnique({ where: { id } });
 

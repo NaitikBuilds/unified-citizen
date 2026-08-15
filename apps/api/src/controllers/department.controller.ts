@@ -16,7 +16,7 @@ export async function getAllDepartments(req: Request, res: Response): Promise<vo
 // GET /api/departments/:id
 export async function getDepartmentById(req: Request, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const department = await prisma.department.findUnique({
       where: { id },
       select: { id: true, name: true, description: true, createdAt: true, users: { select: { id: true, name: true, role: true } } },
@@ -36,7 +36,7 @@ export async function getDepartmentById(req: Request, res: Response): Promise<vo
 // Admin: POST /api/departments
 export async function createDepartment(req: Request, res: Response): Promise<void> {
   try {
-    const { name, description } = req.body;
+    const { name, description, code } = req.body;
 
     if (!name) {
       res.status(400).json({ error: 'Department name is required' });
@@ -44,7 +44,11 @@ export async function createDepartment(req: Request, res: Response): Promise<voi
     }
 
     const department = await prisma.department.create({
-      data: { name, description },
+      data: {
+        name,
+        description,
+        code: code || name.slice(0, 3).toUpperCase() + Math.floor(100 + Math.random() * 900),
+      },
     });
 
     res.status(201).json({ message: 'Department created successfully', department });
@@ -56,7 +60,7 @@ export async function createDepartment(req: Request, res: Response): Promise<voi
 // Admin: PATCH /api/departments/:id
 export async function updateDepartment(req: Request, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name, description } = req.body;
 
     const department = await prisma.department.update({
@@ -76,7 +80,7 @@ export async function updateDepartment(req: Request, res: Response): Promise<voi
 // Admin: DELETE /api/departments/:id
 export async function deleteDepartment(req: Request, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     await prisma.department.delete({
       where: { id },

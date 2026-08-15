@@ -22,7 +22,8 @@ export async function checkAndProcessSLABreaches() {
     for (const sla of activeSLAs) {
       const isResolutionBreached = sla.resolutionDueAt < now;
       
-      if (isResolutionBreached && sla.grievance.status !== 'RESOLVED' && sla.grievance.status !== 'CLOSED') {
+      // Removed 'CLOSED' since it's not part of the GrievanceStatus enum
+      if (isResolutionBreached && sla.grievance.status !== 'RESOLVED') {
         breachedIds.push(sla.id);
 
         await prisma.sLA.update({

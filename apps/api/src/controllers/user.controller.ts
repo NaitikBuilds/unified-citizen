@@ -63,7 +63,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
 // Admin: GET /api/users/:id
 export async function getUserById(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const user = await prisma.user.findUnique({
       where: { id },
       select: { id: true, name: true, email: true, role: true, departmentId: true, createdAt: true },
@@ -83,7 +83,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
 // Admin: PATCH /api/users/:id
 export async function updateUserRoleOrDept(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { role, departmentId } = req.body;
 
     const updatedUser = await prisma.user.update({

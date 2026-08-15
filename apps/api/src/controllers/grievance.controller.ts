@@ -11,7 +11,7 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const { title, description, category, departmentId, latitude, longitude, address } = req.body;
+    const { title, description, category, departmentId, priority, latitude, longitude, address } = req.body;
 
     if (!title || !description || !category || !departmentId) {
       res.status(400).json({ error: 'Missing required fields: title, description, category, departmentId' });
@@ -20,10 +20,12 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
 
     const grievance = await prisma.grievance.create({
       data: {
+        ticketId: `GRV-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
         title,
         description,
         category,
         departmentId,
+        priority: priority || 'MEDIUM',
         citizenId: req.user.userId,
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
@@ -32,7 +34,7 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response):
       },
     });
 
-    // Automatically create SLA for the new grievance
+    // Automatically create SLA for the new grievance with a defined priority fallback
     await createSLAForGrievance(grievance.id, departmentId, grievance.priority);
 
     res.status(201).json({ message: 'Grievance created successfully', grievance });
@@ -87,7 +89,7 @@ export async function getGrievanceById(req: AuthenticatedRequest, res: Response)
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const grievance = await prisma.grievance.findUnique({
       where: { id },
       include: {
@@ -105,7 +107,6 @@ export async function getGrievanceById(req: AuthenticatedRequest, res: Response)
     const userId = req.user.userId;
     const departmentId = req.user.departmentId;
 
-    // Authorization checks
     if (role === 'Citizen' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
@@ -129,7 +130,7 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { title, description, category, departmentId, latitude, longitude, address } = req.body;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
@@ -173,7 +174,7 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status } = req.body;
 
     if (!status) {
@@ -218,7 +219,7 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
     if (!grievance) {
@@ -255,7 +256,7 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { officerId } = req.body;
 
     if (!officerId) {
@@ -310,7 +311,7 @@ export async function addGrievanceComment(req: AuthenticatedRequest, res: Respon
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { message, isInternal } = req.body;
 
     if (!message || message.trim() === '') {
@@ -366,7 +367,7 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
     if (!grievance) {
@@ -382,7 +383,7 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    const whereClause: any = { grievanceId: id };
+    const whereClause: { grievanceId: string; isInternal?: boolean } = { grievanceId: id };
     if (role === 'Citizen') {
       whereClause.isInternal = false;
     }
@@ -411,7 +412,7 @@ export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: 
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const file = req.file;
 
     if (!file) {
@@ -463,7 +464,7 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
     if (!grievance) {
@@ -494,6 +495,7 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 // POST /api/grievances/:id/escalate
 export async function escalateGrievance(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -502,7 +504,7 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const grievance = await prisma.grievance.findUnique({
       where: { id },
       include: { sla: true },
@@ -521,7 +523,6 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
       return;
     }
 
-    // Update grievance priority to CRITICAL and status to ESCALATED (or keep in progress with escalated flag)
     const updatedGrievance = await prisma.grievance.update({
       where: { id },
       data: {
@@ -529,7 +530,6 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
       },
     });
 
-    // If there is an active SLA, mark it breached/escalated
     if (grievance.sla) {
       await prisma.sLA.update({
         where: { id: grievance.sla.id },
@@ -542,6 +542,7 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 // POST /api/grievances/:id/feedback
 export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -550,8 +551,8 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    const { id } = req.params;
-    const { rating, feedback } = req.body;
+    const id = req.params.id as string;
+    const { feedback } = req.body;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
@@ -565,20 +566,21 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    if (grievance.status !== 'RESOLVED' && grievance.status !== 'CLOSED') {
-      res.status(400).json({ error: 'Can only provide feedback on resolved or closed grievances' });
+    if (grievance.status !== 'RESOLVED') {
+      res.status(400).json({ error: 'Can only provide feedback on resolved grievances' });
       return;
     }
 
-    const updated = await prisma.grievance.update({
-      where: { id },
+    // Since rating/feedback fields aren't directly on the grievance model, we log feedback as a comment or handle it via a separate table if needed.
+    const comment = await prisma.comment.create({
       data: {
-        rating: Number(rating),
-        feedback,
+        message: `Feedback from citizen: ${feedback}`,
+        grievanceId: id,
+        userId: req.user.userId,
       },
     });
 
-    res.json({ message: 'Feedback submitted successfully', grievance: updated });
+    res.json({ message: 'Feedback submitted successfully', comment });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -592,7 +594,7 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { reason } = req.body;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
@@ -619,13 +621,12 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
       },
     });
 
-    // Optionally add a comment noting the reopening reason
     if (reason) {
       await prisma.comment.create({
         data: {
-          content: `Grievance reopened by citizen. Reason: ${reason}`,
+          message: `Grievance reopened by citizen. Reason: ${reason}`,
           grievanceId: id,
-          authorId: req.user.userId,
+          userId: req.user.userId,
         },
       });
     }
