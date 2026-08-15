@@ -56,17 +56,17 @@ export async function getGrievances(req: AuthenticatedRequest, res: Response): P
     const departmentId = req.user.departmentId;
     let grievances;
 
-    if (role === 'Citizen') {
+    if (role === 'CITIZEN') {
       grievances = await prisma.grievance.findMany({
         where: { citizenId: userId },
         orderBy: { createdAt: 'desc' },
       });
-    } else if (role === 'Department Officer' || role === 'Department Admin') {
+    } else if (role === 'OFFICER' || role === 'DEPARTMENT_ADMIN') {
       grievances = await prisma.grievance.findMany({
         where: { departmentId: departmentId ?? undefined },
         orderBy: { createdAt: 'desc' },
       });
-    } else if (role === 'Super Admin' || role === 'Verifier') {
+    } else if (role === 'SUPER_ADMIN') {
       grievances = await prisma.grievance.findMany({
         orderBy: { createdAt: 'desc' },
       });
@@ -107,11 +107,11 @@ export async function getGrievanceById(req: AuthenticatedRequest, res: Response)
     const userId = req.user.userId;
     const departmentId = req.user.departmentId;
 
-    if (role === 'Citizen' && grievance.citizenId !== userId) {
+    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
-    if ((role === 'Department Officer' || role === 'Department Admin') && grievance.departmentId !== departmentId) {
+    if ((role === 'OFFICER' || role === 'DEPARTMENT_ADMIN') && grievance.departmentId !== departmentId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -142,7 +142,7 @@ export async function updateGrievance(req: AuthenticatedRequest, res: Response):
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen' && grievance.citizenId !== userId) {
+    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -185,7 +185,7 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
     const role = req.user.role;
     const departmentId = req.user.departmentId;
 
-    if (role === 'Citizen') {
+    if (role === 'CITIZEN') {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -196,7 +196,7 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
       return;
     }
 
-    if ((role === 'Department Officer' || role === 'Department Admin') && grievance.departmentId !== departmentId) {
+    if ((role === 'OFFICER' || role === 'DEPARTMENT_ADMIN') && grievance.departmentId !== departmentId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -230,7 +230,7 @@ export async function deleteGrievance(req: AuthenticatedRequest, res: Response):
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen') {
+    if (role === 'CITIZEN') {
       if (grievance.citizenId !== userId) {
         res.status(403).json({ error: 'Forbidden' });
         return;
@@ -267,7 +267,7 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
     const role = req.user.role;
     const userDepartmentId = req.user.departmentId;
 
-    if (role !== 'Department Admin' && role !== 'Super Admin') {
+    if (role !== 'DEPARTMENT_ADMIN' && role !== 'SUPER_ADMIN') {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -278,7 +278,7 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    if (role === 'Department Admin' && grievance.departmentId !== userDepartmentId) {
+    if (role === 'DEPARTMENT_ADMIN' && grievance.departmentId !== userDepartmentId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -289,11 +289,23 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response):
       return;
     }
 
+    // Use the Assignment table model instead of a direct field if required, or assign via assignment relation
     const updatedGrievance = await prisma.grievance.update({
       where: { id },
       data: { 
-        assignedOfficerId: officerId,
         status: grievance.status === 'SUBMITTED' ? 'IN_PROGRESS' : grievance.status 
+      },
+    });
+
+    // Create assignment record
+    await prisma.assignment.create({
+      data: {
+        grievanceId: id,
+        officerId,
+        departmentId: grievance.departmentId || officer.departmentId || '',
+        assignedById: req.user.userId,
+        type: 'MANUAL',
+        status: 'ACTIVE',
       },
     });
 
@@ -328,7 +340,7 @@ export async function addGrievanceComment(req: AuthenticatedRequest, res: Respon
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen') {
+    if (role === 'CITIZEN') {
       if (grievance.citizenId !== userId) {
         res.status(403).json({ error: 'Forbidden' });
         return;
@@ -378,13 +390,13 @@ export async function getGrievanceComments(req: AuthenticatedRequest, res: Respo
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen' && grievance.citizenId !== userId) {
+    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
 
     const whereClause: { grievanceId: string; isInternal?: boolean } = { grievanceId: id };
-    if (role === 'Citizen') {
+    if (role === 'CITIZEN') {
       whereClause.isInternal = false;
     }
 
@@ -429,7 +441,7 @@ export async function uploadGrievanceAttachment(req: AuthenticatedRequest, res: 
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen' && grievance.citizenId !== userId) {
+    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -475,7 +487,7 @@ export async function getGrievanceAttachments(req: AuthenticatedRequest, res: Re
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen' && grievance.citizenId !== userId) {
+    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -518,7 +530,7 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
     const role = req.user.role;
     const userId = req.user.userId;
 
-    if (role === 'Citizen' && grievance.citizenId !== userId) {
+    if (role === 'CITIZEN' && grievance.citizenId !== userId) {
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -527,6 +539,7 @@ export async function escalateGrievance(req: AuthenticatedRequest, res: Response
       where: { id },
       data: {
         priority: 'CRITICAL',
+        status: 'ESCALATED',
       },
     });
 
@@ -552,7 +565,7 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
     }
 
     const id = req.params.id as string;
-    const { feedback } = req.body;
+    const { rating, feedback } = req.body;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
@@ -571,16 +584,17 @@ export async function addGrievanceFeedback(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    // Since rating/feedback fields aren't directly on the grievance model, we log feedback as a comment or handle it via a separate table if needed.
-    const comment = await prisma.comment.create({
+    // Save properly to the Feedback table defined in the Prisma schema
+    const newFeedback = await prisma.feedback.create({
       data: {
-        message: `Feedback from citizen: ${feedback}`,
         grievanceId: id,
         userId: req.user.userId,
+        rating: Number(rating) || 5,
+        comment: feedback || null,
       },
     });
 
-    res.json({ message: 'Feedback submitted successfully', comment });
+    res.json({ message: 'Feedback submitted successfully', feedback: newFeedback });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -617,7 +631,7 @@ export async function reopenGrievance(req: AuthenticatedRequest, res: Response):
     const updated = await prisma.grievance.update({
       where: { id },
       data: {
-        status: 'IN_PROGRESS',
+        status: 'REOPENED',
       },
     });
 
