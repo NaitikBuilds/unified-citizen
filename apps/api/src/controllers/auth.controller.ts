@@ -22,15 +22,16 @@ export async function register(req: Request, res: Response): Promise<void> {
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashedPassword,
+        passwordHash: hashedPassword, // Fixed: matches Prisma schema
         name,
-        role: role || 'Citizen',
+        role: role ? role.toUpperCase() : 'CITIZEN', // Fixed: matches uppercase Prisma Enum
         departmentId: departmentId || null,
       },
     });
 
     res.status(201).json({ message: 'User registered successfully', userId: user.id });
   } catch (error) {
+    console.error('Register error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -45,7 +46,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash); // Fixed: uses passwordHash
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Invalid email or password' });
       return;
@@ -56,6 +57,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     res.json({ accessToken, refreshToken, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -84,7 +86,6 @@ export async function refresh(req: Request, res: Response): Promise<void> {
 }
 
 export async function logout(_req: Request, res: Response): Promise<void> {
-  // Stateless JWT logout is usually handled on client by clearing tokens, but endpoint can return success
   res.json({ message: 'Logged out successfully' });
 }
 
