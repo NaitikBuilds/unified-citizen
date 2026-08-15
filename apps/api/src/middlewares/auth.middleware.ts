@@ -12,18 +12,23 @@ export function authenticate(
 ): void {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ error: "Access denied. No token provided." });
+  if (!authHeader) {
+    res.status(401).json({ error: "Unauthorized" });
     return;
   }
 
-  const token = authHeader.split(" ")[1];
+  const [scheme, token] = authHeader.split(" ");
+
+  if (scheme !== "Bearer" || !token) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
 
   try {
     const decoded = verifyAccessToken(token);
     req.user = decoded;
     next();
-  } catch (err) {
-    res.status(403).json({ error: "Invalid or expired token." });
+  } catch {
+    res.status(401).json({ error: "Invalid or expired token." });
   }
 }
