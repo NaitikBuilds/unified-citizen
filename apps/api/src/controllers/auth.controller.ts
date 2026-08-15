@@ -236,10 +236,12 @@ export async function refresh(req: Request, res: Response): Promise<void> {
       accessToken: result.accessToken,
       ...(result.refreshToken && { refreshToken: result.refreshToken }),
     });
-  } catch (error: any) {
-    res
-      .status(403)
-      .json({ error: error.message || "Invalid or expired refresh token" });
+  } catch (error) {
+    console.error("Refresh token error:", error);
+
+    res.status(401).json({
+      error: "Invalid or expired refresh token",
+    });
   }
 }
 
