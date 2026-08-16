@@ -83,7 +83,10 @@ export const mockGrievanceService: GrievanceService = {
 
     let results = mockGrievances.filter(inScope)
 
-    if (filters.status) {
+    if (filters.statuses && filters.statuses.length > 0) {
+      const statuses = new Set(filters.statuses)
+      results = results.filter((grievance) => statuses.has(grievance.status))
+    } else if (filters.status) {
       results = results.filter((grievance) => grievance.status === filters.status)
     }
     if (filters.priority) {

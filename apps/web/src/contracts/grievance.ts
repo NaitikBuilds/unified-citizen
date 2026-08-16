@@ -106,6 +106,8 @@ export type GrievanceListParams = {
   limit?: number
   search?: string
   status?: GrievanceStatus
+  /** Multiple statuses (OR). Supersedes `status` when both are present. */
+  statuses?: GrievanceStatus[]
   priority?: Priority
   category?: string
   departmentId?: string
