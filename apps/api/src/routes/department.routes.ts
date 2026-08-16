@@ -19,7 +19,12 @@ const router = Router();
 
 // Public / Authenticated retrieval routes
 router.get("/", authenticate, getAllDepartments);
-router.get("/:id", authenticate, getDepartmentById);
+router.get(
+  "/:id",
+  authenticate,
+  validate(departmentIdParamSchema),
+  getDepartmentById,
+);
 
 // Admin-only modification routes
 router.post(

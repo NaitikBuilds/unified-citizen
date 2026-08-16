@@ -8,6 +8,12 @@ export const updateProfileSchema = z.object({
   }),
 });
 
+export const userIdParamSchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid user ID format"),
+  }),
+});
+
 export const updateUserRoleOrDeptSchema = z.object({
   params: z.object({
     id: z.cuid("Invalid user ID format"),

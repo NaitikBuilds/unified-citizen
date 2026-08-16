@@ -3,40 +3,6 @@ import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import { prisma } from "../services/prisma.service.js";
 import { createAuditLog } from "../services/audit.service.js";
 
-// GET /api/users/me
-export async function getMyProfile(
-  req: AuthenticatedRequest,
-  res: Response,
-): Promise<void> {
-  try {
-    if (!req.user) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        departmentId: true,
-        createdAt: true,
-      },
-    });
-
-    if (!user) {
-      res.status(404).json({ error: "User not found" });
-      return;
-    }
-
-    res.json({ user });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-}
-
 // PATCH /api/users/me
 export async function updateMyProfile(
   req: AuthenticatedRequest,
@@ -79,11 +45,6 @@ export async function getAllUsers(
       return;
     }
 
-    const where =
-      req.user.role === "DEPARTMENT_ADMIN"
-        ? { departmentId: req.user.departmentId ?? undefined }
-        : {};
-
     if (req.user.role === "DEPARTMENT_ADMIN" && !req.user.departmentId) {
       res.status(403).json({
         error: "Forbidden: Department admin is not assigned to a department",
@@ -91,19 +52,42 @@ export async function getAllUsers(
       return;
     }
 
-    const users = await prisma.user.findMany({
-      where,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        departmentId: true,
-        createdAt: true,
+    const where =
+      req.user.role === "DEPARTMENT_ADMIN"
+        ? { departmentId: req.user.departmentId }
+        : {};
+
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Number(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          departmentId: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count({ where }),
+    ]);
+
+    res.json({
+      users,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
     });
-
-    res.json({ users });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

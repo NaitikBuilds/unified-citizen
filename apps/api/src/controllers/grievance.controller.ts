@@ -279,6 +279,18 @@ export async function updateGrievance(
       return;
     }
 
+    // Officers may only update grievances actively assigned to them.
+    if (role === "OFFICER") {
+      const assignment = await prisma.assignment.findFirst({
+        where: { grievanceId: id, officerId: userId, status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!assignment) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
+    }
+
     const updatedGrievance = await prisma.$transaction(async (tx) => {
       const updated = await tx.grievance.update({
         where: { id },
@@ -1017,6 +1029,18 @@ export async function escalateGrievance(
     ) {
       res.status(403).json({ error: "Forbidden" });
       return;
+    }
+
+    // Officers may only escalate grievances actively assigned to them.
+    if (role === "OFFICER") {
+      const assignment = await prisma.assignment.findFirst({
+        where: { grievanceId: id, officerId: userId, status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!assignment) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
     }
 
     // Escalation eligibility: only grievances in a state that permits
