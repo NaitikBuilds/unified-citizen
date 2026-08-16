@@ -21,7 +21,7 @@ export const createGrievanceSchema = z.object({
     title: z.string().min(3, 'Title is required'),
     description: z.string().min(10, 'Description must be at least 10 characters'),
     category: z.string().min(1, 'Category is required'),
-    priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
+    priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']).optional(),
     departmentId: z.string().optional(),
   }),
 });

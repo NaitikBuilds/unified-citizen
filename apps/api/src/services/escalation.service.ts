@@ -1,14 +1,21 @@
 import { prisma } from './prisma.service.js';
-import { createAuditLog } from './audit.service.js';
 
+/**
+ * Creates an Escalation record. Must be called inside the caller's
+ * transaction so that the escalation row, the grievance status update and
+ * the audit entry commit atomically.
+ *
+ * The caller is responsible for authorization (department/ownership
+ * boundaries) and for updating the grievance state.
+ */
 export async function createEscalation(
   grievanceId: string,
   userId: string,
   level: 'LEVEL_1' | 'LEVEL_2' | 'LEVEL_3' | 'ADMIN',
-  reason: string
+  reason: string,
+  tx: any = prisma,
 ) {
-  // Create the actual escalation record
-  const escalation = await prisma.escalation.create({
+  return tx.escalation.create({
     data: {
       grievanceId,
       level,
@@ -18,21 +25,4 @@ export async function createEscalation(
       escalatedAt: new Date(),
     },
   });
-
-  // Update grievance status to ESCALATED as specified in the architecture
-  await prisma.grievance.update({
-    where: { id: grievanceId },
-    data: { status: 'ESCALATED' },
-  });
-
-  // Record audit log
-  await createAuditLog({
-    userId,
-    grievanceId,
-    action: 'ESCALATION_CREATED',
-    newValue: level,
-    metadata: { reason },
-  });
-
-  return escalation;
 }

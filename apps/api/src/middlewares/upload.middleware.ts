@@ -1,7 +1,12 @@
 import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
+import fs from 'fs';
 import { Request } from 'express';
+
+// Ensure the uploads directory exists before multer writes to it.
+const uploadsDir = path.join(process.cwd(), 'uploads');
+fs.mkdirSync(uploadsDir, { recursive: true });
 
 // Configure storage
 const storage = multer.diskStorage({

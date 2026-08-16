@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import path from "path";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
@@ -22,8 +21,9 @@ app.use(
 
 app.use(express.json());
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+// Uploaded files are NOT served statically. They are only accessible through
+// the protected attachment download endpoint which enforces authentication
+// and grievance-level authorization.
 
 app.get("/api/v1/health", (_req, res) => {
   res.json({

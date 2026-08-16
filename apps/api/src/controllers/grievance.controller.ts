@@ -1,7 +1,10 @@
+import path from "path";
+import fs from "fs";
 import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import { prisma } from "../services/prisma.service.js";
 import { createSLAForGrievance } from "../services/sla.service.js";
+import { createEscalation } from "../services/escalation.service.js";
 import { createAuditLog } from "../services/audit.service.js";
 import {
   addCommentToGrievance as addCommentService,
@@ -60,10 +63,18 @@ export async function createGrievance(
         tx,
       });
 
+      // SLA creation runs inside the same transaction as the grievance: if it
+      // fails the grievance is rolled back, so no orphaned/inconsistent state
+      // can remain. When the grievance has no department, no SLA is created.
+      await createSLAForGrievance(
+        grievance.id,
+        grievance.departmentId,
+        grievance.priority,
+        tx,
+      );
+
       return grievance;
     });
-
-    await createSLAForGrievance(result.id, departmentId, result.priority);
 
     res
       .status(201)
@@ -96,8 +107,17 @@ export async function getGrievances(
         orderBy: { createdAt: "desc" },
       });
     } else if (role === "OFFICER" || role === "DEPARTMENT_ADMIN") {
+      // A staff user without a department must never be able to list
+      // grievances outside any scope (departmentId: undefined would match
+      // every grievance).
+      if (!departmentId) {
+        res.status(403).json({
+          error: "Forbidden: You are not assigned to a department",
+        });
+        return;
+      }
       grievances = await prisma.grievance.findMany({
-        where: { departmentId: departmentId ?? undefined },
+        where: { departmentId },
         orderBy: { createdAt: "desc" },
       });
     } else if (role === "SUPER_ADMIN") {
@@ -151,7 +171,7 @@ export async function getGrievanceById(
     }
     if (
       (role === "OFFICER" || role === "DEPARTMENT_ADMIN") &&
-      grievance.departmentId !== departmentId
+      (!departmentId || grievance.departmentId !== departmentId)
     ) {
       res.status(403).json({ error: "Forbidden" });
       return;
@@ -749,6 +769,70 @@ export async function getGrievanceAttachments(
   }
 }
 
+// GET /api/grievances/:id/attachments/:attachmentId
+export async function downloadGrievanceAttachment(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const id = req.params.id as string;
+    const attachmentId = req.params.attachmentId as string;
+
+    const attachment = await prisma.attachment.findUnique({
+      where: { id: attachmentId },
+    });
+
+    if (!attachment || attachment.grievanceId !== id) {
+      res.status(404).json({ error: "Attachment not found" });
+      return;
+    }
+
+    const allowed = await canAccessGrievanceSubResource(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    });
+
+    if (!allowed) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    // fileUrl is server-generated as `/uploads/<random-filename>`; resolve it
+    // with path.basename so traversal attempts can never escape the uploads
+    // directory.
+    const uploadsDir = path.join(process.cwd(), "uploads");
+    const fileName = path.basename(attachment.fileUrl);
+    const filePath = path.join(uploadsDir, fileName);
+
+    if (!filePath.startsWith(uploadsDir)) {
+      res.status(400).json({ error: "Invalid attachment path" });
+      return;
+    }
+
+    try {
+      await fs.promises.access(filePath);
+    } catch {
+      res.status(404).json({ error: "Attachment file not found" });
+      return;
+    }
+
+    const safeName = (attachment.fileName || fileName).replace(
+      /["\\\r\n]/g,
+      "_",
+    );
+    res.download(filePath, safeName);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // POST /api/grievances/:id/escalate
 export async function escalateGrievance(
   req: AuthenticatedRequest,
@@ -762,10 +846,18 @@ export async function escalateGrievance(
     }
 
     const id = req.params.id as string;
+    const { level, reason } = req.body;
     const userId = req.user.userId;
+
+    if (!level || !reason) {
+      res
+        .status(400)
+        .json({ error: "Escalation level and reason are required" });
+      return;
+    }
+
     const grievance = await prisma.grievance.findUnique({
       where: { id },
-      include: { sla: true },
     });
 
     if (!grievance) {
@@ -774,44 +866,80 @@ export async function escalateGrievance(
     }
 
     const role = req.user.role;
+    const departmentId = req.user.departmentId;
+
+    // Ownership/department boundary:
+    // - CITIZEN: only their own grievance
+    // - OFFICER / DEPARTMENT_ADMIN: only grievances in their department
+    // - SUPER_ADMIN: system-wide
     if (role === "CITIZEN" && grievance.citizenId !== userId) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }
 
-    const updatedGrievance = await prisma.$transaction(async (tx) => {
-      const updated = await tx.grievance.update({
-        where: { id },
-        data: {
-          priority: "CRITICAL",
-          status: "ESCALATED",
-        },
+    if (
+      (role === "OFFICER" || role === "DEPARTMENT_ADMIN") &&
+      (!departmentId || grievance.departmentId !== departmentId)
+    ) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    // Escalation eligibility: only grievances in a state that permits
+    // transitioning to ESCALATED may be escalated.
+    if (!canTransitionGrievanceStatus(grievance.status, "ESCALATED")) {
+      res.status(400).json({
+        error: `Grievance cannot be escalated from status ${grievance.status}`,
+      });
+      return;
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Prevent duplicate open escalations for the same grievance.
+      const existing = await tx.escalation.findFirst({
+        where: { grievanceId: id, status: "OPEN" },
       });
 
-      if (grievance.sla) {
-        await tx.sLA.update({
-          where: { id: grievance.sla.id },
-          data: { status: "BREACHED" },
-        });
+      if (existing) {
+        throw new Error("Grievance is already escalated");
       }
+
+      const escalation = await createEscalation(
+        id,
+        userId,
+        level,
+        reason,
+        tx,
+      );
+
+      const updated = await tx.grievance.update({
+        where: { id },
+        data: { status: "ESCALATED" },
+      });
 
       await createAuditLog({
         userId,
         grievanceId: id,
         action: "ESCALATE_GRIEVANCE",
         oldValue: { status: grievance.status, priority: grievance.priority },
-        newValue: { status: "ESCALATED", priority: "CRITICAL" },
+        newValue: { status: "ESCALATED", level },
+        metadata: { reason },
         tx,
       });
 
-      return updated;
+      return { escalation, updated };
     });
 
     res.json({
       message: "Grievance escalated successfully",
-      grievance: updatedGrievance,
+      escalation: result.escalation,
+      grievance: result.updated,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.message === "Grievance is already escalated") {
+      res.status(409).json({ error: error.message });
+      return;
+    }
     next(error);
   }
 }

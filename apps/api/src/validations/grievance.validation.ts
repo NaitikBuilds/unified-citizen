@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+// Prisma models use cuid() primary keys (e.g. cmsrzow3w000azgft4wvilxuy).
+// All ID validations must accept CUIDs, not UUIDs.
+
 export const createGrievanceSchema = z.object({
   body: z.object({
     title: z.string().min(5, "Title must be at least 5 characters long"),
@@ -7,8 +10,10 @@ export const createGrievanceSchema = z.object({
       .string()
       .min(10, "Description must be at least 10 characters long"),
     category: z.string().min(1, "Category is required"),
-    priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
-    departmentId: z.string().uuid("Invalid department ID format").optional(),
+    priority: z
+      .enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"])
+      .optional(),
+    departmentId: z.cuid("Invalid department ID format").optional(),
     isAnonymous: z.boolean().optional(),
     location: z.string().optional(),
     latitude: z.number().optional(),
@@ -18,7 +23,7 @@ export const createGrievanceSchema = z.object({
 
 export const updateGrievanceStatusSchema = z.object({
   params: z.object({
-    id: z.string().uuid("Invalid grievance ID format"),
+    id: z.cuid("Invalid grievance ID format"),
   }),
   body: z.object({
     status: z.enum([
@@ -37,18 +42,20 @@ export const updateGrievanceStatusSchema = z.object({
 
 export const assignGrievanceSchema = z.object({
   params: z.object({
-    id: z.string().uuid("Invalid grievance ID format"),
+    id: z.cuid("Invalid grievance ID format"),
   }),
   body: z.object({
-    officerId: z.string().uuid("Invalid officer ID format"),
-    departmentId: z.string().uuid("Invalid department ID format"),
+    officerId: z.cuid("Invalid officer ID format"),
+    // The controller derives the assignment department from the grievance
+    // itself, so a client-supplied departmentId is not required.
+    departmentId: z.cuid("Invalid department ID format").optional(),
     reason: z.string().optional(),
   }),
 });
 
 export const addCommentSchema = z.object({
   params: z.object({
-    id: z.string().uuid("Invalid grievance ID format"),
+    id: z.cuid("Invalid grievance ID format"),
   }),
   body: z.object({
     message: z.string().min(1, "Comment message cannot be empty"),
@@ -58,10 +65,20 @@ export const addCommentSchema = z.object({
 
 export const addFeedbackSchema = z.object({
   params: z.object({
-    id: z.string().uuid("Invalid grievance ID format"),
+    id: z.cuid("Invalid grievance ID format"),
   }),
   body: z.object({
     rating: z.number().int().min(1).max(5, "Rating must be between 1 and 5"),
     comment: z.string().optional(),
+  }),
+});
+
+export const escalateGrievanceSchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid grievance ID format"),
+  }),
+  body: z.object({
+    level: z.enum(["LEVEL_1", "LEVEL_2", "LEVEL_3", "ADMIN"]),
+    reason: z.string().min(3, "Escalation reason must be at least 3 characters long"),
   }),
 });
