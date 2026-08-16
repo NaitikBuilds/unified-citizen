@@ -8,6 +8,9 @@ vi.mock('./prisma.service.js', () => ({
     grievance: {
       findUnique: vi.fn(),
     },
+    assignment: {
+      findFirst: vi.fn(),
+    },
   },
 }));
 
@@ -57,10 +60,13 @@ describe('Sub-Resource Authorization Service', () => {
     expect(allowed).toBe(false);
   });
 
-  it('allows OFFICER to access a grievance in their department', async () => {
+  it('allows OFFICER to access a grievance actively assigned to them', async () => {
     vi.mocked(prisma.grievance.findUnique).mockResolvedValueOnce({
       citizenId: 'citizen-2',
       departmentId: 'dept-1',
+    } as any);
+    vi.mocked(prisma.assignment.findFirst).mockResolvedValueOnce({
+      id: 'assignment-1',
     } as any);
 
     const allowed = await canAccessGrievanceSubResource('grv-123', {
@@ -70,6 +76,22 @@ describe('Sub-Resource Authorization Service', () => {
     });
 
     expect(allowed).toBe(true);
+  });
+
+  it('denies OFFICER access without an active assignment in their department', async () => {
+    vi.mocked(prisma.grievance.findUnique).mockResolvedValueOnce({
+      citizenId: 'citizen-2',
+      departmentId: 'dept-1',
+    } as any);
+    vi.mocked(prisma.assignment.findFirst).mockResolvedValueOnce(null);
+
+    const allowed = await canAccessGrievanceSubResource('grv-123', {
+      userId: 'officer-1',
+      role: 'OFFICER',
+      departmentId: 'dept-1',
+    });
+
+    expect(allowed).toBe(false);
   });
 
   it('denies OFFICER access to a grievance in another department', async () => {

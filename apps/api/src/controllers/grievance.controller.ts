@@ -120,7 +120,17 @@ export async function getGrievances(
         });
         return;
       }
-      where = { departmentId };
+      // Officers see only grievances actively assigned to them; department
+      // admins see the full department scope (per governance requirements).
+      where =
+        role === "OFFICER"
+          ? {
+              departmentId,
+              assignments: {
+                some: { officerId: userId, status: "ACTIVE" },
+              },
+            }
+          : { departmentId };
     } else if (role === "SUPER_ADMIN") {
       where = {};
     } else {
@@ -187,11 +197,27 @@ export async function getGrievanceById(
       return;
     }
     if (
-      (role === "OFFICER" || role === "DEPARTMENT_ADMIN") &&
+      role === "DEPARTMENT_ADMIN" &&
       (!departmentId || grievance.departmentId !== departmentId)
     ) {
       res.status(403).json({ error: "Forbidden" });
       return;
+    }
+
+    // Officers may only access grievances actively assigned to them.
+    if (role === "OFFICER") {
+      if (!departmentId || grievance.departmentId !== departmentId) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
+      const assignment = await prisma.assignment.findFirst({
+        where: { grievanceId: id, officerId: userId, status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!assignment) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
     }
 
     res.json({ grievance });
@@ -395,14 +421,22 @@ export async function updateGrievanceStatus(
         data: { status },
       });
 
-      // A resolved grievance completes its SLA lifecycle.
-      if (status === "RESOLVED") {
+      // RESOLVED or REJECTED terminates the SLA lifecycle:
+      // - RESOLVED completes the SLA (work finished, deadlines met)
+      // - REJECTED completes the SLA so a terminal grievance can never
+      //   falsely accrue a WARNING/BREACHED state and notify the citizen.
+      if (status === "RESOLVED" || status === "REJECTED") {
         await tx.sLA.updateMany({
           where: {
             grievanceId: id,
             status: { in: ["ACTIVE", "WARNING", "BREACHED"] },
           },
-          data: { status: "COMPLETED", resolutionCompletedAt: new Date() },
+          data: {
+            status: "COMPLETED",
+            ...(status === "RESOLVED" && {
+              resolutionCompletedAt: new Date(),
+            }),
+          },
         });
       }
 

@@ -31,12 +31,30 @@ export async function canAccessGrievanceSubResource(
     return grievance.citizenId === user.userId;
   }
 
-  if (user.role === "OFFICER" || user.role === "DEPARTMENT_ADMIN") {
+  // Department admins have department-wide scope.
+  if (user.role === "DEPARTMENT_ADMIN") {
     return (
       user.departmentId !== null &&
       grievance.departmentId !== null &&
       grievance.departmentId === user.departmentId
     );
+  }
+
+  // Officers may only act on sub-resources of grievances actively assigned
+  // to them (within their department).
+  if (user.role === "OFFICER") {
+    if (
+      user.departmentId === null ||
+      grievance.departmentId === null ||
+      grievance.departmentId !== user.departmentId
+    ) {
+      return false;
+    }
+    const assignment = await prisma.assignment.findFirst({
+      where: { grievanceId, officerId: user.userId, status: "ACTIVE" },
+      select: { id: true },
+    });
+    return Boolean(assignment);
   }
 
   return false;

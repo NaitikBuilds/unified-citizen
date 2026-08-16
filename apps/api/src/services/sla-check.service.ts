@@ -21,8 +21,14 @@ export async function checkAndProcessSLABreaches() {
     const breachedIds: string[] = [];
 
     for (const sla of activeSLAs) {
+      // RESOLVED and REJECTED are terminal states: their SLA is completed by
+      // the status transition and must never accrue warning/breach states.
+      const isTerminal = ['RESOLVED', 'REJECTED'].includes(
+        sla.grievance.status,
+      );
+
       const isResolutionBreached =
-        sla.resolutionDueAt < now && sla.grievance.status !== 'RESOLVED';
+        sla.resolutionDueAt < now && !isTerminal;
 
       if (isResolutionBreached) {
         breachedIds.push(sla.id);
@@ -52,7 +58,7 @@ export async function checkAndProcessSLABreaches() {
         }
       } else if (
         sla.responseDueAt < now &&
-        sla.grievance.status !== 'RESOLVED' &&
+        !isTerminal &&
         sla.status !== 'WARNING'
       ) {
         // Response deadline passed but resolution deadline has not: warning.
