@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
 import grievanceRoutes from "./routes/grievance.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import attachmentRoutes from "./routes/attachment.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -38,8 +39,9 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/departments", departmentRoutes);
 app.use("/api/v1/grievances", grievanceRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/attachments", attachmentRoutes);
 
-// Centralized Error Handler (must be registered after routes)
+// Centralized Error Handler (must be registered LAST after all routes)
 app.use(errorHandler);
 
 export default app;
