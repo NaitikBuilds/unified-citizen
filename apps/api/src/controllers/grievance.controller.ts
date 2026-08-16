@@ -472,7 +472,7 @@ export async function addGrievanceComment(
     }
 
     const id = req.params.id as string;
-    const { message } = req.body;
+    const { message, isInternal } = req.body;
 
     if (!message || message.trim() === "") {
       res.status(400).json({ error: "Comment message is required" });
@@ -487,6 +487,7 @@ export async function addGrievanceComment(
         departmentId: req.user.departmentId ?? null,
       },
       message,
+      isInternal === true,
     );
 
     res.status(201).json({ message: "Comment added successfully", comment });
@@ -716,7 +717,7 @@ export async function addGrievanceFeedback(
     }
 
     const id = req.params.id as string;
-    const { rating, feedback } = req.body;
+    const { rating, comment } = req.body;
 
     const grievance = await prisma.grievance.findUnique({ where: { id } });
 
@@ -737,6 +738,31 @@ export async function addGrievanceFeedback(
       return;
     }
 
+    const existingFeedback = await prisma.feedback.findFirst({
+      where: {
+        grievanceId: id,
+        userId: req.user.userId,
+      },
+    });
+
+    if (existingFeedback) {
+      res.status(409).json({
+        error: "Feedback has already been submitted for this grievance",
+      });
+      return;
+    }
+
+    const numericRating = Number(rating);
+    if (
+      !Number.isInteger(numericRating) ||
+      numericRating < 1 ||
+      numericRating > 5
+    ) {
+      res.status(400).json({
+        error: "Rating must be an integer between 1 and 5",
+      });
+      return;
+    }
     const newFeedback = await submitFeedbackService(
       id,
       {
@@ -744,8 +770,8 @@ export async function addGrievanceFeedback(
         role: req.user.role,
         departmentId: req.user.departmentId ?? null,
       },
-      Number(rating) || 5,
-      feedback,
+      numericRating,
+      comment,
     );
 
     res.json({

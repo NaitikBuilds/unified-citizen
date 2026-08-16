@@ -1,6 +1,6 @@
-import { prisma } from './prisma.service.js';
-import { canAccessGrievanceSubResource } from './subresource-auth.service.js';
-import { createAuditLog } from './audit.service.js';
+import { prisma } from "./prisma.service.js";
+import { canAccessGrievanceSubResource } from "./subresource-auth.service.js";
+import { createAuditLog } from "./audit.service.js";
 
 interface UserContext {
   userId: string;
@@ -9,25 +9,35 @@ interface UserContext {
 }
 
 // --- COMMENTS ---
-export async function addCommentToGrievance(grievanceId: string, user: UserContext, textContent: string) {
+export async function addCommentToGrievance(
+  grievanceId: string,
+  user: UserContext,
+  textContent: string,
+  requestedIsInternal = false,
+) {
   const allowed = await canAccessGrievanceSubResource(grievanceId, user);
+
   if (!allowed) {
-    throw new Error('Forbidden: You do not have access to this grievance sub-resource.');
+    throw new Error(
+      "Forbidden: You do not have access to this grievance sub-resource.",
+    );
   }
+
+  const isInternal = user.role === "CITIZEN" ? false : requestedIsInternal;
 
   const comment = await prisma.comment.create({
     data: {
       grievanceId,
       userId: user.userId,
-      text: textContent,
-      content: textContent,
-    } as any,
+      message: textContent,
+      isInternal,
+    },
   });
 
   await createAuditLog({
     userId: user.userId,
     grievanceId,
-    action: 'COMMENT_ADDED',
+    action: "COMMENT_ADDED",
     newValue: comment.id,
   });
 
@@ -35,10 +45,18 @@ export async function addCommentToGrievance(grievanceId: string, user: UserConte
 }
 
 // --- ATTACHMENTS ---
-export async function addAttachmentToGrievance(grievanceId: string, user: UserContext, fileUrl: string, fileType: string, fileName?: string) {
+export async function addAttachmentToGrievance(
+  grievanceId: string,
+  user: UserContext,
+  fileUrl: string,
+  fileType: string,
+  fileName?: string,
+) {
   const allowed = await canAccessGrievanceSubResource(grievanceId, user);
   if (!allowed) {
-    throw new Error('Forbidden: You do not have access to this grievance sub-resource.');
+    throw new Error(
+      "Forbidden: You do not have access to this grievance sub-resource.",
+    );
   }
 
   const attachment = await prisma.attachment.create({
@@ -46,7 +64,7 @@ export async function addAttachmentToGrievance(grievanceId: string, user: UserCo
       grievanceId,
       uploadedById: user.userId,
       fileUrl,
-      fileName: fileName || fileUrl.split('/').pop() || 'attachment',
+      fileName: fileName || fileUrl.split("/").pop() || "attachment",
       fileType: fileType as any,
     },
   });
@@ -54,7 +72,7 @@ export async function addAttachmentToGrievance(grievanceId: string, user: UserCo
   await createAuditLog({
     userId: user.userId,
     grievanceId,
-    action: 'ATTACHMENT_ADDED',
+    action: "ATTACHMENT_ADDED",
     newValue: attachment.id,
   });
 
@@ -62,10 +80,17 @@ export async function addAttachmentToGrievance(grievanceId: string, user: UserCo
 }
 
 // --- FEEDBACK ---
-export async function submitGrievanceFeedback(grievanceId: string, user: UserContext, rating: number, comments?: string) {
+export async function submitGrievanceFeedback(
+  grievanceId: string,
+  user: UserContext,
+  rating: number,
+  comments?: string,
+) {
   const allowed = await canAccessGrievanceSubResource(grievanceId, user);
   if (!allowed) {
-    throw new Error('Forbidden: You do not have access to this grievance sub-resource.');
+    throw new Error(
+      "Forbidden: You do not have access to this grievance sub-resource.",
+    );
   }
 
   const feedback = await prisma.feedback.create({
@@ -73,14 +98,14 @@ export async function submitGrievanceFeedback(grievanceId: string, user: UserCon
       grievanceId,
       userId: user.userId,
       rating,
-      comments: comments || null,
+      comment: comments || null,
     },
   });
 
   await createAuditLog({
     userId: user.userId,
     grievanceId,
-    action: 'FEEDBACK_SUBMITTED',
+    action: "FEEDBACK_SUBMITTED",
     newValue: String(rating),
   });
 

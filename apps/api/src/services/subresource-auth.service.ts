@@ -1,4 +1,4 @@
-import { prisma } from './prisma.service.js';
+import { prisma } from "./prisma.service.js";
 
 interface UserContext {
   userId: string;
@@ -6,22 +6,36 @@ interface UserContext {
   departmentId: string | null;
 }
 
-export async function canAccessGrievanceSubResource(grievanceId: string, user: UserContext): Promise<boolean> {
-  if (user.role === 'SUPER_ADMIN') return true;
-
+export async function canAccessGrievanceSubResource(
+  grievanceId: string,
+  user: UserContext,
+): Promise<boolean> {
   const grievance = await prisma.grievance.findUnique({
     where: { id: grievanceId },
-    select: { citizenId: true, departmentId: true },
+    select: {
+      citizenId: true,
+      departmentId: true,
+    },
   });
 
-  if (!grievance) return false;
+  if (!grievance) {
+    return false;
+  }
 
-  if (user.role === 'CITIZEN') {
+  if (user.role === "SUPER_ADMIN") {
+    return true;
+  }
+
+  if (user.role === "CITIZEN") {
     return grievance.citizenId === user.userId;
   }
 
-  if (user.role === 'OFFICER' || user.role === 'DEPARTMENT_ADMIN') {
-    return Boolean(user.departmentId && grievance.departmentId === user.departmentId);
+  if (user.role === "OFFICER" || user.role === "DEPARTMENT_ADMIN") {
+    return (
+      user.departmentId !== null &&
+      grievance.departmentId !== null &&
+      grievance.departmentId === user.departmentId
+    );
   }
 
   return false;
