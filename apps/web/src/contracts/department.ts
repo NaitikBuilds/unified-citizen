@@ -4,6 +4,18 @@ export type Department = {
   code?: string
   description?: string
   isActive?: boolean
+  createdAt?: string
+}
+
+export type CreateDepartmentRequest = {
+  name: string
+  code?: string
+  description?: string
+}
+
+export type UpdateDepartmentRequest = {
+  name?: string
+  description?: string
 }
 
 export type OfficerSummary = {

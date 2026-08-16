@@ -1,0 +1,56 @@
+import type { Escalation } from '../../contracts/escalation'
+
+export const mockEscalations: Escalation[] = [
+  {
+    id: 'esc-1',
+    grievanceId: 'GRV-1003',
+    level: 'LEVEL_2',
+    status: 'OPEN',
+    reason:
+      'Water contamination affecting 200+ households; department unresponsive beyond SLA.',
+    createdById: 'user-citizen-3',
+    createdAt: '2026-08-15T18:00:00.000Z',
+    escalatedAt: '2026-08-15T18:00:00.000Z',
+  },
+  {
+    id: 'esc-2',
+    grievanceId: 'GRV-1007',
+    level: 'LEVEL_3',
+    status: 'OPEN',
+    reason: 'Sewage overflow health hazard; no repair crew assigned within SLA.',
+    createdById: 'user-citizen-5',
+    createdAt: '2026-08-13T09:00:00.000Z',
+    escalatedAt: '2026-08-13T09:00:00.000Z',
+  },
+  {
+    id: 'esc-3',
+    grievanceId: 'GRV-1016',
+    level: 'ADMIN',
+    status: 'ACKNOWLEDGED',
+    reason: 'Fire near school premises; mayor office notified.',
+    createdById: 'user-super-admin',
+    createdAt: '2026-08-11T08:30:00.000Z',
+    escalatedAt: '2026-08-11T08:30:00.000Z',
+  },
+  {
+    id: 'esc-4',
+    grievanceId: 'GRV-1002',
+    level: 'LEVEL_1',
+    status: 'RESOLVED',
+    reason: 'Collection crew delayed beyond 48h response SLA.',
+    createdById: 'user-citizen-2',
+    createdAt: '2026-08-15T09:00:00.000Z',
+    escalatedAt: '2026-08-15T09:00:00.000Z',
+    resolvedAt: '2026-08-16T09:00:00.000Z',
+  },
+  {
+    id: 'esc-5',
+    grievanceId: 'GRV-1014',
+    level: 'LEVEL_1',
+    status: 'OPEN',
+    reason: 'Water leakage wasting large volumes; shutdown window not approved.',
+    createdById: 'user-officer-water-1',
+    createdAt: '2026-08-14T14:00:00.000Z',
+    escalatedAt: '2026-08-14T14:00:00.000Z',
+  },
+]
