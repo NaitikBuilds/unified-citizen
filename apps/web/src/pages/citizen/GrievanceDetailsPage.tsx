@@ -3,20 +3,29 @@ import {
   ArrowLeft,
   Building2,
   CalendarDays,
+  FileText,
   FolderOpen,
   Lock,
   MapPin,
+  MessageSquareText,
   SearchX,
+  UserRound,
 } from 'lucide-react'
 import { services } from '../../api/registry'
 import { useAsync } from '../../hooks/useAsync'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDateTime } from '../../utils/format'
+import type { Attachment } from '../../contracts/attachment'
+import type { Comment } from '../../contracts/comment'
+import type { Sla } from '../../contracts/sla'
+import { ROLE_LABELS } from '../../auth/roles'
 import { PriorityBadge, StatusBadge } from '../../components/grievance'
 import { AIAnalysisCard, DuplicateWarning } from '../../components/ai'
+import { SLAIndicator } from '../../components/sla/SLAIndicator'
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
   EmptyState,
@@ -30,11 +39,14 @@ function DetailsSkeleton() {
       <Skeleton className="mb-6 h-5 w-32" />
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
-          <Skeleton className="h-64 rounded-xl" />
+          <Skeleton className="h-72 rounded-xl" />
+          <Skeleton className="h-40 rounded-xl" />
+          <Skeleton className="h-48 rounded-xl" />
         </div>
         <div className="space-y-4">
           <Skeleton className="h-64 rounded-xl" />
           <Skeleton className="h-40 rounded-xl" />
+          <Skeleton className="h-48 rounded-xl" />
         </div>
       </div>
     </div>
@@ -77,7 +89,173 @@ function NotFoundState() {
   )
 }
 
-/** Grievance details — Member 4, Steps 89 (AI) + 92 (details) + 93 (timeline). */
+function formatFileSize(bytes?: number | null): string {
+  if (!bytes) {
+    return ''
+  }
+  if (bytes < 1024 * 1024) {
+    return `${Math.max(1, Math.round(bytes / 1024))} KB`
+  }
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+function AttachmentsSection({ grievanceId }: { grievanceId: string }) {
+  const query = useAsync(() => services.grievance.getAttachments(grievanceId), [grievanceId])
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Attachments</CardTitle>
+        <CardDescription>Photos and documents submitted with this grievance.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {query.isLoading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-10 rounded-lg" />
+            <Skeleton className="h-10 rounded-lg" />
+          </div>
+        ) : query.isError ? (
+          <p className="text-sm text-slate-500">
+            Attachments could not be loaded.{' '}
+            <button
+              type="button"
+              onClick={query.reload}
+              className="font-medium text-blue-600 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              Try again
+            </button>
+          </p>
+        ) : (query.data?.length ?? 0) === 0 ? (
+          <p className="text-sm text-slate-500">No attachments were added.</p>
+        ) : (
+          <ul className="space-y-2">
+            {query.data?.map((attachment: Attachment) => (
+              <li key={attachment.id}>
+                <a
+                  href={attachment.fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5 transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                >
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-100">
+                    <FileText className="size-4.5 text-slate-500" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium text-slate-800">
+                      {attachment.fileName}
+                    </span>
+                    <span className="block text-xs text-slate-500">
+                      {formatFileSize(attachment.fileSize)} · {formatDateTime(attachment.createdAt)}
+                    </span>
+                  </span>
+                  <span className="text-xs font-medium text-blue-600">Open</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function SlaSection({ grievanceId }: { grievanceId: string }) {
+  const query = useAsync(() => services.sla.getByGrievance(grievanceId), [grievanceId])
+  const sla: Sla | null = query.data ?? null
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>SLA</CardTitle>
+        <CardDescription>Response and resolution deadlines for this grievance.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {query.isLoading ? (
+          <Skeleton className="h-32 rounded-lg" />
+        ) : query.isError ? (
+          <p className="text-sm text-slate-500">
+            SLA details could not be loaded.{' '}
+            <button
+              type="button"
+              onClick={query.reload}
+              className="font-medium text-blue-600 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              Try again
+            </button>
+          </p>
+        ) : sla ? (
+          <SLAIndicator sla={sla} />
+        ) : (
+          <p className="text-sm text-slate-500">
+            No SLA has been assigned to this grievance yet.
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function CommentsShell({ grievanceId }: { grievanceId: string }) {
+  const query = useAsync(() => services.grievance.getComments(grievanceId), [grievanceId])
+  const comments: Comment[] = query.data ?? []
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <MessageSquareText className="size-4 text-slate-400" aria-hidden="true" />
+          <CardTitle>Updates & communication</CardTitle>
+        </div>
+        <CardDescription>
+          Officer updates and replies on this grievance. Adding comments is coming in a
+          later step.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {query.isLoading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-14 rounded-lg" />
+            <Skeleton className="h-14 rounded-lg" />
+          </div>
+        ) : query.isError ? (
+          <p className="text-sm text-slate-500">
+            Updates could not be loaded.{' '}
+            <button
+              type="button"
+              onClick={query.reload}
+              className="font-medium text-blue-600 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              Try again
+            </button>
+          </p>
+        ) : comments.length === 0 ? (
+          <p className="text-sm text-slate-500">
+            No updates yet. You will be notified when the department responds.
+          </p>
+        ) : (
+          <ul className="space-y-4">
+            {comments.map((comment) => (
+              <li key={comment.id} className="rounded-lg border border-slate-100 bg-slate-50/60 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold text-slate-800">
+                    {comment.user?.name ?? 'Department'}
+                  </span>
+                  <span className="text-xs text-slate-500">{formatDateTime(comment.createdAt)}</span>
+                </div>
+                {comment.user?.role && (
+                  <p className="text-xs text-slate-500">{ROLE_LABELS[comment.user.role]}</p>
+                )}
+                <p className="mt-2 text-sm leading-relaxed text-slate-700">{comment.message}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+/** Grievance details — Member 4, Steps 89–93. */
 export function GrievanceDetailsPage() {
   const { id } = useParams<{ id: string }>()
 
@@ -132,7 +310,7 @@ export function GrievanceDetailsPage() {
       </Link>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main complaint */}
+        {/* Main column */}
         <div className="space-y-6 lg:col-span-2">
           <Card>
             <CardHeader>
@@ -189,9 +367,21 @@ export function GrievanceDetailsPage() {
                     {formatDateTime(grievance.createdAt)}
                   </dd>
                 </div>
+                <div>
+                  <dt className="flex items-center gap-1.5 text-xs text-slate-500">
+                    <UserRound className="size-3.5" aria-hidden="true" />
+                    Assigned officer
+                  </dt>
+                  <dd className="mt-0.5 font-medium text-slate-800">
+                    {grievance.assignedOfficer?.name ?? 'Not assigned yet'}
+                  </dd>
+                </div>
               </dl>
             </CardContent>
           </Card>
+
+          <AttachmentsSection grievanceId={grievance.id} />
+          <CommentsShell grievanceId={grievance.id} />
         </div>
 
         {/* Right rail */}
@@ -202,6 +392,7 @@ export function GrievanceDetailsPage() {
             onRetry={aiQuery.reload}
           />
           <DuplicateWarning matches={aiQuery.data?.duplicates ?? []} />
+          <SlaSection grievanceId={grievance.id} />
         </div>
       </div>
     </div>
