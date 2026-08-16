@@ -32,7 +32,8 @@ import {
   attachmentDownloadSchema,
   updateGrievanceSchema,
   reopenGrievanceSchema,
-  listGrievancesSchema
+  listGrievancesSchema,
+  grievanceCommentsQuerySchema
 } from '../validations/grievance.validation.js';
 
 const router = Router();
@@ -64,10 +65,12 @@ router.post('/:id/reopen', requireRole(['CITIZEN']), validate(reopenGrievanceSch
 
 // Grievance comments (Zod validated comment creation)
 router.post('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(addCommentSchema), addGrievanceComment);
-router.get('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), getGrievanceComments);
+router.get('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceCommentsQuerySchema), getGrievanceComments);
 
 // Grievance attachments
-router.post('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), upload.single('file'), uploadGrievanceAttachment);
+// The param is validated BEFORE multer writes anything to disk, so an invalid
+// grievance ID returns 400 without leaving an orphaned file behind.
+router.post('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), upload.single('file'), uploadGrievanceAttachment);
 router.get('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), getGrievanceAttachments);
 router.get('/:id/attachments/:attachmentId', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(attachmentDownloadSchema), downloadGrievanceAttachment);
 

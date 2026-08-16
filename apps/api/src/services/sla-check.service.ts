@@ -1,5 +1,60 @@
 import { prisma } from './prisma.service.js';
 import { createNotification } from './notification.service.js';
+import { createAuditLog } from './audit.service.js';
+
+interface GrievanceLike {
+  id: string;
+  ticketId: string;
+  departmentId: string | null;
+}
+
+/**
+ * Notifies the staff responsible for a grievance's department that its SLA is
+ * at risk/breached: the officer holding the ACTIVE assignment (if any) and the
+ * department's administrators. Recipients are deduplicated; failures are
+ * swallowed by createNotification so they never break the SLA processing.
+ */
+async function notifyDepartmentRecipients(
+  grievance: GrievanceLike,
+  title: string,
+  message: string,
+): Promise<void> {
+  if (!grievance.departmentId) {
+    return;
+  }
+
+  const [admins, activeAssignment] = await Promise.all([
+    prisma.user.findMany({
+      where: {
+        departmentId: grievance.departmentId,
+        role: 'DEPARTMENT_ADMIN',
+      },
+      select: { id: true },
+    }),
+    prisma.assignment.findFirst({
+      where: { grievanceId: grievance.id, status: 'ACTIVE' },
+      select: { officerId: true },
+    }),
+  ]);
+
+  const recipientIds = new Set<string>();
+  for (const admin of admins) {
+    recipientIds.add(admin.id);
+  }
+  if (activeAssignment) {
+    recipientIds.add(activeAssignment.officerId);
+  }
+
+  for (const userId of recipientIds) {
+    await createNotification({
+      userId,
+      title,
+      message,
+      type: 'SLA_WARNING',
+      grievanceId: grievance.id,
+    });
+  }
+}
 
 export async function checkAndProcessSLABreaches() {
   try {
@@ -45,6 +100,15 @@ export async function checkAndProcessSLABreaches() {
               where: { id: sla.grievanceId },
               data: { priority: 'CRITICAL' },
             });
+
+            // System-initiated priority escalation must be auditable.
+            await createAuditLog({
+              grievanceId: sla.grievanceId,
+              action: 'SLA_PRIORITY_ESCALATED',
+              oldValue: { priority: sla.grievance.priority },
+              newValue: { priority: 'CRITICAL' },
+              metadata: { slaId: sla.id },
+            });
           }
 
           await createNotification({
@@ -55,6 +119,12 @@ export async function checkAndProcessSLABreaches() {
             type: 'SLA_WARNING',
             grievanceId: sla.grievanceId,
           });
+
+          await notifyDepartmentRecipients(
+            sla.grievance,
+            'Grievance SLA breached',
+            `Grievance ${sla.grievance.ticketId} has exceeded its resolution timeline and its priority has been raised.`,
+          );
         }
       } else if (
         sla.responseDueAt < now &&
@@ -75,6 +145,12 @@ export async function checkAndProcessSLABreaches() {
           type: 'SLA_WARNING',
           grievanceId: sla.grievanceId,
         });
+
+        await notifyDepartmentRecipients(
+          sla.grievance,
+          'Grievance SLA warning',
+          `Grievance ${sla.grievance.ticketId} is approaching its resolution deadline and needs attention.`,
+        );
       }
     }
 

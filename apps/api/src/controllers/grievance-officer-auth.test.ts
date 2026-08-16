@@ -24,7 +24,11 @@ vi.mock("../services/prisma.service.js", () => ({
 }));
 
 import { prisma } from "../services/prisma.service.js";
-import { updateGrievance, escalateGrievance } from "./grievance.controller.js";
+import {
+  updateGrievance,
+  escalateGrievance,
+  updateGrievanceStatus,
+} from "./grievance.controller.js";
 
 function mockRes() {
   const res: any = {
@@ -215,6 +219,48 @@ describe("escalateGrievance — officer write authorization (F-12)", () => {
     );
 
     expect(res.statusCode).toBe(403);
+  });
+
+  it("sets resolvedAt when an officer transitions a grievance to RESOLVED", async () => {
+    (prisma.grievance.findUnique as any).mockResolvedValue(grievanceInDept);
+    (prisma.assignment.findFirst as any).mockResolvedValue({
+      id: "assignment-1",
+    });
+
+    let capturedTx: any;
+    (prisma.$transaction as any).mockImplementation(async (fn: any) => {
+      capturedTx = {
+        grievance: {
+          update: vi.fn().mockResolvedValue(grievanceInDept),
+        },
+        sLA: { updateMany: vi.fn().mockResolvedValue({ count: 1 }) },
+        auditLog: { create: vi.fn().mockResolvedValue({}) },
+      };
+      return fn(capturedTx);
+    });
+
+    const res = mockRes();
+    await updateGrievanceStatus(
+      {
+        user: assignedOfficer,
+        params: { id: "grievance-1" },
+        body: { status: "RESOLVED" },
+      } as any,
+      res,
+      () => {},
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(capturedTx.grievance.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          status: "RESOLVED",
+          resolvedAt: expect.any(Date),
+        }),
+      }),
+    );
+    // Resolving completes the SLA lifecycle.
+    expect(capturedTx.sLA.updateMany).toHaveBeenCalled();
   });
 
   it("allows an assigned officer to escalate their own grievance", async () => {

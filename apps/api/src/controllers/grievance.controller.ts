@@ -430,7 +430,11 @@ export async function updateGrievanceStatus(
     const updatedGrievance = await prisma.$transaction(async (tx) => {
       const updated = await tx.grievance.update({
         where: { id },
-        data: { status },
+        data: {
+          status,
+          // Record when the grievance reached RESOLVED for lifecycle reporting.
+          ...(status === "RESOLVED" && { resolvedAt: new Date() }),
+        },
       });
 
       // RESOLVED or REJECTED terminates the SLA lifecycle:
@@ -798,17 +802,34 @@ export async function getGrievanceComments(
       whereClause.isInternal = false;
     }
 
-    const comments = await prisma.comment.findMany({
-      where: whereClause,
-      include: {
-        user: {
-          select: { id: true, name: true, role: true },
-        },
-      },
-      orderBy: { createdAt: "asc" },
-    });
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Number(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
 
-    res.json({ comments });
+    const [comments, total] = await Promise.all([
+      prisma.comment.findMany({
+        where: whereClause,
+        include: {
+          user: {
+            select: { id: true, name: true, role: true },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+        skip,
+        take: limit,
+      }),
+      prisma.comment.count({ where: whereClause }),
+    ]);
+
+    res.json({
+      comments,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -820,6 +841,12 @@ export async function uploadGrievanceAttachment(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
+  // The multer-written file is removed on EVERY non-success path so failed or
+  // unauthorized uploads can never accumulate orphaned files on disk. It is
+  // kept only when the attachment record is successfully created.
+  let uploadedFilePath: string | null = null;
+  let keepFile = false;
+
   try {
     if (!req.user) {
       res.status(401).json({ error: "Unauthorized" });
@@ -834,12 +861,15 @@ export async function uploadGrievanceAttachment(
       return;
     }
 
+    uploadedFilePath = path.join(process.cwd(), "uploads", file.filename);
+
     // Verify the actual file content matches the declared MIME type (the
     // client-supplied MIME header is trivially spoofable).
-    const filePath = path.join(process.cwd(), "uploads", file.filename);
-    const signatureValid = await validateFileSignature(filePath, file.mimetype);
+    const signatureValid = await validateFileSignature(
+      uploadedFilePath,
+      file.mimetype,
+    );
     if (!signatureValid) {
-      await fs.promises.unlink(filePath).catch(() => {});
       res.status(400).json({
         error: "File content does not match the declared file type",
       });
@@ -858,6 +888,7 @@ export async function uploadGrievanceAttachment(
       file.originalname,
     );
 
+    keepFile = true;
     res.status(201).json({ message: "File uploaded successfully", attachment });
   } catch (error: any) {
     if (error.message?.includes("Forbidden")) {
@@ -865,6 +896,11 @@ export async function uploadGrievanceAttachment(
       return;
     }
     next(error);
+  } finally {
+    // Keep the file only on success; delete it in every other case.
+    if (uploadedFilePath && !keepFile) {
+      await fs.promises.unlink(uploadedFilePath).catch(() => {});
+    }
   }
 }
 

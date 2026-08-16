@@ -58,8 +58,21 @@ export const addCommentSchema = z.object({
     id: z.cuid("Invalid grievance ID format"),
   }),
   body: z.object({
-    message: z.string().min(1, "Comment message cannot be empty"),
+    message: z
+      .string()
+      .min(1, "Comment message cannot be empty")
+      .max(2000, "Comment must be at most 2000 characters"),
     isInternal: z.boolean().optional(),
+  }),
+});
+
+export const grievanceCommentsQuerySchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid grievance ID format"),
+  }),
+  query: z.object({
+    page: z.coerce.number().int().min(1).optional(),
+    limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
 });
 
