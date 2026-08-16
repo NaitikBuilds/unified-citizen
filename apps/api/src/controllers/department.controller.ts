@@ -120,6 +120,7 @@ export async function updateDepartment(
 }
 
 // Admin: DELETE /api/departments/:id
+// Admin: DELETE /api/departments/:id
 export async function deleteDepartment(
   req: Request,
   res: Response,
@@ -127,11 +128,45 @@ export async function deleteDepartment(
   try {
     const id = req.params.id as string;
 
-    await prisma.department.delete({
+    const department = await prisma.department.findUnique({
       where: { id },
+      select: {
+        id: true,
+        isActive: true,
+      },
     });
 
-    res.json({ message: "Department deleted successfully" });
+    if (!department) {
+      res.status(404).json({ error: "Department not found" });
+      return;
+    }
+
+    if (!department.isActive) {
+      res.status(400).json({
+        error: "Department is already inactive",
+      });
+      return;
+    }
+
+    const updatedDepartment = await prisma.department.update({
+      where: { id },
+      data: {
+        isActive: false,
+      },
+      select: {
+        id: true,
+        name: true,
+        code: true,
+        description: true,
+        isActive: true,
+        updatedAt: true,
+      },
+    });
+
+    res.json({
+      message: "Department deactivated successfully",
+      department: updatedDepartment,
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
