@@ -40,4 +40,15 @@ export const mockNotificationService: NotificationService = {
     }
     mockNotifications[index] = { ...mockNotifications[index], isRead: true }
   },
+
+  async markAllRead(): Promise<void> {
+    maybeFail('notification.markAllRead')
+    await simulateLatency(150, 350)
+
+    for (let index = 0; index < mockNotifications.length; index += 1) {
+      if (!mockNotifications[index].isRead) {
+        mockNotifications[index] = { ...mockNotifications[index], isRead: true }
+      }
+    }
+  },
 }

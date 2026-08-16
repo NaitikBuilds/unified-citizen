@@ -29,4 +29,11 @@ export const apiNotificationService: NotificationService = {
   async markRead(id: string): Promise<void> {
     await client.patch(`/notifications/${id}/read`)
   },
+
+  async markAllRead(): Promise<void> {
+    // No bulk endpoint on the backend — compose the supported per-item PATCH.
+    const { data } = await client.get<NotificationsResponse>('/notifications')
+    const unread = data.notifications.filter((item) => !item.isRead)
+    await Promise.all(unread.map((item) => client.patch(`/notifications/${item.id}/read`)))
+  },
 }

@@ -23,6 +23,7 @@ import { CitizenDashboardPage } from '../pages/citizen/CitizenDashboardPage'
 import { SubmitGrievancePage } from '../pages/citizen/SubmitGrievancePage'
 import { GrievanceDetailsPage } from '../pages/citizen/GrievanceDetailsPage'
 import { GrievanceListPage } from '../pages/citizen/GrievanceListPage'
+import { NotificationsPage } from '../pages/citizen/NotificationsPage'
 import { CitizenPlaceholderPage } from '../pages/citizen/CitizenPlaceholderPage'
 import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboardPage'
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
@@ -148,20 +149,10 @@ export function AppRouter() {
         }
       >
         <Route path="/citizen" element={<CitizenDashboardPage />} />
-        {/* Built in later steps of this batch: 94 notifications */}
         <Route path="/citizen/grievances" element={<GrievanceListPage />} />
         <Route path="/citizen/grievances/:id" element={<GrievanceDetailsPage />} />
         <Route path="/citizen/submit" element={<SubmitGrievancePage />} />
-        <Route
-          path="/citizen/notifications"
-          element={
-            <CitizenPlaceholderPage
-              title="Notifications"
-              phase="Step 94 — Member 4"
-              description="Your notification center with unread tracking will appear here."
-            />
-          }
-        />
+        <Route path="/citizen/notifications" element={<NotificationsPage />} />
         <Route
           path="/citizen/profile"
           element={
