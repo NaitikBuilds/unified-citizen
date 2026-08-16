@@ -26,10 +26,19 @@ export function MobileNav({
     }
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+
     return () => {
       document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [open])
+  }, [open, onClose])
 
   return (
     <div

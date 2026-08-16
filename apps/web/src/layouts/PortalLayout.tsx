@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, type ReactNode } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut, UserRound } from 'lucide-react'
 import { AppLayout } from './AppLayout'
@@ -9,6 +9,8 @@ import { ROLE_LABELS, type Portal } from '../auth/roles'
 
 export interface PortalLayoutProps {
   portal: Portal
+  /** Extra actions rendered in the topbar before the user chip (e.g. a notification bell). */
+  topbarExtra?: ReactNode
 }
 
 /**
@@ -16,16 +18,21 @@ export interface PortalLayoutProps {
  * Resolves the portal's nav config, highlights the active item, and provides
  * the session user chip + logout in the topbar and sidebar footer.
  */
-export function PortalLayout({ portal }: PortalLayoutProps) {
+export function PortalLayout({ portal, topbarExtra }: PortalLayoutProps) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
   const navItems = portalNavigation[portal]
 
-  const activeKey = navItems.find(
-    (item) => item.href && location.pathname.startsWith(item.href),
-  )?.key
+  const activeKey = navItems.find((item) => {
+    if (!item.href) {
+      return false
+    }
+    return (
+      location.pathname === item.href || location.pathname.startsWith(`${item.href}/`)
+    )
+  })?.key
 
   const handleNavigate = useCallback(
     (key: string) => {
@@ -62,6 +69,7 @@ export function PortalLayout({ portal }: PortalLayoutProps) {
       onNavigate={handleNavigate}
       topbarRight={
         <div className="flex items-center gap-3">
+          {topbarExtra}
           <div className="hidden items-center gap-2 sm:flex">
             <span className="flex size-8 items-center justify-center rounded-full bg-slate-100">
               <UserRound className="size-4 text-slate-500" aria-hidden="true" />

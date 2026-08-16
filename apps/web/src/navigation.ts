@@ -1,4 +1,12 @@
-import { LayoutDashboard } from 'lucide-react'
+import {
+  Bell,
+  CircleHelp,
+  LayoutDashboard,
+  ListTodo,
+  PlusCircle,
+  Settings,
+  UserRound,
+} from 'lucide-react'
 import type { NavItem } from './components/layout/types'
 
 /**
@@ -9,6 +17,12 @@ import type { NavItem } from './components/layout/types'
 export const portalNavigation = {
   citizen: [
     { key: 'dashboard', label: 'Dashboard', href: '/citizen', icon: LayoutDashboard },
+    { key: 'grievances', label: 'My Grievances', href: '/citizen/grievances', icon: ListTodo },
+    { key: 'submit', label: 'Submit Grievance', href: '/citizen/submit', icon: PlusCircle },
+    { key: 'notifications', label: 'Notifications', href: '/citizen/notifications', icon: Bell },
+    { key: 'profile', label: 'Profile', href: '/citizen/profile', icon: UserRound },
+    { key: 'settings', label: 'Settings', href: '/citizen/settings', icon: Settings },
+    { key: 'help', label: 'Help', href: '/citizen/help', icon: CircleHelp },
   ] satisfies NavItem[],
 
   department: [

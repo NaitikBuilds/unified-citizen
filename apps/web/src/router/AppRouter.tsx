@@ -18,7 +18,9 @@ import { HelpPage } from '../pages/public/HelpPage'
 
 import { LoginPage } from '../pages/auth/LoginPage'
 import { RegisterPage } from '../pages/auth/RegisterPage'
+import { CitizenLayout } from '../layouts/CitizenLayout'
 import { CitizenDashboardPage } from '../pages/citizen/CitizenDashboardPage'
+import { CitizenPlaceholderPage } from '../pages/citizen/CitizenPlaceholderPage'
 import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboardPage'
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
@@ -132,17 +134,88 @@ export function AppRouter() {
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
 
-      {/* Citizen portal group */}
+      {/* Citizen portal group (Member 4) */}
       <Route
         element={
           <ProtectedRoute>
             <RoleRoute roles={['CITIZEN']}>
-              <PortalLayout portal="citizen" />
+              <CitizenLayout />
             </RoleRoute>
           </ProtectedRoute>
         }
       >
         <Route path="/citizen" element={<CitizenDashboardPage />} />
+        {/* Built in later steps of this batch: 88 submit, 91 list, 92 details, 94 notifications */}
+        <Route
+          path="/citizen/grievances"
+          element={
+            <CitizenPlaceholderPage
+              title="My Grievances"
+              phase="Step 91 — Member 4"
+              description="Your grievance list with filters, search, sorting and pagination will appear here."
+            />
+          }
+        />
+        <Route
+          path="/citizen/grievances/:id"
+          element={
+            <CitizenPlaceholderPage
+              title="Grievance Details"
+              phase="Step 92 — Member 4"
+              description="Full grievance details, AI analysis, SLA and timeline will appear here."
+            />
+          }
+        />
+        <Route
+          path="/citizen/submit"
+          element={
+            <CitizenPlaceholderPage
+              title="Submit Grievance"
+              phase="Step 88 — Member 4"
+              description="The grievance submission form will appear here."
+            />
+          }
+        />
+        <Route
+          path="/citizen/notifications"
+          element={
+            <CitizenPlaceholderPage
+              title="Notifications"
+              phase="Step 94 — Member 4"
+              description="Your notification center with unread tracking will appear here."
+            />
+          }
+        />
+        <Route
+          path="/citizen/profile"
+          element={
+            <CitizenPlaceholderPage
+              title="Profile"
+              phase="Step 99 — Member 4"
+              description="Your name, contact details and security settings will appear here."
+            />
+          }
+        />
+        <Route
+          path="/citizen/settings"
+          element={
+            <CitizenPlaceholderPage
+              title="Settings"
+              phase="Step 100 — Member 4"
+              description="Notification preferences, language and accessibility options will appear here."
+            />
+          }
+        />
+        <Route
+          path="/citizen/help"
+          element={
+            <CitizenPlaceholderPage
+              title="Help"
+              phase="Step 101 — Member 4"
+              description="FAQ, support and grievance guidance will appear here."
+            />
+          }
+        />
       </Route>
 
       {/* Department portal group (officers + department admins) */}
