@@ -1,0 +1,177 @@
+import { Link, Route, Routes } from 'react-router-dom'
+import { PublicLayout } from '../layouts/PublicLayout'
+import { PortalLayout } from '../layouts/PortalLayout'
+import { ProtectedRoute } from '../auth/ProtectedRoute'
+import { RoleRoute } from '../auth/RoleRoute'
+import { PublicNav } from '../components/layout/PublicNav'
+import { useAuth } from '../auth/auth-context'
+import { roleHomePath } from '../auth/roles'
+
+import { HomePage } from '../pages/public/HomePage'
+import { AboutPage } from '../pages/public/AboutPage'
+import { ServicesPage } from '../pages/public/ServicesPage'
+import { HowItWorksPage } from '../pages/public/HowItWorksPage'
+import { DepartmentsPage } from '../pages/public/DepartmentsPage'
+import { FaqPage } from '../pages/public/FaqPage'
+import { ContactPage } from '../pages/public/ContactPage'
+import { HelpPage } from '../pages/public/HelpPage'
+
+import { AuthPlaceholderPage } from '../pages/auth/AuthPlaceholderPage'
+import { CitizenDashboardPage } from '../pages/citizen/CitizenDashboardPage'
+import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboardPage'
+import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
+import { NotFoundPage } from '../pages/NotFoundPage'
+import { FoundationPage } from '../pages/FoundationPage'
+
+function LandingActions() {
+  const { isAuthenticated, user } = useAuth()
+
+  if (isAuthenticated && user) {
+    return (
+      <Link
+        to={roleHomePath(user.role)}
+        className="inline-flex h-9 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      >
+        Go to portal
+      </Link>
+    )
+  }
+
+  return (
+    <>
+      <Link
+        to="/auth/login"
+        className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      >
+        Sign in
+      </Link>
+      <Link
+        to="/auth/register"
+        className="inline-flex h-9 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      >
+        Register
+      </Link>
+    </>
+  )
+}
+
+export function AppRouter() {
+  return (
+    <Routes>
+      {/* Public landing (Phase 2 — Member 4 Step 84) */}
+      <Route
+        path="/"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <HomePage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <AboutPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/services"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <ServicesPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/how-it-works"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <HowItWorksPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/departments"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <DepartmentsPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/faq"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <FaqPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/contact"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <ContactPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/help"
+        element={
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+            <HelpPage />
+          </PublicLayout>
+        }
+      />
+
+      {/* Dev reference: Phase 0 foundation smoke screen */}
+      <Route path="/foundation" element={<FoundationPage />} />
+
+      {/* Authentication (Phase 3 implements the real UI) */}
+      <Route path="/auth/login" element={<AuthPlaceholderPage mode="login" />} />
+      <Route path="/auth/register" element={<AuthPlaceholderPage mode="register" />} />
+
+      {/* Citizen portal group */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['CITIZEN']}>
+              <PortalLayout portal="citizen" />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/citizen" element={<CitizenDashboardPage />} />
+      </Route>
+
+      {/* Department portal group (officers + department admins) */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['OFFICER', 'DEPARTMENT_ADMIN']}>
+              <PortalLayout portal="department" />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/department" element={<DepartmentDashboardPage />} />
+      </Route>
+
+      {/* Admin portal group */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['SUPER_ADMIN']}>
+              <PortalLayout portal="admin" />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/admin" element={<AdminDashboardPage />} />
+      </Route>
+
+      {/* 404 */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  )
+}

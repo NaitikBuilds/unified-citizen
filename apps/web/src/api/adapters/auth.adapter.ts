@@ -45,6 +45,14 @@ export const apiAuthService: AuthService = {
 
   async refresh(refreshToken: string): Promise<RefreshResponse> {
     const { data } = await client.post<RefreshResponse>('/auth/refresh', { refreshToken })
+
+    // Persist so subsequent requests carry the new access token. (The client
+    // interceptor does the same on automatic refresh; this covers explicit calls.)
+    tokenStorage.setAccessToken(data.accessToken)
+    if (data.refreshToken) {
+      tokenStorage.setRefreshToken(data.refreshToken)
+    }
+
     return data
   },
 

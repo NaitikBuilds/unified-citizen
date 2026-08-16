@@ -54,3 +54,9 @@ export type { ErrorStateProps } from './ErrorState'
 
 export { Spinner } from './Spinner'
 export type { SpinnerProps } from './Spinner'
+
+export { PageLoader } from './PageLoader'
+export type { PageLoaderProps } from './PageLoader'
+
+export { ComingSoon } from './ComingSoon'
+export type { ComingSoonProps } from './ComingSoon'
