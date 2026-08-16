@@ -166,13 +166,91 @@ export async function updateUserRoleOrDept(
   res: Response,
 ): Promise<void> {
   try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    if (req.user.role !== "SUPER_ADMIN") {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
     const id = req.params.id as string;
-    const { role, departmentId } = req.body;
+    const { role, departmentId } = req.body ?? {};
+
+    if (role === undefined && departmentId === undefined) {
+      res.status(400).json({
+        error: "At least one of role or departmentId is required",
+      });
+      return;
+    }
+
+    const validRoles = [
+      "CITIZEN",
+      "OFFICER",
+      "DEPARTMENT_ADMIN",
+      "SUPER_ADMIN",
+    ] as const;
+
+    if (role !== undefined && !validRoles.includes(role)) {
+      res.status(400).json({
+        error: "Invalid user role",
+      });
+      return;
+    }
+
+    if (
+      departmentId !== undefined &&
+      departmentId !== null &&
+      typeof departmentId !== "string"
+    ) {
+      res.status(400).json({
+        error: "Invalid departmentId",
+      });
+      return;
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        role: true,
+        departmentId: true,
+      },
+    });
+
+    if (!existingUser) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    if (departmentId !== undefined && departmentId !== null) {
+      const department = await prisma.department.findUnique({
+        where: { id: departmentId },
+        select: {
+          id: true,
+          isActive: true,
+        },
+      });
+
+      if (!department) {
+        res.status(404).json({ error: "Department not found" });
+        return;
+      }
+
+      if (!department.isActive) {
+        res.status(400).json({
+          error: "Cannot assign user to an inactive department",
+        });
+        return;
+      }
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
-        ...(role && { role }),
+        ...(role !== undefined && { role }),
         ...(departmentId !== undefined && { departmentId }),
       },
       select: {
@@ -184,7 +262,10 @@ export async function updateUserRoleOrDept(
       },
     });
 
-    res.json({ message: "User updated successfully", user: updatedUser });
+    res.json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
