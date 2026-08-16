@@ -521,10 +521,13 @@ export async function getGrievanceComments(
       return;
     }
 
-    const role = req.user.role;
-    const userId = req.user.userId;
+    const allowed = await canAccessGrievanceSubResource(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    });
 
-    if (role === "CITIZEN" && grievance.citizenId !== userId) {
+    if (!allowed) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }
@@ -532,7 +535,7 @@ export async function getGrievanceComments(
     const whereClause: { grievanceId: string; isInternal?: boolean } = {
       grievanceId: id,
     };
-    if (role === "CITIZEN") {
+    if (req.user.role === "CITIZEN") {
       whereClause.isInternal = false;
     }
 
