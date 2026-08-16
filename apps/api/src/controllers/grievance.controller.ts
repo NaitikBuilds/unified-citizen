@@ -9,6 +9,7 @@ import {
   submitGrievanceFeedback as submitFeedbackService,
 } from "../services/subresource.service.js";
 import { canTransitionGrievanceStatus } from "../services/grievance-status.service.js";
+import { canAccessGrievanceSubResource } from "../services/subresource-auth.service.js";
 
 // POST /api/grievances
 export async function createGrievance(
@@ -613,10 +614,13 @@ export async function getGrievanceAttachments(
       return;
     }
 
-    const role = req.user.role;
-    const userId = req.user.userId;
+    const allowed = await canAccessGrievanceSubResource(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    });
 
-    if (role === "CITIZEN" && grievance.citizenId !== userId) {
+    if (!allowed) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }
