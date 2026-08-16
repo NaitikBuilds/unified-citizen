@@ -289,6 +289,53 @@ export async function updateGrievanceStatus(
       return;
     }
 
+    if (role === "OFFICER") {
+      const assignment = await prisma.assignment.findFirst({
+        where: {
+          grievanceId: id,
+          officerId: userId,
+          status: "ACTIVE",
+        },
+      });
+
+      if (!assignment) {
+        res.status(403).json({
+          error: "Forbidden: You are not assigned to this grievance",
+        });
+        return;
+      }
+    }
+    // Role-specific transition authorization.
+    // Officers may only move their assigned grievances forward
+    // to IN_PROGRESS or RESOLVED.
+    if (
+      role === "OFFICER" &&
+      status !== "IN_PROGRESS" &&
+      status !== "RESOLVED"
+    ) {
+      res.status(403).json({
+        error: "Forbidden: Officers cannot perform this status transition",
+      });
+      return;
+    }
+
+    // Department admins may manage department-level workflow,
+    // but ASSIGNED should be handled through the dedicated
+    // assignment endpoint.
+    if (
+      role === "DEPARTMENT_ADMIN" &&
+      (status === "ASSIGNED" ||
+        status === "AI_CLASSIFIED" ||
+        status === "REOPENED")
+    ) {
+      res.status(403).json({
+        error:
+          "Forbidden: Department admins cannot perform this status transition",
+      });
+      return;
+    }
+
+    // SUPER_ADMIN is unrestricted by role-specific transition rules.
     if (!canTransitionGrievanceStatus(grievance.status, status)) {
       res.status(400).json({
         error: `Invalid grievance status transition: ${grievance.status} -> ${status}`,
@@ -403,23 +450,81 @@ export async function assignGrievance(
       return;
     }
 
-    const grievance = await prisma.grievance.findUnique({ where: { id } });
+    const grievance = await prisma.grievance.findUnique({
+      where: { id },
+    });
+
     if (!grievance) {
       res.status(404).json({ error: "Grievance not found" });
       return;
     }
 
+    if (!grievance.departmentId) {
+      res.status(400).json({
+        error: "Cannot assign a grievance without a department",
+      });
+      return;
+    }
+    const grievanceDepartmentId = grievance.departmentId;
+
+    // Department admins may only assign grievances belonging
+    // to their own department.
     if (
       role === "DEPARTMENT_ADMIN" &&
-      grievance.departmentId !== userDepartmentId
+      grievanceDepartmentId !== userDepartmentId
     ) {
-      res.status(403).json({ error: "Forbidden" });
+      res.status(403).json({
+        error: "Forbidden: Grievance belongs to another department",
+      });
       return;
     }
 
-    const officer = await prisma.user.findUnique({ where: { id: officerId } });
+    const officer = await prisma.user.findUnique({
+      where: { id: officerId },
+      select: {
+        id: true,
+        name: true,
+        role: true,
+        departmentId: true,
+      },
+    });
+
     if (!officer) {
       res.status(404).json({ error: "Officer not found" });
+      return;
+    }
+
+    if (officer.role !== "OFFICER") {
+      res.status(400).json({
+        error: "Selected user is not an officer",
+      });
+      return;
+    }
+
+    if (!officer.departmentId) {
+      res.status(400).json({
+        error: "Selected officer is not assigned to a department",
+      });
+      return;
+    }
+
+    // The officer must belong to the grievance's department.
+    if (officer.departmentId !== grievanceDepartmentId) {
+      res.status(403).json({
+        error: "Officer does not belong to the grievance department",
+      });
+      return;
+    }
+
+    // Department admins cannot use the request body to cross
+    // department boundaries.
+    if (
+      role === "DEPARTMENT_ADMIN" &&
+      officer.departmentId !== userDepartmentId
+    ) {
+      res.status(403).json({
+        error: "Forbidden: Officer belongs to another department",
+      });
       return;
     }
 
@@ -436,7 +541,7 @@ export async function assignGrievance(
         data: {
           grievanceId: id,
           officerId,
-          departmentId: grievance.departmentId || officer.departmentId || "",
+          departmentId: grievanceDepartmentId,
           assignedById: userId,
           type: "MANUAL",
           status: "ACTIVE",
