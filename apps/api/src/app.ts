@@ -14,7 +14,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -38,6 +38,11 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/departments", departmentRoutes);
 app.use("/api/v1/grievances", grievanceRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+
+// JSON 404 for unknown routes (must be registered after all routes)
+app.use((_req, res) => {
+  res.status(404).json({ success: false, error: "Route not found" });
+});
 
 // Centralized Error Handler (must be registered after routes)
 app.use(errorHandler);

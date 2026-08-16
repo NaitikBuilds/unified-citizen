@@ -26,7 +26,12 @@ import {
   assignGrievanceSchema, 
   addCommentSchema, 
   addFeedbackSchema,
-  escalateGrievanceSchema
+  escalateGrievanceSchema,
+  grievanceIdParamSchema,
+  attachmentDownloadSchema,
+  updateGrievanceSchema,
+  reopenGrievanceSchema,
+  listGrievancesSchema
 } from '../validations/grievance.validation.js';
 
 const router = Router();
@@ -38,11 +43,11 @@ router.use(authenticate);
 router.post('/', requireRole(['CITIZEN']), validate(createGrievanceSchema), createGrievance);
 
 // Role-based grievance viewing (Aligned with schema enums)
-router.get('/', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievances);
-router.get('/:id', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievanceById);
+router.get('/', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(listGrievancesSchema), getGrievances);
+router.get('/:id', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), getGrievanceById);
 
 // Grievance updates
-router.patch('/:id', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), updateGrievance);
+router.patch('/:id', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(updateGrievanceSchema), updateGrievance);
 router.patch('/:id/status', requireRole(['OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(updateGrievanceStatusSchema), updateGrievanceStatus);
 
 // Grievance assignment (Zod validated)
@@ -53,18 +58,18 @@ router.post('/:id/escalate', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMI
 
 // Feedback and Reopen (Zod validated feedback)
 router.post('/:id/feedback', requireRole(['CITIZEN']), validate(addFeedbackSchema), addGrievanceFeedback);
-router.post('/:id/reopen', requireRole(['CITIZEN']), reopenGrievance);
+router.post('/:id/reopen', requireRole(['CITIZEN']), validate(reopenGrievanceSchema), reopenGrievance);
 
 // Grievance comments (Zod validated comment creation)
 router.post('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(addCommentSchema), addGrievanceComment);
-router.get('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievanceComments);
+router.get('/:id/comments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), getGrievanceComments);
 
 // Grievance attachments
 router.post('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), upload.single('file'), uploadGrievanceAttachment);
-router.get('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), getGrievanceAttachments);
-router.get('/:id/attachments/:attachmentId', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), downloadGrievanceAttachment);
+router.get('/:id/attachments', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), getGrievanceAttachments);
+router.get('/:id/attachments/:attachmentId', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(attachmentDownloadSchema), downloadGrievanceAttachment);
 
 // Grievance deletion
-router.delete('/:id', requireRole(['CITIZEN', 'SUPER_ADMIN']), deleteGrievance);
+router.delete('/:id', requireRole(['CITIZEN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), deleteGrievance);
 
 export default router;

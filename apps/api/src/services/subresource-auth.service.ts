@@ -10,6 +10,11 @@ export async function canAccessGrievanceSubResource(
   grievanceId: string,
   user: UserContext,
 ): Promise<boolean> {
+  // SUPER_ADMIN has system-wide access and requires no database lookup.
+  if (user.role === "SUPER_ADMIN") {
+    return true;
+  }
+
   const grievance = await prisma.grievance.findUnique({
     where: { id: grievanceId },
     select: {
@@ -20,10 +25,6 @@ export async function canAccessGrievanceSubResource(
 
   if (!grievance) {
     return false;
-  }
-
-  if (user.role === "SUPER_ADMIN") {
-    return true;
   }
 
   if (user.role === "CITIZEN") {

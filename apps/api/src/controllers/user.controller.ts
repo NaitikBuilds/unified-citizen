@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import { prisma } from "../services/prisma.service.js";
+import { createAuditLog } from "../services/audit.service.js";
 
 // GET /api/users/me
 export async function getMyProfile(
@@ -260,6 +261,21 @@ export async function updateUserRoleOrDept(
         role: true,
         departmentId: true,
       },
+    });
+
+    // Privilege changes must be audited.
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "UPDATE_USER_ROLE_OR_DEPT",
+      oldValue: {
+        role: existingUser.role,
+        departmentId: existingUser.departmentId,
+      },
+      newValue: {
+        role: updatedUser.role,
+        departmentId: updatedUser.departmentId,
+      },
+      metadata: { targetUserId: id },
     });
 
     res.json({

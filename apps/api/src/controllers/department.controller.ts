@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { prisma } from "../services/prisma.service.js";
 
 // GET /api/departments
 export async function getAllDepartments(
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const departments = await prisma.department.findMany({
@@ -26,7 +27,7 @@ export async function getAllDepartments(
 
     res.json({ departments });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }
 
@@ -34,6 +35,7 @@ export async function getAllDepartments(
 export async function getDepartmentById(
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const id = req.params.id as string;
@@ -60,7 +62,7 @@ export async function getDepartmentById(
 
     res.json({ department });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }
 
@@ -68,14 +70,10 @@ export async function getDepartmentById(
 export async function createDepartment(
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const { name, description, code } = req.body;
-
-    if (!name) {
-      res.status(400).json({ error: "Department name is required" });
-      return;
-    }
 
     const department = await prisma.department.create({
       data: {
@@ -92,7 +90,8 @@ export async function createDepartment(
       .status(201)
       .json({ message: "Department created successfully", department });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    // Central handler maps Prisma P2002 (duplicate name/code) to 409.
+    next(error);
   }
 }
 
@@ -100,6 +99,7 @@ export async function createDepartment(
 export async function updateDepartment(
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const id = req.params.id as string;
@@ -115,7 +115,7 @@ export async function updateDepartment(
 
     res.json({ message: "Department updated successfully", department });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }
 
@@ -124,6 +124,7 @@ export async function updateDepartment(
 export async function deleteDepartment(
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const id = req.params.id as string;
@@ -168,6 +169,6 @@ export async function deleteDepartment(
       department: updatedDepartment,
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }

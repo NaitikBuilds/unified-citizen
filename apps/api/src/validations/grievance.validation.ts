@@ -82,3 +82,50 @@ export const escalateGrievanceSchema = z.object({
     reason: z.string().min(3, "Escalation reason must be at least 3 characters long"),
   }),
 });
+
+export const grievanceIdParamSchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid grievance ID format"),
+  }),
+});
+
+export const attachmentDownloadSchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid grievance ID format"),
+    attachmentId: z.cuid("Invalid attachment ID format"),
+  }),
+});
+
+export const updateGrievanceSchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid grievance ID format"),
+  }),
+  body: z.object({
+    title: z.string().min(5, "Title must be at least 5 characters long").optional(),
+    description: z
+      .string()
+      .min(10, "Description must be at least 10 characters long")
+      .optional(),
+    category: z.string().min(1, "Category is required").optional(),
+    departmentId: z.cuid("Invalid department ID format").optional(),
+    latitude: z.number().nullable().optional(),
+    longitude: z.number().nullable().optional(),
+    address: z.string().optional(),
+  }),
+});
+
+export const reopenGrievanceSchema = z.object({
+  params: z.object({
+    id: z.cuid("Invalid grievance ID format"),
+  }),
+  body: z.object({
+    reason: z.string().max(1000).optional(),
+  }),
+});
+
+export const listGrievancesSchema = z.object({
+  query: z.object({
+    page: z.coerce.number().int().min(1).optional(),
+    limit: z.coerce.number().int().min(1).max(100).optional(),
+  }),
+});
