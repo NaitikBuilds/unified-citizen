@@ -22,6 +22,7 @@ import { ROLE_LABELS } from '../../auth/roles'
 import { PriorityBadge, StatusBadge } from '../../components/grievance'
 import { AIAnalysisCard, DuplicateWarning } from '../../components/ai'
 import { SLAIndicator } from '../../components/sla/SLAIndicator'
+import { GrievanceTimeline } from '../../components/timeline'
 import {
   Card,
   CardContent,
@@ -377,6 +378,16 @@ export function GrievanceDetailsPage() {
                   </dd>
                 </div>
               </dl>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Progress</CardTitle>
+              <CardDescription>Where this grievance is in its lifecycle.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GrievanceTimeline grievance={grievance} />
             </CardContent>
           </Card>
 

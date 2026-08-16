@@ -66,6 +66,15 @@
     .duplicate-warning {
       animation: none !important;
     }
+    .timeline-node-row,
+    .timeline-segment {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .timeline-node-current::after {
+      animation: none !important;
+    }
   }
 
   /* Subtle attention pulse for the duplicate warning — no flashing. */
@@ -80,6 +89,66 @@
     }
     50% {
       box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18);
+    }
+  }
+
+  /*
+   * Grievance timeline — nodes appear in sequence while the connecting line
+   * draws itself. One pass on entry; reduced motion shows the static state.
+   */
+  .timeline-node-row {
+    opacity: 0;
+    animation: timeline-node-in 0.35s ease-out forwards;
+  }
+
+  @keyframes timeline-node-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .timeline-segment {
+    transform-origin: top;
+    animation: timeline-draw 0.4s ease-out forwards;
+    animation-delay: 0.15s;
+  }
+
+  @keyframes timeline-draw {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  .timeline-node-current::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    border: 2px solid currentColor;
+    opacity: 0.4;
+    animation: timeline-current-pulse 2s ease-out infinite;
+  }
+
+  @keyframes timeline-current-pulse {
+    0% {
+      transform: scale(0.9);
+      opacity: 0.5;
+    }
+    70% {
+      transform: scale(1.35);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1.35);
+      opacity: 0;
     }
   }
 }
