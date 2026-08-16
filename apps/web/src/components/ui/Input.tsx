@@ -5,6 +5,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   hint?: string
   error?: string
+  /** Optional element rendered inside the input on the left (e.g. an icon). */
+  leftSlot?: ReactNode
   /** Optional element rendered inside the input on the right (e.g. a visibility toggle). */
   rightSlot?: ReactNode
   ref?: Ref<HTMLInputElement>
@@ -14,6 +16,7 @@ export function Input({
   label,
   hint,
   error,
+  leftSlot,
   rightSlot,
   className,
   id,
@@ -35,6 +38,11 @@ export function Input({
         </label>
       )}
       <div className="relative">
+        {leftSlot && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            {leftSlot}
+          </div>
+        )}
         <input
           id={inputId}
           ref={ref}
@@ -45,6 +53,7 @@ export function Input({
             'placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500',
             'focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30',
             error ? 'border-red-500' : 'border-slate-300',
+            leftSlot ? 'pl-9' : undefined,
             rightSlot ? 'pr-10' : undefined,
             className,
           )}

@@ -20,6 +20,7 @@ import { LoginPage } from '../pages/auth/LoginPage'
 import { RegisterPage } from '../pages/auth/RegisterPage'
 import { CitizenLayout } from '../layouts/CitizenLayout'
 import { CitizenDashboardPage } from '../pages/citizen/CitizenDashboardPage'
+import { SubmitGrievancePage } from '../pages/citizen/SubmitGrievancePage'
 import { CitizenPlaceholderPage } from '../pages/citizen/CitizenPlaceholderPage'
 import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboardPage'
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
@@ -145,7 +146,7 @@ export function AppRouter() {
         }
       >
         <Route path="/citizen" element={<CitizenDashboardPage />} />
-        {/* Built in later steps of this batch: 88 submit, 91 list, 92 details, 94 notifications */}
+        {/* Built in later steps of this batch: 91 list, 92 details, 94 notifications */}
         <Route
           path="/citizen/grievances"
           element={
@@ -166,16 +167,7 @@ export function AppRouter() {
             />
           }
         />
-        <Route
-          path="/citizen/submit"
-          element={
-            <CitizenPlaceholderPage
-              title="Submit Grievance"
-              phase="Step 88 — Member 4"
-              description="The grievance submission form will appear here."
-            />
-          }
-        />
+        <Route path="/citizen/submit" element={<SubmitGrievancePage />} />
         <Route
           path="/citizen/notifications"
           element={
