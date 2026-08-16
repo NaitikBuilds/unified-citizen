@@ -14,6 +14,7 @@ import {
   downloadGrievanceAttachment,
   escalateGrievance,
   addGrievanceFeedback,
+  getGrievanceFeedback,
   reopenGrievance
 } from '../controllers/grievance.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
@@ -58,6 +59,7 @@ router.post('/:id/escalate', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMI
 
 // Feedback and Reopen (Zod validated feedback)
 router.post('/:id/feedback', requireRole(['CITIZEN']), validate(addFeedbackSchema), addGrievanceFeedback);
+router.get('/:id/feedback', requireRole(['CITIZEN', 'OFFICER', 'DEPARTMENT_ADMIN', 'SUPER_ADMIN']), validate(grievanceIdParamSchema), getGrievanceFeedback);
 router.post('/:id/reopen', requireRole(['CITIZEN']), validate(reopenGrievanceSchema), reopenGrievance);
 
 // Grievance comments (Zod validated comment creation)

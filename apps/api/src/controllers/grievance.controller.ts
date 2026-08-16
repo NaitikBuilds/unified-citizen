@@ -1135,6 +1135,59 @@ export async function addGrievanceFeedback(
   }
 }
 
+// GET /api/grievances/:id/feedback
+export async function getGrievanceFeedback(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const id = req.params.id as string;
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: "Grievance not found" });
+      return;
+    }
+
+    const allowed = await canAccessGrievanceSubResource(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    });
+
+    if (!allowed) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    // Citizens see only their own feedback; staff see all feedback for the
+    // grievance (ratings are part of the governance record).
+    const where =
+      req.user.role === "CITIZEN"
+        ? { grievanceId: id, userId: req.user.userId }
+        : { grievanceId: id };
+
+    const feedback = await prisma.feedback.findMany({
+      where,
+      include: {
+        user: { select: { id: true, name: true, role: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json({ feedback });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // POST /api/grievances/:id/reopen
 export async function reopenGrievance(
   req: AuthenticatedRequest,
@@ -1184,7 +1237,7 @@ export async function reopenGrievance(
             message: `Grievance reopened by citizen. Reason: ${reason}`,
             grievanceId: id,
             userId: userId,
-          } as any,
+          },
         });
       }
 
@@ -1199,6 +1252,22 @@ export async function reopenGrievance(
 
       return updatedGrievance;
     });
+
+    // Notify the officer holding the active assignment (if any) so the
+    // reopened grievance re-enters the workflow.
+    const activeAssignment = await prisma.assignment.findFirst({
+      where: { grievanceId: id, status: "ACTIVE" },
+      select: { officerId: true },
+    });
+    if (activeAssignment) {
+      await createNotification({
+        userId: activeAssignment.officerId,
+        title: "Grievance reopened",
+        message: `Grievance ${grievance.ticketId} was reopened by the citizen.`,
+        type: "STATUS_CHANGED",
+        grievanceId: id,
+      });
+    }
 
     res.json({
       message: "Grievance reopened successfully",

@@ -1,9 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import { prisma } from "../services/prisma.service.js";
+import { createAuditLog } from "../services/audit.service.js";
 
 // GET /api/departments
 export async function getAllDepartments(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
@@ -33,7 +35,7 @@ export async function getAllDepartments(
 
 // GET /api/departments/:id
 export async function getDepartmentById(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
@@ -68,7 +70,7 @@ export async function getDepartmentById(
 
 // Admin: POST /api/departments
 export async function createDepartment(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
@@ -86,6 +88,17 @@ export async function createDepartment(
       },
     });
 
+    await createAuditLog({
+      userId: req.user?.userId,
+      action: "CREATE_DEPARTMENT",
+      newValue: {
+        id: department.id,
+        name: department.name,
+        code: department.code,
+      },
+      metadata: { departmentId: department.id },
+    });
+
     res
       .status(201)
       .json({ message: "Department created successfully", department });
@@ -97,7 +110,7 @@ export async function createDepartment(
 
 // Admin: PATCH /api/departments/:id
 export async function updateDepartment(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
@@ -105,12 +118,34 @@ export async function updateDepartment(
     const id = req.params.id as string;
     const { name, description } = req.body;
 
+    const existing = await prisma.department.findUnique({
+      where: { id },
+      select: { id: true, name: true, code: true, description: true },
+    });
+
+    if (!existing) {
+      res.status(404).json({ error: "Department not found" });
+      return;
+    }
+
     const department = await prisma.department.update({
       where: { id },
       data: {
         ...(name && { name }),
         ...(description !== undefined && { description }),
       },
+    });
+
+    await createAuditLog({
+      userId: req.user?.userId,
+      action: "UPDATE_DEPARTMENT",
+      oldValue: existing,
+      newValue: {
+        id: department.id,
+        name: department.name,
+        description: department.description,
+      },
+      metadata: { departmentId: id },
     });
 
     res.json({ message: "Department updated successfully", department });
@@ -122,7 +157,7 @@ export async function updateDepartment(
 // Admin: DELETE /api/departments/:id
 // Admin: DELETE /api/departments/:id
 export async function deleteDepartment(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
@@ -162,6 +197,14 @@ export async function deleteDepartment(
         isActive: true,
         updatedAt: true,
       },
+    });
+
+    await createAuditLog({
+      userId: req.user?.userId,
+      action: "DEACTIVATE_DEPARTMENT",
+      oldValue: { id: department.id, isActive: true },
+      newValue: { id: department.id, isActive: false },
+      metadata: { departmentId: id },
     });
 
     res.json({
