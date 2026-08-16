@@ -22,8 +22,8 @@ app.use(
 
 app.use(express.json());
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+// REMOVED: Insecure public static file serving for '/uploads'
+// Files should now be accessed via a protected download route with proper RBAC.
 
 app.get("/api/v1/health", (_req, res) => {
   res.json({
