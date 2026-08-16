@@ -13,7 +13,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDateTime } from '../../utils/format'
 import { PriorityBadge, StatusBadge } from '../../components/grievance'
-import { AIAnalysisCard } from '../../components/ai/AIAnalysisCard'
+import { AIAnalysisCard, DuplicateWarning } from '../../components/ai'
 import {
   Card,
   CardContent,
@@ -201,6 +201,7 @@ export function GrievanceDetailsPage() {
             isLoading={aiQuery.isLoading}
             onRetry={aiQuery.reload}
           />
+          <DuplicateWarning matches={aiQuery.data?.duplicates ?? []} />
         </div>
       </div>
     </div>

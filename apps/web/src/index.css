@@ -63,5 +63,23 @@
     .ai-stage-dot {
       animation: none;
     }
+    .duplicate-warning {
+      animation: none !important;
+    }
+  }
+
+  /* Subtle attention pulse for the duplicate warning — no flashing. */
+  .duplicate-warning {
+    animation: duplicate-warning-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes duplicate-warning-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
+    50% {
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18);
+    }
   }
 }
