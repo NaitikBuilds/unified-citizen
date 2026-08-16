@@ -4,6 +4,7 @@ import { prisma } from '../services/prisma.service.js';
 import { createSLAForGrievance } from '../services/sla.service.js';
 import { createAuditLog } from '../services/audit.service.js';
 import { addCommentToGrievance as addCommentService, addAttachmentToGrievance as addAttachmentService, submitGrievanceFeedback as submitFeedbackService } from '../services/subresource.service.js';
+import { createNotification } from '../services/notification.service.js';
 
 // POST /api/grievances
 export async function createGrievance(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -45,7 +46,12 @@ export async function createGrievance(req: AuthenticatedRequest, res: Response, 
     });
 
     await createSLAForGrievance(result.id, departmentId, result.priority);
-
+    await createNotification({
+      userId,
+      title: 'Grievance Submitted',
+      message: `Your grievance "${title}" has been successfully filed with ticket ID ${result.ticketId}.`,
+      type: 'INFO',
+    });
     res.status(201).json({ message: 'Grievance created successfully', grievance: result });
   } catch (error) {
     next(error);
@@ -224,6 +230,13 @@ export async function updateGrievanceStatus(req: AuthenticatedRequest, res: Resp
     }
 
     const updatedGrievance = await prisma.$transaction(async (tx) => {
+      // Notify citizen about status change
+      await createNotification({
+        userId: grievance.citizenId,
+        title: 'Grievance Status Updated',
+        message: `Your grievance "${grievance.title}" status has been updated to: ${status}.`,
+        type: 'INFO',
+      });
       const updated = await tx.grievance.update({
         where: { id },
         data: { status },
@@ -362,6 +375,21 @@ export async function assignGrievance(req: AuthenticatedRequest, res: Response, 
       });
 
       return updatedGrievance;
+    });
+
+    // Notify assigned officer and citizen
+    await createNotification({
+      userId: officerId,
+      title: 'New Grievance Assigned',
+      message: `You have been assigned grievance "${grievance.title}" (${grievance.ticketId}).`,
+      type: 'ASSIGNMENT',
+    });
+
+    await createNotification({
+      userId: grievance.citizenId,
+      title: 'Officer Assigned',
+      message: `An officer has been assigned to your grievance "${grievance.title}".`,
+      type: 'INFO',
     });
 
     res.json({ message: 'Grievance assigned successfully', grievance: result });
