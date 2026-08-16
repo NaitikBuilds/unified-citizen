@@ -19,13 +19,19 @@ export type Paginated<T> = {
   totalPages: number
 }
 
+/** A single field-level validation error from the backend (Zod). */
+export type ApiFieldError = {
+  field: string
+  message: string
+}
+
 /**
  * Wire-level error body emitted by the backend API.
- * Source of truth: apps/api controllers (e.g. `{ error: "..." }`).
+ * Source of truth: apps/api middlewares (e.g. `{ success:false, error: "...", errors: [...] }`).
  */
 export type ApiErrorBody = {
   error: string
-  errors?: Record<string, string[]>
+  errors?: ApiFieldError[]
 }
 
 /** Common list request parameters shared by list endpoints. */

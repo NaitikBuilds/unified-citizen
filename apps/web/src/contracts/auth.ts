@@ -52,3 +52,21 @@ export type AuthSession = {
   accessToken: string
   refreshToken?: string
 }
+
+/**
+ * Request shapes for password recovery.
+ *
+ * BACKEND BLOCKER: the backend exposes no forgot-password or reset-password
+ * endpoints (apps/api/src/routes/auth.routes.ts has register/login/refresh/
+ * logout/me only). These types are documented so the UI can be wired in a
+ * later phase when the backend supports them — do not build fake flows on top.
+ */
+export type ForgotPasswordRequest = {
+  email: string
+}
+
+export type ResetPasswordRequest = {
+  /** Token delivered to the user's email by the backend. */
+  token: string
+  password: string
+}

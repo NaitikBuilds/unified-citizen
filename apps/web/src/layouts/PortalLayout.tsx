@@ -38,9 +38,9 @@ export function PortalLayout({ portal }: PortalLayoutProps) {
   )
 
   const handleLogout = useCallback(async () => {
-    // Navigate to the public home first, then clear the session, so the user
+    // Navigate to the sign-in page first, then clear the session, so the user
     // leaves the portal instead of bouncing back through the auth guard.
-    navigate('/')
+    navigate('/auth/login')
     await logout()
   }, [logout, navigate])
 

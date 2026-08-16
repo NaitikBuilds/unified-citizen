@@ -16,7 +16,8 @@ import { FaqPage } from '../pages/public/FaqPage'
 import { ContactPage } from '../pages/public/ContactPage'
 import { HelpPage } from '../pages/public/HelpPage'
 
-import { AuthPlaceholderPage } from '../pages/auth/AuthPlaceholderPage'
+import { LoginPage } from '../pages/auth/LoginPage'
+import { RegisterPage } from '../pages/auth/RegisterPage'
 import { CitizenDashboardPage } from '../pages/citizen/CitizenDashboardPage'
 import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboardPage'
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
@@ -127,9 +128,9 @@ export function AppRouter() {
       {/* Dev reference: Phase 0 foundation smoke screen */}
       <Route path="/foundation" element={<FoundationPage />} />
 
-      {/* Authentication (Phase 3 implements the real UI) */}
-      <Route path="/auth/login" element={<AuthPlaceholderPage mode="login" />} />
-      <Route path="/auth/register" element={<AuthPlaceholderPage mode="register" />} />
+      {/* Citizen authentication (Phase 3 — Member 4 Step 85) */}
+      <Route path="/auth/login" element={<LoginPage />} />
+      <Route path="/auth/register" element={<RegisterPage />} />
 
       {/* Citizen portal group */}
       <Route

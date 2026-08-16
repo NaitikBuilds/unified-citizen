@@ -1,5 +1,5 @@
 import type { AxiosError } from 'axios'
-import type { ApiErrorBody } from '../contracts/api'
+import type { ApiErrorBody, ApiFieldError } from '../contracts/api'
 
 /**
  * Normalized error surfaced by the API client and mock services.
@@ -9,17 +9,49 @@ import type { ApiErrorBody } from '../contracts/api'
 export class ApiError extends Error {
   readonly status: number | null
   readonly code: string | null
+  /** Field-level validation messages from the backend, keyed by field name. */
+  readonly fieldErrors: Record<string, string> | null
 
-  constructor(message: string, status: number | null = null, code: string | null = null) {
+  constructor(
+    message: string,
+    status: number | null = null,
+    code: string | null = null,
+    fieldErrors: Record<string, string> | null = null,
+  ) {
     super(message)
     this.name = 'ApiError'
     this.status = status
     this.code = code
+    this.fieldErrors = fieldErrors
   }
 }
 
 export function isApiError(error: unknown): error is ApiError {
   return error instanceof ApiError
+}
+
+/**
+ * Normalizes a list of backend field errors (Zod style:
+ * `[{ field: "body.email", message: "..." }]`) into a field-keyed map with the
+ * `body.` prefix stripped.
+ */
+function mapFieldErrors(errors: unknown): Record<string, string> | null {
+  if (!Array.isArray(errors)) {
+    return null
+  }
+  const mapped: Record<string, string> = {}
+  for (const entry of errors) {
+    if (
+      typeof entry === 'object' &&
+      entry !== null &&
+      'field' in entry &&
+      'message' in entry
+    ) {
+      const field = String((entry as ApiFieldError).field).replace(/^body\./, '')
+      mapped[field] = String((entry as ApiFieldError).message)
+    }
+  }
+  return Object.keys(mapped).length > 0 ? mapped : null
 }
 
 /**
@@ -38,7 +70,12 @@ export function normalizeError(error: unknown): ApiError {
     const body = axiosError.response?.data
 
     if (body?.error) {
-      return new ApiError(body.error, status)
+      return new ApiError(
+        body.error,
+        status,
+        null,
+        mapFieldErrors(body.errors),
+      )
     }
 
     if (axiosError.code === 'ECONNABORTED') {
