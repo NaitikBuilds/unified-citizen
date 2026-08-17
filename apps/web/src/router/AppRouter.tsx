@@ -26,6 +26,8 @@ import { GrievanceListPage } from '../pages/citizen/GrievanceListPage'
 import { NotificationsPage } from '../pages/citizen/NotificationsPage'
 import { CitizenPlaceholderPage } from '../pages/citizen/CitizenPlaceholderPage'
 import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboardPage'
+import { DepartmentGrievanceListPage } from '../pages/department/DepartmentGrievanceListPage'
+import { DepartmentGrievanceDetailPage } from '../pages/department/DepartmentGrievanceDetailPage'
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { FoundationPage } from '../pages/FoundationPage'
@@ -187,6 +189,8 @@ export function AppRouter() {
         }
       >
         <Route path="/department" element={<DepartmentDashboardPage />} />
+        <Route path="/department/grievances" element={<DepartmentGrievanceListPage />} />
+        <Route path="/department/grievances/:id" element={<DepartmentGrievanceDetailPage />} />
       </Route>
 
       {/* Admin portal group */}

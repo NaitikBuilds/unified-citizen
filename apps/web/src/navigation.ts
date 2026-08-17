@@ -27,6 +27,7 @@ export const portalNavigation = {
 
   department: [
     { key: 'dashboard', label: 'Dashboard', href: '/department', icon: LayoutDashboard },
+    { key: 'grievances', label: 'Grievances', href: '/department/grievances', icon: ListTodo },
   ] satisfies NavItem[],
 
   admin: [
