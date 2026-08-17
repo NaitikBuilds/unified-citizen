@@ -5,6 +5,8 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
   label?: string
   hint?: string
   error?: string
+  /** Extra classes for the label element (when `label` is provided). */
+  labelClassName?: string
   ref?: Ref<HTMLTextAreaElement>
 }
 
@@ -12,6 +14,7 @@ export function Textarea({
   label,
   hint,
   error,
+  labelClassName,
   className,
   id,
   ref,
@@ -23,7 +26,10 @@ export function Textarea({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={textareaId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        <label
+          htmlFor={textareaId}
+          className={cn('mb-1.5 block text-sm font-medium text-slate-700', labelClassName)}
+        >
           {label}
         </label>
       )}

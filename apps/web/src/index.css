@@ -2833,3 +2833,229 @@
     }
   }
 }
+
+/* ============================================================
+   V4.3 — GRIEVANCE DETAIL + SUBMIT (citizen portal)
+   Editorial detail surfaces, civic file rows, comment surfaces,
+   and the submission form carried in the same system voice.
+   ============================================================ */
+@layer utilities {
+  /* Detail: back link as mono system label */
+  .gd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: -0.375rem;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.375rem;
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #5b6675;
+    transition: color var(--ucg-dur-micro) ease;
+  }
+
+  .gd-back:hover {
+    color: var(--color-ucg-ink);
+  }
+
+  /* Detail: metadata grid — mono labels, editorial values */
+  .gd-meta dt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5b6675;
+  }
+
+  .gd-meta dd {
+    margin-top: 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-ucg-ink);
+  }
+
+  /* Detail: attachment file rows */
+  .gd-file {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--color-ucg-fog);
+    border-radius: 0.75rem;
+    background: #ffffff;
+    padding: 0.625rem 0.75rem;
+    transition:
+      border-color var(--ucg-dur-micro) ease,
+      box-shadow var(--ucg-dur-micro) ease,
+      transform var(--ucg-dur-micro) ease;
+  }
+
+  .gd-file:hover {
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 6px 18px -8px rgba(9, 12, 18, 0.18);
+    transform: translateY(-1px);
+  }
+
+  .gd-file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    border-radius: 0.625rem;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--color-ucg-blue);
+  }
+
+  .gd-file-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-ucg-ink);
+  }
+
+  .gd-file-meta {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a93a0;
+  }
+
+  .gd-file-open {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ucg-blue);
+  }
+
+  /* Detail: comment surface */
+  .gd-comment {
+    border: 1px solid var(--color-ucg-fog);
+    border-radius: 0.75rem;
+    background: #fbfcfa;
+    padding: 0.75rem 1rem;
+  }
+
+  .gd-comment-author {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ucg-ink);
+  }
+
+  .gd-comment-meta {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a93a0;
+  }
+
+  .gd-comment-role {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5b6675;
+  }
+
+  /* Submit: form alert (matches the auth alert voice) */
+  .sg-alert {
+    border-radius: 0.875rem;
+    border: 1px solid rgba(220, 38, 38, 0.22);
+    background: rgba(254, 242, 242, 0.92);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #b91c1c;
+  }
+
+  /* Submit: selected-file chips */
+  .sg-file-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--color-ucg-fog);
+    border-radius: 0.75rem;
+    background: #fbfcfa;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .sg-file-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-ucg-ink);
+  }
+
+  .sg-file-size {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a93a0;
+  }
+
+  /* Submit: dashed attachment drop zone */
+  .sg-dropzone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1.5px dashed rgba(9, 12, 18, 0.22);
+    border-radius: 0.75rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    transition:
+      border-color var(--ucg-dur-micro) ease,
+      color var(--ucg-dur-micro) ease,
+      background var(--ucg-dur-micro) ease;
+  }
+
+  .sg-dropzone:hover {
+    border-color: var(--color-ucg-blue);
+    color: var(--color-ucg-blue);
+    background: rgba(37, 99, 235, 0.04);
+  }
+
+  .sg-dropzone:focus-visible {
+    outline: 2px solid var(--color-ucg-blue);
+    outline-offset: 2px;
+  }
+
+  .sg-dropzone:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Submit: AI note in the system voice */
+  .sg-note {
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+    color: #5b6675;
+  }
+
+  .sg-note svg {
+    color: var(--color-ucg-blue);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gd-back,
+    .gd-file {
+      transition: none;
+    }
+
+    .gd-file:hover {
+      transform: none;
+    }
+  }
+}

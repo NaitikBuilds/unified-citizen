@@ -150,14 +150,15 @@ export function SubmitGrievancePage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-6">
-        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
-          Citizen Portal
+      <div className="mb-7">
+        <p className="label-mono flex items-center gap-2 text-slate-400">
+          <span className="size-1.5 rounded-full bg-ucg-blue" aria-hidden="true" />
+          Citizen Portal / Report
         </p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+        <h2 className="mt-2 font-editorial text-3xl font-semibold tracking-tight text-ucg-ink">
           Report a grievance
         </h2>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-500">
           Describe the issue in your own words. After submission, AI will suggest a
           category and priority, and route it to the right department — always
           available for human review.
@@ -165,10 +166,7 @@ export function SubmitGrievancePage() {
       </div>
 
       {errors.form && (
-        <div
-          role="alert"
-          className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700"
-        >
+        <div role="alert" className="sg-alert mb-5">
           {errors.form}
         </div>
       )}
@@ -192,6 +190,8 @@ export function SubmitGrievancePage() {
               error={errors.title}
               disabled={isSubmitting}
               required
+              className="ucg-input-field"
+              labelClassName="auth-label"
             />
 
             <Textarea
@@ -205,6 +205,8 @@ export function SubmitGrievancePage() {
               hint={`At least ${DESCRIPTION_MIN} characters.`}
               disabled={isSubmitting}
               required
+              className="ucg-input-field"
+              labelClassName="auth-label"
             />
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -221,6 +223,8 @@ export function SubmitGrievancePage() {
                 error={errors.category}
                 disabled={isSubmitting}
                 required
+                className="ucg-input-field"
+                labelClassName="auth-label"
               />
               <Select
                 label="Priority"
@@ -236,6 +240,8 @@ export function SubmitGrievancePage() {
                 value={priority}
                 onChange={(event) => setPriority(event.target.value as Priority | '')}
                 disabled={isSubmitting}
+                className="ucg-input-field"
+                labelClassName="auth-label"
               />
             </div>
 
@@ -251,6 +257,8 @@ export function SubmitGrievancePage() {
               error={errors.location}
               hint="Optional but strongly recommended."
               disabled={isSubmitting}
+              className="ucg-input-field"
+              labelClassName="auth-label"
             />
           </CardContent>
         </Card>
@@ -269,22 +277,18 @@ export function SubmitGrievancePage() {
                 {files.map((file, index) => (
                   <li
                     key={`${file.name}-${index}`}
-                    className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
+                    className="sg-file-chip"
                   >
-                    <FileText className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+                    <FileText className="size-4 shrink-0 text-ucg-blue" aria-hidden="true" />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-slate-800">
-                        {file.name}
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        {(file.size / 1024).toFixed(0)} KB
-                      </p>
+                      <p className="sg-file-name truncate">{file.name}</p>
+                      <p className="sg-file-size">{(file.size / 1024).toFixed(0)} KB</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeFile(index)}
                       aria-label={`Remove ${file.name}`}
-                      className="rounded-md p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                      className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     >
                       <X className="size-4" aria-hidden="true" />
                     </button>
@@ -312,7 +316,7 @@ export function SubmitGrievancePage() {
               />
               <label
                 htmlFor="grievance-attachments"
-                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:border-blue-400 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="sg-dropzone disabled:cursor-not-allowed disabled:opacity-55"
               >
                 <Paperclip className="size-4" aria-hidden="true" />
                 Add attachments
@@ -322,8 +326,8 @@ export function SubmitGrievancePage() {
         </Card>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="flex items-start gap-2 text-xs text-slate-500">
-            <Sparkles className="mt-0.5 size-4 shrink-0 text-slate-400" aria-hidden="true" />
+          <p className="sg-note flex items-start gap-2 max-w-sm">
+            <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             AI will suggest the best category, department and priority after you
             submit. You can always track progress from the dashboard.
           </p>

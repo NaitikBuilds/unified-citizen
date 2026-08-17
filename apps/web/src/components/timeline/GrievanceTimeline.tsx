@@ -123,9 +123,9 @@ function buildSteps(grievance: Grievance): TimelineStep[] {
 }
 
 const toneDotClasses: Record<StepTone, string> = {
-  default: 'bg-blue-600 ring-blue-600/25',
-  danger: 'bg-red-600 ring-red-600/25',
-  warning: 'bg-amber-500 ring-amber-500/25',
+  default: 'bg-ucg-blue ring-ucg-blue/20',
+  danger: 'bg-ucg-critical ring-ucg-critical/20',
+  warning: 'bg-ucg-warning ring-ucg-warning/25',
 }
 
 /**
@@ -157,7 +157,7 @@ export function GrievanceTimeline({ grievance }: { grievance: Grievance }) {
                   'timeline-node relative mt-0.5 flex size-5 items-center justify-center rounded-full ring-4',
                   step.state === 'past' && 'bg-emerald-500 text-white ring-emerald-500/20',
                   step.state === 'current' && cn('timeline-node-current text-white', toneDotClasses[step.tone]),
-                  step.state === 'future' && 'border-2 border-slate-300 bg-white',
+                  step.state === 'future' && 'border-2 border-ucg-fog bg-white',
                 )}
                 aria-hidden="true"
               >
@@ -167,11 +167,7 @@ export function GrievanceTimeline({ grievance }: { grievance: Grievance }) {
                 <span
                   className={cn(
                     'timeline-segment w-0.5 flex-1 rounded-full',
-                    step.state === 'past'
-                      ? 'bg-emerald-400'
-                      : step.state === 'current'
-                        ? 'bg-slate-200'
-                        : 'bg-slate-200',
+                    step.state === 'past' ? 'bg-emerald-400' : 'bg-ucg-fog',
                   )}
                   aria-hidden="true"
                 />
@@ -196,13 +192,13 @@ export function GrievanceTimeline({ grievance }: { grievance: Grievance }) {
                     step.state === 'future'
                       ? 'text-slate-400'
                       : step.state === 'current'
-                        ? 'text-slate-900'
+                        ? 'text-ucg-ink'
                         : 'text-slate-700',
                   )}
                 >
                   {step.label}
                   {step.state === 'current' && (
-                    <span className="ml-2 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-700">
+                    <span className="ml-2 rounded-full bg-ucg-blue/10 px-2 py-0.5 font-system text-[0.5625rem] font-semibold uppercase tracking-[0.12em] text-ucg-blue">
                       Current
                     </span>
                   )}
@@ -217,9 +213,9 @@ export function GrievanceTimeline({ grievance }: { grievance: Grievance }) {
               </button>
 
               {isOpen && (
-                <div className="mt-1 rounded-lg bg-slate-50 px-3 py-2">
+                <div className="mt-1 rounded-lg border border-ucg-fog bg-ucg-paper/60 px-3 py-2">
                   <p className="text-xs leading-relaxed text-slate-600">{step.note}</p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 font-system text-[0.625rem] uppercase tracking-[0.08em] text-slate-500">
                     {step.timestamp
                       ? formatDateTime(step.timestamp)
                       : 'Time not recorded'}

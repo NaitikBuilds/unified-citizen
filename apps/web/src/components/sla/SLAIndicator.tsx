@@ -24,28 +24,36 @@ export function SLAIndicator({
   const breached = sla.status === 'BREACHED'
 
   return (
-    <div className={cn('rounded-lg border border-slate-200 bg-slate-50 p-3', className)}>
+    <div className={cn('rounded-xl border border-ucg-fog bg-white p-4', className)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Clock className="size-4 text-slate-400" aria-hidden="true" />
-          <span className="text-sm font-medium text-slate-700">SLA</span>
+          <span className="flex size-8 items-center justify-center rounded-lg bg-ucg-blue/8 text-ucg-blue">
+            <Clock className="size-4" aria-hidden="true" />
+          </span>
+          <span className="font-system text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-slate-600">
+            SLA
+          </span>
         </div>
         <Badge variant={SLA_STATUS_VARIANTS[sla.status]}>
           {SLA_STATUS_LABELS[sla.status]}
         </Badge>
       </div>
 
-      <dl className="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+      <dl className="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-xs text-slate-500">Response due</dt>
-          <dd className="font-medium text-slate-800">
+          <dt className="font-system text-[0.625rem] uppercase tracking-[0.12em] text-slate-500">
+            Response due
+          </dt>
+          <dd className="mt-0.5 font-medium text-ucg-ink">
             {formatDateTime(sla.responseDueAt)}
           </dd>
         </div>
         {showResolution && (
           <div>
-            <dt className="text-xs text-slate-500">Resolution due</dt>
-            <dd className="font-medium text-slate-800">
+            <dt className="font-system text-[0.625rem] uppercase tracking-[0.12em] text-slate-500">
+              Resolution due
+            </dt>
+            <dd className="mt-0.5 font-medium text-ucg-ink">
               {formatDateTime(sla.resolutionDueAt)}
             </dd>
           </div>
@@ -55,8 +63,8 @@ export function SLAIndicator({
       {sla.status === 'ACTIVE' || sla.status === 'WARNING' ? (
         <p
           className={cn(
-            'mt-2 text-xs font-medium',
-            hoursLeft < 24 ? 'text-red-600' : 'text-slate-500',
+            'mt-2 font-system text-[0.6875rem] uppercase tracking-[0.08em]',
+            hoursLeft < 24 ? 'font-semibold text-ucg-critical' : 'text-slate-500',
           )}
         >
           {hoursLeft >= 0
@@ -64,7 +72,7 @@ export function SLAIndicator({
             : `Overdue by ${formatHours(Math.abs(hoursLeft))}`}
         </p>
       ) : breached && sla.breachedAt ? (
-        <p className="mt-2 text-xs font-medium text-red-600">
+        <p className="mt-2 font-system text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-ucg-critical">
           Breached at {formatDateTime(sla.breachedAt)}
         </p>
       ) : null}
