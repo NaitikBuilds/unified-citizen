@@ -1,76 +1,83 @@
 import { Clock, Mail, MapPin, Phone, Siren } from 'lucide-react'
 import { contactDetails } from './landingContent'
+import {
+  CivicPanel,
+  PageHero,
+  PublicPage,
+  Reveal,
+  SystemPanel,
+} from '../../components/public'
 
 const ICONS = [MapPin, Phone, Mail, Siren] as const
 
+const HOURS = [
+  { day: 'Monday – Friday', time: '8:00 AM – 8:00 PM' },
+  { day: 'Saturday', time: '9:00 AM – 5:00 PM' },
+  { day: 'Sunday', time: 'Closed (online 24×7)' },
+]
+
 export function ContactPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Contact</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">
-          Reach the city help desk
-        </h1>
-        <p className="mt-4 text-lg text-slate-600">
-          For questions about the portal, your grievance, or how to get help, the help desk
-          is available six days a week.
-        </p>
-      </div>
+    <PublicPage size="md">
+      <PageHero
+        eyebrow="Contact"
+        title="Reach the city help desk"
+        description="For questions about the portal, your grievance, or how to get help, the help desk is available six days a week."
+        meta="HELP DESK · DIRECT CHANNELS"
+      />
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2">
-        {contactDetails.map((detail, index) => {
-          const Icon = ICONS[index] ?? MapPin
-          const isEmergency = index === 3
-          return (
-            <div
-              key={detail.label}
-              className={`rounded-xl border p-6 ${
-                isEmergency ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-white'
-              }`}
-            >
-              <span
-                className={`flex size-10 items-center justify-center rounded-lg ${
-                  isEmergency ? 'bg-red-100' : 'bg-blue-100'
-                }`}
-              >
-                <Icon
-                  className={`size-5 ${isEmergency ? 'text-red-700' : 'text-blue-700'}`}
-                  aria-hidden="true"
-                />
-              </span>
-              <h2 className="mt-4 text-sm font-semibold text-slate-900">{detail.label}</h2>
-              <p className={`mt-1 text-sm ${isEmergency ? 'text-red-800' : 'text-slate-600'}`}>
-                {detail.value}
-              </p>
-            </div>
-          )
-        })}
-      </div>
-
-      <div className="mt-10 rounded-xl border border-slate-200 bg-white p-6">
-        <div className="flex items-center gap-3">
-          <Clock className="size-5 text-blue-700" aria-hidden="true" />
-          <h2 className="font-semibold text-slate-900">Help desk hours</h2>
+      {/* Help-desk command surface */}
+      <section className="pb-20">
+        <div className="grid gap-6 sm:grid-cols-2">
+          {contactDetails.map((detail, index) => {
+            const Icon = ICONS[index] ?? MapPin
+            const isEmergency = index === 3
+            return (
+              <Reveal key={detail.label} delay={index * 50}>
+                <CivicPanel tone={isEmergency ? 'critical' : 'default'} hover className="h-full">
+                  <div className="flex items-start justify-between">
+                    <span className="civic-icon-chip">
+                      <Icon aria-hidden="true" />
+                    </span>
+                    <span className="civic-mono-label">
+                      CH-{String(index + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <h2 className="mt-5 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                    {detail.label}
+                  </h2>
+                  <p className="mt-1.5 font-editorial text-xl font-semibold text-ucg-ink">
+                    {detail.value}
+                  </p>
+                </CivicPanel>
+              </Reveal>
+            )
+          })}
         </div>
-        <dl className="mt-4 grid max-w-md gap-2 text-sm sm:grid-cols-2">
-          <div className="flex justify-between gap-4 border-b border-slate-100 pb-2">
-            <dt className="text-slate-500">Monday – Friday</dt>
-            <dd className="font-medium text-slate-800">8:00 AM – 8:00 PM</dd>
-          </div>
-          <div className="flex justify-between gap-4 border-b border-slate-100 pb-2">
-            <dt className="text-slate-500">Saturday</dt>
-            <dd className="font-medium text-slate-800">9:00 AM – 5:00 PM</dd>
-          </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-slate-500">Sunday</dt>
-            <dd className="font-medium text-slate-800">Closed (online 24×7)</dd>
-          </div>
-        </dl>
-        <p className="mt-4 text-sm text-slate-600">
-          Grievance submission is available online 24×7 — you never need to wait for office
-          hours to report an issue.
-        </p>
-      </div>
-    </div>
+      </section>
+
+      {/* Help desk hours — system panel */}
+      <section className="pb-20">
+        <SystemPanel
+          eyebrow="Availability"
+          title="Help desk hours"
+          description="Grievance submission is available online 24×7 — you never need to wait for office hours to report an issue."
+          readout="ONLINE REPORTING · 24×7"
+          className="max-w-none"
+        >
+          <span className="civic-icon-chip mt-6">
+            <Clock aria-hidden="true" />
+          </span>
+          <dl className="mt-7 grid max-w-xl gap-x-10 gap-y-3 sm:grid-cols-3">
+            {HOURS.map((row) => (
+              <div key={row.day} className="border-t border-white/10 pt-3">
+                <dt className="civic-mono-label text-slate-400">{row.day}</dt>
+                <dd className="mt-1.5 text-sm font-medium text-ucg-white">{row.time}</dd>
+              </div>
+            ))}
+          </dl>
+        </SystemPanel>
+      </section>
+    </PublicPage>
   )
 }

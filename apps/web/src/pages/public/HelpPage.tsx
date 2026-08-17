@@ -1,5 +1,11 @@
-import { Link } from 'react-router-dom'
-import { ArrowRight, FilePlus2, Search, ShieldAlert, Star, UserPlus } from 'lucide-react'
+import { FilePlus2, Search, ShieldAlert, Star, UserPlus } from 'lucide-react'
+import {
+  CtaPanel,
+  CivicPanel,
+  PageHero,
+  PublicPage,
+  Reveal,
+} from '../../components/public'
 
 const HELP_SECTIONS = [
   {
@@ -54,63 +60,61 @@ const HELP_SECTIONS = [
 
 export function HelpPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Help</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">
-          How to use the portal
-        </h1>
-        <p className="mt-4 text-lg text-slate-600">
-          Step-by-step guides for the most common tasks. For anything else, the help desk is
-          one call away.
-        </p>
-      </div>
+    <PublicPage size="md">
+      <PageHero
+        eyebrow="Help"
+        title="How to use the portal"
+        description="Step-by-step guides for the most common tasks. For anything else, the help desk is one call away."
+      />
 
-      <div className="mt-12 space-y-6">
-        {HELP_SECTIONS.map((section) => {
-          const Icon = section.icon
-          return (
-            <section
-              key={section.title}
-              className="rounded-xl border border-slate-200 bg-white p-6"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100">
-                  <Icon className="size-5 text-blue-700" aria-hidden="true" />
-                </span>
-                <h2 className="text-lg font-semibold text-slate-900">{section.title}</h2>
-              </div>
-              <ol className="mt-4 space-y-2">
-                {section.steps.map((step, index) => (
-                  <li key={step} className="flex gap-3 text-sm leading-relaxed text-slate-600">
-                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-500">
-                      {index + 1}
+      {/* Editorial guide system */}
+      <section className="pb-20">
+        <div className="space-y-6">
+          {HELP_SECTIONS.map((section, index) => {
+            const Icon = section.icon
+            return (
+              <Reveal key={section.title} delay={Math.min(index * 40, 160)}>
+                <CivicPanel>
+                  <div className="flex items-center gap-3">
+                    <span className="civic-icon-chip">
+                      <Icon aria-hidden="true" />
                     </span>
-                    {step}
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )
-        })}
-      </div>
+                    <h2 className="font-editorial text-xl font-semibold text-ucg-ink">
+                      {section.title}
+                    </h2>
+                    <span className="civic-mono-label ml-auto">
+                      GUIDE {String(index + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <ol className="mt-6 space-y-4">
+                    {section.steps.map((step, stepIndex) => (
+                      <li key={step} className="flex gap-4">
+                        <span className="editorial-index shrink-0 pt-0.5">
+                          {String(stepIndex + 1).padStart(2, '0')}
+                        </span>
+                        <p className="leading-relaxed text-slate-600">{step}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </CivicPanel>
+              </Reveal>
+            )
+          })}
+        </div>
+      </section>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        <Link
-          to="/faq"
-          className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-5 text-sm font-medium text-slate-800 transition-colors hover:border-blue-300 hover:bg-blue-50"
-        >
-          Browse the FAQ
-          <ArrowRight className="size-4 text-blue-600" aria-hidden="true" />
-        </Link>
-        <Link
-          to="/contact"
-          className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-5 text-sm font-medium text-slate-800 transition-colors hover:border-blue-300 hover:bg-blue-50"
-        >
-          Contact the help desk
-          <ArrowRight className="size-4 text-blue-600" aria-hidden="true" />
-        </Link>
-      </div>
-    </div>
+      <section className="pb-20">
+        <CtaPanel
+          tone="light"
+          eyebrow="Next steps"
+          title="More ways to get answers"
+          description="Browse common questions or speak to the help desk directly."
+          actions={[
+            { to: '/faq', label: 'Browse the FAQ', secondary: true },
+            { to: '/contact', label: 'Contact the help desk' },
+          ]}
+        />
+      </section>
+    </PublicPage>
   )
 }

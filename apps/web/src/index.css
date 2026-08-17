@@ -1670,3 +1670,474 @@
     }
   }
 }
+
+/* ============================================================
+   VISUAL PHASE V3 — PUBLIC INNER PAGE SYSTEM
+   Shared editorial civic primitives for /about, /services,
+   /how-it-works, /departments, /faq, /contact, /help.
+   ============================================================ */
+@layer utilities {
+  /* Scroll reveal — one IntersectionObserver per element, transform/opacity
+     only. Content stays visible under reduced motion. */
+  .ucg-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s var(--ucg-ease-editorial),
+      transform 0.7s var(--ucg-ease-editorial);
+    will-change: opacity, transform;
+  }
+
+  .ucg-reveal.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ucg-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Editorial page hero — clears the fixed pill header, subtle geometry. */
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    padding-top: clamp(6.5rem, 13vh, 9.5rem);
+    padding-bottom: clamp(3rem, 7vh, 5rem);
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: radial-gradient(ellipse at 82% 0%, rgba(0, 0, 0, 0.8), transparent 62%);
+    -webkit-mask-image: radial-gradient(ellipse at 82% 0%, rgba(0, 0, 0, 0.8), transparent 62%);
+    pointer-events: none;
+  }
+
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(9, 12, 18, 0.14) 18%,
+      rgba(9, 12, 18, 0.14) 82%,
+      transparent
+    );
+  }
+
+  .page-hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-hero-title {
+    font-family: var(--font-editorial);
+    font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    font-weight: 600;
+    color: var(--color-ucg-ink);
+  }
+
+  .page-hero-desc {
+    max-width: 40rem;
+    margin-top: 1.25rem;
+    color: #51607a;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  /* Mono readout pill (shared voice with V2 auth system readout). */
+  .ucg-readout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    border: 1px solid rgba(9, 12, 18, 0.12);
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 9999px;
+    padding: 0.45rem 0.9rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    color: #4b5a72;
+  }
+
+  .ucg-readout-dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 9999px;
+    background: var(--color-ucg-blue);
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.55);
+  }
+
+  /* Section header — consistent editorial rhythm. */
+  .section-head {
+    max-width: 44rem;
+  }
+
+  .section-head.is-centered {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .section-head h2 {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    color: var(--color-ucg-ink);
+    margin-top: 1rem;
+  }
+
+  .section-head .section-desc {
+    margin-top: 0.9rem;
+    color: #5b6675;
+    line-height: 1.7;
+  }
+
+  /* Layered civic surface — replaces generic SaaS cards. */
+  .civic-panel {
+    background: var(--color-ucg-white);
+    border: 1px solid rgba(9, 12, 18, 0.08);
+    border-radius: 1.25rem;
+    box-shadow:
+      0 1px 2px rgba(9, 12, 18, 0.03),
+      0 18px 44px -30px rgba(9, 12, 18, 0.18);
+  }
+
+  .civic-panel-hover {
+    transition:
+      border-color var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      box-shadow var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      transform var(--ucg-dur-ui) var(--ucg-ease-editorial);
+  }
+
+  .civic-panel-hover:hover {
+    border-color: rgba(37, 99, 235, 0.28);
+    box-shadow:
+      0 1px 2px rgba(9, 12, 18, 0.03),
+      0 26px 56px -30px rgba(9, 12, 18, 0.28);
+    transform: translateY(-2px);
+  }
+
+  .civic-icon-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.8rem;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-ucg-blue);
+  }
+
+  .civic-icon-chip svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .civic-mono-label {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7c8aa0;
+  }
+
+  .civic-panel-critical {
+    border-color: rgba(255, 107, 97, 0.32);
+    background: linear-gradient(to bottom, rgba(255, 107, 97, 0.05), var(--color-ucg-white) 55%);
+  }
+
+  .civic-panel-critical .civic-icon-chip {
+    background: rgba(255, 107, 97, 0.12);
+    color: #dc4444;
+  }
+
+  /* Midnight system panel — digital-intelligence accent, never whole page. */
+  .system-panel {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 84% 0%, rgba(37, 99, 235, 0.2), transparent 48%),
+      radial-gradient(ellipse at 10% 100%, rgba(103, 232, 249, 0.08), transparent 44%),
+      var(--color-ucg-midnight);
+    border-radius: 1.5rem;
+    color: #e8edf5;
+  }
+
+  .system-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(120, 150, 200, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 150, 200, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse at 70% 20%, rgba(0, 0, 0, 0.85), transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at 70% 20%, rgba(0, 0, 0, 0.85), transparent 70%);
+    pointer-events: none;
+  }
+
+  .system-panel-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .system-panel .civic-icon-chip {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-ucg-electric);
+  }
+
+  .system-panel .system-title {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: #f2f5fa;
+  }
+
+  .system-panel .system-desc {
+    margin-top: 0.9rem;
+    color: rgba(200, 212, 232, 0.75);
+    line-height: 1.7;
+  }
+
+  .system-readout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 9999px;
+    padding: 0.45rem 0.9rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    color: rgba(190, 205, 230, 0.85);
+  }
+
+  .system-readout .dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 9999px;
+    background: var(--color-ucg-signal);
+    box-shadow: 0 0 8px rgba(103, 232, 249, 0.9);
+  }
+
+  .system-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.9rem;
+    padding-inline: 1.4rem;
+    border-radius: 9999px;
+    background: #fff;
+    color: var(--color-ucg-ink);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    box-shadow: 0 12px 34px -14px rgba(255, 255, 255, 0.35);
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      transform var(--ucg-dur-micro) var(--ucg-ease-editorial);
+  }
+
+  .system-cta:hover {
+    background: #e8f1ff;
+    transform: translateY(-1px);
+  }
+
+  /* CTA panel (midnight) + light variant. */
+  .cta-panel-midnight {
+    background:
+      radial-gradient(ellipse at 85% 0%, rgba(37, 99, 235, 0.22), transparent 50%),
+      var(--color-ucg-midnight);
+  }
+
+  .cta-panel-light {
+    background: var(--color-ucg-white);
+    border: 1px solid rgba(9, 12, 18, 0.08);
+  }
+
+  /* Editorial numbered block (About principles / Services codes). */
+  .editorial-block {
+    border-top: 1px solid rgba(9, 12, 18, 0.14);
+    padding-top: 1.6rem;
+  }
+
+  .editorial-index {
+    font-family: var(--font-system);
+    font-size: 0.8125rem;
+    letter-spacing: 0.18em;
+    color: rgba(37, 99, 235, 0.8);
+  }
+
+  /* How-it-works journey spine. */
+  .journey {
+    position: relative;
+  }
+
+  .journey-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.4rem;
+    padding-bottom: 2.6rem;
+  }
+
+  .journey-step:last-child {
+    padding-bottom: 0;
+  }
+
+  .journey-rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .journey-rail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      rgba(37, 99, 235, 0.35),
+      rgba(37, 99, 235, 0.12)
+    );
+  }
+
+  .journey-step:last-child .journey-rail::before {
+    display: none;
+  }
+
+  .journey-dot {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.45rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    background: var(--color-ucg-blue);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14), 0 0 14px rgba(37, 99, 235, 0.35);
+  }
+
+  /* FAQ — native disclosure, editorial voice. */
+  .faq-item {
+    overflow: hidden;
+    transition:
+      border-color var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      box-shadow var(--ucg-dur-ui) var(--ucg-ease-editorial);
+  }
+
+  .faq-item[open] {
+    border-color: rgba(37, 99, 235, 0.3);
+    box-shadow: 0 18px 44px -30px rgba(9, 12, 18, 0.22);
+  }
+
+  .faq-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 1.25rem 1.5rem;
+    list-style: none;
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-summary:hover {
+    background: rgba(37, 99, 235, 0.03);
+  }
+
+  .faq-q {
+    flex: 1;
+    font-family: var(--font-editorial);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--color-ucg-ink);
+  }
+
+  .faq-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(9, 12, 18, 0.14);
+    color: #4b5a72;
+    font-size: 1rem;
+    line-height: 1;
+    transition:
+      transform var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      background-color var(--ucg-dur-ui) linear,
+      border-color var(--ucg-dur-ui) linear;
+  }
+
+  .faq-item[open] .faq-toggle {
+    transform: rotate(45deg);
+    border-color: var(--color-ucg-blue);
+    color: var(--color-ucg-blue);
+    background: rgba(37, 99, 235, 0.08);
+  }
+
+  .faq-answer {
+    padding: 0 1.5rem 1.5rem;
+    color: #51607a;
+    line-height: 1.75;
+    animation: faq-fade 0.35s var(--ucg-ease-editorial) both;
+  }
+
+  @keyframes faq-fade {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-answer {
+      animation: none;
+    }
+    .faq-toggle {
+      transition: none;
+    }
+    .civic-panel-hover {
+      transition: none;
+    }
+    .civic-panel-hover:hover {
+      transform: none;
+    }
+    .system-cta {
+      transition: none;
+    }
+    .system-cta:hover {
+      transform: none;
+    }
+  }
+}

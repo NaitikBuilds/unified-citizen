@@ -1,4 +1,11 @@
 import { Eye, Globe, Handshake, ShieldCheck, Target } from 'lucide-react'
+import {
+  PageHero,
+  PublicPage,
+  Reveal,
+  SectionHeader,
+  SystemPanel,
+} from '../../components/public'
 
 const PRINCIPLES = [
   {
@@ -29,61 +36,73 @@ const PRINCIPLES = [
 
 export function AboutPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-      <div className="max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">About</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">
-          A single channel between citizens and their city
-        </h1>
-        <p className="mt-4 text-lg leading-relaxed text-slate-600">
-          Unified Citizen Governance is the city&apos;s digital grievance platform. It brings
-          public works, sanitation, water, electricity, health and transport departments
-          into one place, so a reported problem reaches the right team automatically and
-          citizens can follow it from submission to resolution.
-        </p>
-        <p className="mt-4 leading-relaxed text-slate-600">
-          Instead of visiting offices, making phone calls or waiting for updates, citizens
-          can submit a grievance in minutes, attach photos as evidence, receive comments
-          from the handling officer and rate the outcome. Built with artificial
-          intelligence, the platform classifies each grievance, suggests the responsible
-          department and flags likely duplicates — always leaving the final decision with
-          people.
-        </p>
-      </div>
+    <PublicPage>
+      <PageHero
+        eyebrow="About"
+        title="A single channel between citizens and their city"
+        description="Unified Citizen Governance is the city's digital grievance platform. It brings public works, sanitation, water, electricity, health and transport departments into one place, so a reported problem reaches the right team automatically and citizens can follow it from submission to resolution."
+      />
 
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {PRINCIPLES.map((principle) => {
-          const Icon = principle.icon
-          return (
-            <div key={principle.title} className="rounded-xl border border-slate-200 bg-white p-6">
-              <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100">
-                <Icon className="size-5 text-blue-700" aria-hidden="true" />
-              </span>
-              <h2 className="mt-4 font-semibold text-slate-900">{principle.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                {principle.description}
-              </p>
-            </div>
-          )
-        })}
-      </div>
-
-      <div className="mt-12 rounded-2xl border border-slate-200 bg-white p-8">
-        <div className="flex items-start gap-4">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
-            <ShieldCheck className="size-5 text-emerald-700" aria-hidden="true" />
-          </span>
-          <div>
-            <h2 className="font-semibold text-slate-900">Your privacy is protected</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
-              Contact details are used only for resolving your grievance and are never shown
-              publicly. Every action on the platform is audited, and departmental access is
-              restricted by role — citizens see their own grievances, while staff only see
-              what their department handles.
-            </p>
-          </div>
+      {/* Mission lead */}
+      <Reveal>
+        <div className="mx-auto max-w-3xl pb-20">
+          <p className="text-lg leading-relaxed text-slate-600">
+            Instead of visiting offices, making phone calls or waiting for updates,
+            citizens can submit a grievance in minutes, attach photos as evidence,
+            receive comments from the handling officer and rate the outcome. Built with
+            artificial intelligence, the platform classifies each grievance, suggests
+            the responsible department and flags likely duplicates — always leaving the
+            final decision with people.
+          </p>
         </div>
-      </div>
-    </div>
+      </Reveal>
+
+      {/* Principles — four editorial civic blocks */}
+      <section className="pb-20">
+        <SectionHeader
+          eyebrow="Principles"
+          title="How the platform works for you"
+          description="Four commitments shape every interaction on the civic grid."
+        />
+        <div className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          {PRINCIPLES.map((principle, index) => {
+            const Icon = principle.icon
+            return (
+              <Reveal key={principle.title} delay={index * 70}>
+                <article className="editorial-block">
+                  <p className="editorial-index">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <span className="civic-icon-chip mt-5">
+                    <Icon aria-hidden="true" />
+                  </span>
+                  <h3 className="mt-4 font-editorial text-xl font-semibold text-ucg-ink">
+                    {principle.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    {principle.description}
+                  </p>
+                </article>
+              </Reveal>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Privacy — trust / security panel */}
+      <section className="pb-20">
+        <SystemPanel
+          eyebrow="Trust"
+          title="Your privacy is protected"
+          description="Contact details are used only for resolving your grievance and are never shown publicly. Every action on the platform is audited, and departmental access is restricted by role — citizens see their own grievances, while staff only see what their department handles."
+          readout="ROLE-BASED ACCESS · FULL AUDIT TRAIL"
+          className="max-w-none"
+        >
+          <span className="civic-icon-chip mt-6">
+            <ShieldCheck aria-hidden="true" />
+          </span>
+        </SystemPanel>
+      </section>
+    </PublicPage>
   )
 }
