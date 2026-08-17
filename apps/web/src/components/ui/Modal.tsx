@@ -55,6 +55,27 @@ export function Modal({
       if (event.key === 'Escape') {
         event.stopPropagation()
         onClose()
+        return
+      }
+      // Trap Tab focus inside the dialog so keyboard users cannot tab into
+      // the page behind the modal (and back out through the overlay).
+      if (event.key === 'Tab' && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+        )
+        if (focusables.length === 0) {
+          return
+        }
+        const first = focusables[0]
+        const last = focusables[focusables.length - 1]
+        const active = document.activeElement
+        if (event.shiftKey && (active === first || active === dialogRef.current)) {
+          event.preventDefault()
+          last.focus()
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault()
+          first.focus()
+        }
       }
     }
 

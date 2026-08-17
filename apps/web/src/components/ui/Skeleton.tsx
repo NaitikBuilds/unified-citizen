@@ -7,7 +7,7 @@ export interface SkeletonProps {
 export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
-      className={cn('animate-pulse rounded-md bg-ucg-fog', className)}
+      className={cn('animate-pulse rounded-md bg-ucg-fog motion-reduce:animate-none', className)}
       aria-hidden="true"
     />
   )
