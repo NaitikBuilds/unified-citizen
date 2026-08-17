@@ -11,15 +11,15 @@ const LINKS = [
   { to: '/help', label: 'Help' },
 ]
 
-const linkClasses =
-  'rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-
-/** Primary navigation for the public landing pages. */
+/**
+ * Public navigation link set — rendered inside the floating pill header.
+ * Tone (light/dark header) is handled by the header's CSS.
+ */
 export function PublicNav() {
   return (
     <>
       {LINKS.map((link) => (
-        <Link key={link.to} to={link.to} className={linkClasses}>
+        <Link key={link.to} to={link.to} className="ucg-nav-link">
           {link.label}
         </Link>
       ))}

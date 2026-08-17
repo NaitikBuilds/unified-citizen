@@ -1,9 +1,57 @@
 @import "tailwindcss";
 
+/* ============================================================
+   UNIFIED CITIZEN GOVERNANCE — VISUAL SYSTEM V1
+   Tokens, typography, motion. Consumed by Tailwind utilities
+   (bg-ucg-*, text-ucg-*, font-editorial, font-system, ease-editorial)
+   and by the cinematic components in components/hero + components/motion.
+   ============================================================ */
+
+@theme {
+  /* Civic palette */
+  --color-ucg-ink: #090c12;
+  --color-ucg-midnight: #0e1526;
+  --color-ucg-paper: #f5f6f2;
+  --color-ucg-white: #ffffff;
+  --color-ucg-fog: #e8ebef;
+  --color-ucg-blue: #2563eb;
+  --color-ucg-electric: #5ea7ff;
+  --color-ucg-signal: #67e8f9;
+  --color-ucg-warning: #f4b63c;
+  --color-ucg-critical: #ff6b61;
+
+  /* Typography systems */
+  --font-editorial:
+    'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman',
+    serif;
+  --font-system:
+    ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas,
+    monospace;
+
+  /* Editorial entrance easing */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  /* Motion tokens */
+  --ucg-dur-micro: 180ms;
+  --ucg-dur-ui: 280ms;
+  --ucg-dur-section: 600ms;
+  --ucg-dur-story: 1200ms;
+  --ucg-dur-cinematic: 8s;
+  --ucg-ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ucg-paper);
+    color: var(--color-ucg-ink);
   }
 
   /* Guaranteed visible keyboard focus everywhere. */
@@ -11,14 +59,1166 @@
     outline: 2px solid #2563eb;
     outline-offset: 2px;
   }
+
+  ::selection {
+    background: rgba(37, 99, 235, 0.22);
+  }
 }
 
 @layer utilities {
-  /*
-   * AI processing sequence — stages fade in one pass and stop (motion
-   * communicates progress, not decoration). Reduced motion shows the full
-   * stage list statically with a steady dot.
-   */
+  /* ---------- Typography helpers ---------- */
+
+  /* Editorial display serif with fluid sizing. */
+  .display-serif {
+    font-family: var(--font-editorial);
+    font-size: clamp(2.6rem, 7vw, 5.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    font-weight: 600;
+  }
+
+  .display-serif-sm {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.9rem, 3.4vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+
+  /* System/mono label — pixel-accent voice, never whole surfaces. */
+  .label-mono {
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .label-mono-sm {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.55;
+  }
+
+  /* ============================================================
+     PUBLIC HEADER — floating pill navigation
+     ============================================================ */
+
+  .ucg-header {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 40;
+    padding: 0.75rem 1rem 0;
+    pointer-events: none;
+  }
+
+  .ucg-header-pill {
+    pointer-events: auto;
+    margin-inline: auto;
+    max-width: 76rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      border-color var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      box-shadow var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      padding var(--ucg-dur-ui) var(--ucg-ease-editorial);
+  }
+
+  .ucg-header-pill > * {
+    pointer-events: auto;
+  }
+
+  /* Dark tone over the cinematic hero — transparent until scroll.
+     Scoped to the pill: the mobile drawer keeps light styling. */
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill .ucg-wordmark,
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill .ucg-nav-link,
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill .ucg-icon-btn {
+    color: #f2f4f8;
+  }
+
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill .ucg-nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill .ucg-cta-outline {
+    border-color: rgba(255, 255, 255, 0.35);
+    color: #f2f4f8;
+    background: transparent;
+  }
+
+  .ucg-header-dark:not(.is-compact) .ucg-header-pill .ucg-cta-outline:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Compact floating surface (scrolled, or light pages). */
+  .ucg-header.is-compact .ucg-header-pill,
+  .ucg-header-light .ucg-header-pill {
+    background: rgba(255, 255, 255, 0.86);
+    border-color: rgba(9, 12, 18, 0.08);
+    box-shadow: 0 10px 30px -12px rgba(9, 12, 18, 0.22);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .ucg-header.is-compact .ucg-header-pill {
+    padding: 0.4rem 0.55rem;
+  }
+
+  .ucg-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-inline: 0.55rem;
+    border-radius: 9999px;
+  }
+
+  .ucg-logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+    background: var(--color-ucg-blue);
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(94, 167, 255, 0.35), 0 4px 14px -4px rgba(37, 99, 235, 0.55);
+  }
+
+  .ucg-wordmark {
+    font-family: var(--font-editorial);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    color: var(--color-ucg-ink);
+    transition: color var(--ucg-dur-micro) linear;
+  }
+
+  .ucg-nav-link {
+    border-radius: 9999px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #3f4a5c;
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .ucg-nav-link:hover {
+    background: rgba(9, 12, 18, 0.06);
+    color: var(--color-ucg-ink);
+  }
+
+  .ucg-nav-link[aria-current='page'] {
+    color: var(--color-ucg-blue);
+    font-weight: 600;
+  }
+
+  .ucg-cta-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.25rem;
+    padding-inline: 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(9, 12, 18, 0.18);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ucg-ink);
+    background: transparent;
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      border-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .ucg-cta-outline:hover {
+    background: rgba(9, 12, 18, 0.05);
+  }
+
+  .ucg-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.25rem;
+    padding-inline: 1rem;
+    border-radius: 9999px;
+    background: var(--color-ucg-blue);
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    transition: background-color var(--ucg-dur-micro) linear;
+  }
+
+  .ucg-cta-primary:hover {
+    background: #1d4ed8;
+  }
+
+  .ucg-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    color: var(--color-ucg-ink);
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .ucg-icon-btn:hover {
+    background: rgba(9, 12, 18, 0.07);
+  }
+
+  /* Mobile drawer */
+  .ucg-mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 49;
+    background: rgba(4, 6, 12, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ucg-dur-ui) var(--ucg-ease-editorial);
+  }
+
+  .ucg-header.menu-open .ucg-mobile-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ucg-mobile-drawer {
+    position: fixed;
+    inset-block: 0;
+    right: 0;
+    z-index: 50;
+    width: min(20rem, 88vw);
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    background: var(--color-ucg-paper);
+    border-left: 1px solid rgba(9, 12, 18, 0.08);
+    box-shadow: -24px 0 60px -20px rgba(9, 12, 18, 0.4);
+    transform: translateX(100%);
+    transition: transform var(--ucg-dur-ui) var(--ucg-ease-editorial);
+    padding: 1rem;
+  }
+
+  .ucg-header.menu-open .ucg-mobile-drawer {
+    transform: translateX(0);
+  }
+
+  .ucg-mobile-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 0.9rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #334155;
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .ucg-mobile-link:hover {
+    background: rgba(9, 12, 18, 0.06);
+    color: var(--color-ucg-ink);
+  }
+
+  /* ============================================================
+     CINEMATIC SCENE — space → earth → atmosphere → clouds →
+     city → civic destination
+     ============================================================ */
+
+  .civic-scene {
+    position: relative;
+    height: 100svh;
+    min-height: 620px;
+    overflow: hidden;
+    background: #04060d;
+    isolation: isolate;
+    color: #eef1f6;
+  }
+
+  /* Custom cursor is active only while a cinematic container is on screen. */
+  .ucg-cursor-active .civic-scene,
+  .ucg-cursor-active .civic-story-pin {
+    cursor: none;
+  }
+
+  .scene-layer {
+    position: absolute;
+    inset: 0;
+    will-change: transform, opacity, filter;
+  }
+
+  .scene-stars {
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, rgba(255, 255, 255, 0.9), transparent 60%),
+      radial-gradient(1px 1px at 27% 64%, rgba(255, 255, 255, 0.55), transparent 60%),
+      radial-gradient(1.5px 1.5px at 41% 12%, rgba(255, 255, 255, 0.75), transparent 60%),
+      radial-gradient(1px 1px at 58% 41%, rgba(255, 255, 255, 0.5), transparent 60%),
+      radial-gradient(1px 1px at 66% 78%, rgba(255, 255, 255, 0.8), transparent 60%),
+      radial-gradient(1.5px 1.5px at 79% 28%, rgba(255, 255, 255, 0.6), transparent 60%),
+      radial-gradient(1px 1px at 88% 56%, rgba(255, 255, 255, 0.7), transparent 60%),
+      radial-gradient(1px 1px at 94% 15%, rgba(255, 255, 255, 0.45), transparent 60%),
+      radial-gradient(1.5px 1.5px at 7% 86%, rgba(255, 255, 255, 0.6), transparent 60%),
+      radial-gradient(1px 1px at 34% 46%, rgba(255, 255, 255, 0.5), transparent 60%),
+      radial-gradient(1px 1px at 51% 88%, rgba(255, 255, 255, 0.65), transparent 60%),
+      radial-gradient(1px 1px at 72% 7%, rgba(255, 255, 255, 0.55), transparent 60%);
+  }
+
+  .scene-stars-far {
+    background-image:
+      radial-gradient(1px 1px at 18% 34%, rgba(255, 255, 255, 0.35), transparent 60%),
+      radial-gradient(1px 1px at 33% 78%, rgba(255, 255, 255, 0.3), transparent 60%),
+      radial-gradient(1px 1px at 49% 20%, rgba(255, 255, 255, 0.38), transparent 60%),
+      radial-gradient(1px 1px at 62% 54%, rgba(255, 255, 255, 0.32), transparent 60%),
+      radial-gradient(1px 1px at 76% 33%, rgba(255, 255, 255, 0.36), transparent 60%),
+      radial-gradient(1px 1px at 87% 69%, rgba(255, 255, 255, 0.3), transparent 60%),
+      radial-gradient(1px 1px at 96% 42%, rgba(255, 255, 255, 0.34), transparent 60%);
+    animation: star-twinkle 7s ease-in-out infinite alternate;
+  }
+
+  @keyframes star-twinkle {
+    from {
+      opacity: 0.55;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Earth + atmosphere */
+  .scene-earth {
+    position: absolute;
+    left: 50%;
+    top: 54%;
+    width: 0;
+    height: 0;
+  }
+
+  .earth-globe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vh;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%, #8fc3ef 0%, #3f7fbb 16%, #1c4c80 38%, #0d2a55 62%, #061329 82%, #02060f 100%);
+    overflow: hidden;
+  }
+
+  .earth-term {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      linear-gradient(108deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.05) 32%, transparent 48%, rgba(0, 0, 0, 0.42) 76%, rgba(0, 0, 0, 0.62) 100%);
+  }
+
+  .earth-clouds {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse 22% 12% at 30% 38%, rgba(240, 247, 255, 0.5), transparent 70%),
+      radial-gradient(ellipse 26% 10% at 58% 26%, rgba(235, 245, 255, 0.42), transparent 70%),
+      radial-gradient(ellipse 18% 9% at 72% 52%, rgba(240, 247, 255, 0.36), transparent 70%),
+      radial-gradient(ellipse 24% 11% at 44% 68%, rgba(235, 245, 255, 0.3), transparent 70%);
+    filter: blur(6px);
+    animation: earth-cloud-drift 46s linear infinite;
+  }
+
+  @keyframes earth-cloud-drift {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .earth-atmo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vh;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 90px 30px rgba(94, 167, 255, 0.32),
+      0 0 220px 90px rgba(94, 167, 255, 0.14);
+  }
+
+  /* Cloud pass — soft blobs that dominate the frame mid-transition. */
+  .scene-clouds {
+    opacity: 0;
+  }
+
+  .cloud {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(ellipse at center, rgba(242, 248, 255, 0.95) 0%, rgba(206, 226, 248, 0.6) 42%, transparent 74%);
+    filter: blur(16px);
+  }
+
+  .cloud-a {
+    width: 62vmax;
+    height: 22vmax;
+    left: -12vmax;
+    top: 16vh;
+  }
+  .cloud-b {
+    width: 70vmax;
+    height: 24vmax;
+    right: -18vmax;
+    top: 34vh;
+  }
+  .cloud-c {
+    width: 56vmax;
+    height: 18vmax;
+    left: 8vmax;
+    top: 58vh;
+  }
+  .cloud-d {
+    width: 44vmax;
+    height: 16vmax;
+    right: 6vmax;
+    bottom: 2vh;
+  }
+
+  .scene-city {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 42%;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  .scene-city svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .scene-arch {
+    position: absolute;
+    left: 50%;
+    bottom: 4%;
+    width: min(64rem, 96vw);
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+
+  .scene-arch svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 24px 60px rgba(2, 6, 16, 0.6));
+  }
+
+  .scene-vignette {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(4, 6, 13, 0.72) 0%, transparent 26%, transparent 64%, rgba(3, 5, 11, 0.62) 100%),
+      radial-gradient(ellipse at 50% 38%, transparent 34%, rgba(3, 5, 11, 0.5) 100%);
+    pointer-events: none;
+  }
+
+  /* Hero copy — appears once the camera settles. */
+  .scene-hero-content {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 6;
+    padding: 0 1.5rem max(2.2rem, env(safe-area-inset-bottom));
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.9s var(--ucg-ease-editorial) 0.1s,
+      transform 0.9s var(--ucg-ease-editorial) 0.1s;
+  }
+
+  .civic-scene.is-settled .scene-hero-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scene-hero-content h1 {
+    color: #f4f6fa;
+  }
+
+  .scene-hero-copy {
+    max-width: 34rem;
+    color: rgba(226, 232, 240, 0.78);
+  }
+
+  .hero-eyebrow {
+    color: var(--color-ucg-signal);
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.6rem;
+  }
+
+  .hero-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding-inline: 1.5rem;
+    border-radius: 9999px;
+    background: #fff;
+    color: var(--color-ucg-ink);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    box-shadow: 0 12px 34px -12px rgba(255, 255, 255, 0.5);
+    transition:
+      transform var(--ucg-dur-micro) var(--ucg-ease-editorial),
+      background-color var(--ucg-dur-micro) linear;
+  }
+
+  .hero-cta-primary:hover {
+    background: #e8f1ff;
+    transform: translateY(-1px);
+  }
+
+  .hero-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding-inline: 1.5rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e6ebf3;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    backdrop-filter: blur(6px);
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      transform var(--ucg-dur-micro) var(--ucg-ease-editorial);
+  }
+
+  .hero-cta-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+  }
+
+  /* Governance layer — architecture becomes a living system. */
+  .scene-governance {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 1.2s var(--ucg-ease-editorial);
+    pointer-events: none;
+  }
+
+  .civic-scene.is-settled .scene-governance {
+    opacity: 1;
+  }
+
+  .governance-svg {
+    width: min(56rem, 92vw);
+    height: auto;
+  }
+
+  .gov-node {
+    opacity: 0;
+    animation: gov-node-in 0.7s var(--ucg-ease-editorial) forwards;
+  }
+
+  .gov-link {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: gov-link-draw 0.9s var(--ucg-ease-editorial) forwards;
+  }
+
+  @keyframes gov-link-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes gov-node-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .gov-node-ring {
+    animation: gov-ring 2.4s ease-out infinite;
+  }
+
+  @keyframes gov-ring {
+    0% {
+      opacity: 0.5;
+      transform: scale(0.86);
+    }
+    70% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  .gov-blink {
+    animation: gov-blink 1.4s steps(2, start) infinite;
+  }
+
+  @keyframes gov-blink {
+    to {
+      visibility: hidden;
+    }
+  }
+
+  /* ============================================================
+     CIVIC LOADER — scene initialization only (never API calls)
+     ============================================================ */
+
+  .civic-loader {
+    position: relative;
+    height: 100svh;
+    min-height: 620px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    background:
+      radial-gradient(ellipse at 50% 42%, #0c1428 0%, #060a15 55%, #04060d 100%);
+    color: #dfe6f2;
+  }
+
+  .civic-loader-title {
+    font-family: var(--font-editorial);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .civic-loader-sub {
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.3em;
+    color: rgba(190, 205, 230, 0.7);
+  }
+
+  .civic-loader-list {
+    margin-top: 1.4rem;
+    display: grid;
+    gap: 0.7rem;
+    min-width: 15rem;
+  }
+
+  .civic-loader-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    color: rgba(214, 224, 240, 0.75);
+  }
+
+  .civic-loader-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-ucg-signal);
+    box-shadow: 0 0 10px rgba(103, 232, 249, 0.9);
+    opacity: 0.18;
+    animation: loader-dot-on 0.5s ease-out forwards;
+  }
+
+  .civic-loader-row:nth-child(1) .civic-loader-dot {
+    animation-delay: 0.2s;
+  }
+  .civic-loader-row:nth-child(2) .civic-loader-dot {
+    animation-delay: 0.6s;
+  }
+  .civic-loader-row:nth-child(3) .civic-loader-dot {
+    animation-delay: 1s;
+  }
+  .civic-loader-row:nth-child(4) .civic-loader-dot {
+    animation-delay: 1.4s;
+  }
+
+  @keyframes loader-dot-on {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* ============================================================
+     CIVIC CURSOR — cinematic areas only
+     ============================================================ */
+
+  .civic-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    pointer-events: none;
+    display: none;
+  }
+
+  @media (pointer: fine) {
+    .ucg-cursor-active .civic-cursor {
+      display: block;
+    }
+  }
+
+  .civic-cursor-dot,
+  .civic-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 9999px;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+  }
+
+  .civic-cursor-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+
+  .civic-cursor-ring {
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    transition: width var(--ucg-dur-micro) linear, height var(--ucg-dur-micro) linear;
+  }
+
+  .civic-cursor.is-active .civic-cursor-ring {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .civic-cursor-label {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0.3rem 0.7rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(6px);
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    color: #fff;
+    opacity: 0;
+    transform: translate(12px, -50%);
+    transition: opacity var(--ucg-dur-micro) linear;
+    white-space: nowrap;
+  }
+
+  .civic-cursor.has-label .civic-cursor-label {
+    opacity: 1;
+  }
+
+  /* ============================================================
+     SCROLL STORY — one pinned controller, six governance stages
+     ============================================================ */
+
+  .civic-story {
+    position: relative;
+    height: 460vh;
+    background: #070b14;
+    color: #e8edf5;
+  }
+
+  .civic-story-pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 620px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .story-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(120, 150, 200, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 150, 200, 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.9), transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.9), transparent 78%);
+  }
+
+  .story-skyline {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 34%;
+    opacity: 0.5;
+  }
+
+  .story-skyline svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .story-content {
+    position: relative;
+    z-index: 2;
+    width: min(72rem, 100%);
+    padding: 5rem 1.5rem 2rem;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .story-content {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Vertical spine */
+  .story-spine {
+    position: relative;
+    margin-inline: auto;
+    width: min(26rem, 100%);
+    padding-block: 0.4rem;
+  }
+
+  .story-spine-line {
+    position: absolute;
+    left: 1.35rem;
+    top: 1.2rem;
+    bottom: 1.2rem;
+    width: 2px;
+    background: rgba(120, 150, 200, 0.18);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .story-spine-line-fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: top;
+    transform: scaleY(0);
+    background: linear-gradient(to bottom, var(--color-ucg-signal), var(--color-ucg-electric));
+    transition: transform 0.25s linear;
+  }
+
+  .story-node {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0.4rem 0.85rem 0;
+    opacity: 0.35;
+    transition: opacity 0.35s var(--ucg-ease-editorial);
+  }
+
+  .story-node.is-active,
+  .story-node.is-done {
+    opacity: 1;
+  }
+
+  .story-node-dot {
+    position: relative;
+    z-index: 1;
+    width: 0.85rem;
+    height: 0.85rem;
+    margin-left: 0.9rem;
+    border-radius: 9999px;
+    border: 2px solid rgba(160, 185, 225, 0.5);
+    background: #0a0f1d;
+    transition:
+      background-color 0.3s var(--ucg-ease-editorial),
+      border-color 0.3s var(--ucg-ease-editorial),
+      box-shadow 0.3s var(--ucg-ease-editorial);
+  }
+
+  .story-node.is-done .story-node-dot {
+    background: var(--color-ucg-electric);
+    border-color: var(--color-ucg-electric);
+  }
+
+  .story-node.is-active .story-node-dot {
+    background: var(--color-ucg-signal);
+    border-color: var(--color-ucg-signal);
+    box-shadow: 0 0 18px rgba(103, 232, 249, 0.7);
+  }
+
+  .story-node-label {
+    font-family: var(--font-system);
+    font-size: 0.8125rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c8d4e6;
+  }
+
+  .story-node-index {
+    margin-left: auto;
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    color: rgba(160, 185, 225, 0.55);
+  }
+
+  /* Stage copy — fades + small position change, no theatrics. */
+  .story-text {
+    position: relative;
+    min-height: 16rem;
+  }
+
+  .story-stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.9rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.4s var(--ucg-ease-editorial),
+      transform 0.4s var(--ucg-ease-editorial);
+    pointer-events: none;
+  }
+
+  .story-stage.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .story-stage h2 {
+    font-family: var(--font-editorial);
+    font-size: clamp(2rem, 4.4vw, 3.2rem);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #f2f5fa;
+  }
+
+  .story-stage p {
+    max-width: 26rem;
+    color: rgba(200, 212, 232, 0.72);
+    font-size: 1.02rem;
+    line-height: 1.65;
+  }
+
+  .story-hud {
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    color: rgba(160, 185, 225, 0.6);
+  }
+
+  .story-hud-bar {
+    width: 7rem;
+    height: 2px;
+    border-radius: 9999px;
+    background: rgba(160, 185, 225, 0.18);
+    overflow: hidden;
+  }
+
+  .story-hud-bar span {
+    display: block;
+    height: 100%;
+    background: var(--color-ucg-signal);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.25s linear;
+  }
+
+  /* ============================================================
+     REDUCED MOTION — everything visible, nothing animated.
+     ============================================================ */
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .ucg-header-pill,
+    .ucg-mobile-overlay,
+    .ucg-mobile-drawer,
+    .ucg-nav-link,
+    .ucg-cta-outline,
+    .ucg-cta-primary,
+    .ucg-logo,
+    .ucg-icon-btn {
+      transition: none;
+    }
+
+    .scene-stars-far,
+    .earth-clouds,
+    .gov-node,
+    .gov-link,
+    .gov-node-ring,
+    .gov-blink,
+    .civic-loader-dot {
+      animation: none !important;
+    }
+
+    .gov-node,
+    .gov-link {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+
+    .civic-loader-dot {
+      opacity: 1;
+    }
+
+    .civic-scene.is-settled .scene-hero-content {
+      transition: none;
+    }
+
+    .civic-story {
+      height: auto;
+    }
+
+    .civic-story-pin {
+      position: relative;
+      height: auto;
+      min-height: 0;
+      padding-block: 5rem;
+    }
+
+    .story-spine-line-fill,
+    .story-hud-bar span {
+      transition: none;
+    }
+
+    .story-node {
+      opacity: 1;
+    }
+
+    .story-stage {
+      position: relative;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      transition: none;
+    }
+
+    .story-text {
+      min-height: 0;
+      display: grid;
+      gap: 1.6rem;
+    }
+
+    /* Static civic destination — camera pass skipped. */
+    .scene-stars,
+    .scene-stars-far {
+      opacity: 0.4;
+    }
+
+    .ucg-cursor-active .civic-scene,
+    .ucg-cursor-active .civic-story-pin {
+      cursor: auto;
+    }
+  }
+
+  /* ============================================================
+     MOBILE / TABLET — lighter scene, usability first.
+     ============================================================ */
+
+  @media (max-width: 640px) {
+    .scene-cloud-b {
+      display: none;
+    }
+    .scene-cloud-d {
+      display: none;
+    }
+
+    .scene-hero-content {
+      padding-inline: 1.25rem;
+    }
+
+    .governance-svg {
+      width: 100vw;
+      opacity: 0.85;
+    }
+
+    .story-content {
+      padding-top: 4.5rem;
+    }
+
+    .story-hud {
+      display: none;
+    }
+  }
+
+  /* ============================================================
+     Existing motion utilities (AI stages, timeline, duplicate
+     warning) — preserved unchanged from previous phases.
+     ============================================================ */
+
   .ai-stage-row {
     opacity: 0;
     animation: ai-stage-in 0.3s ease-out forwards;

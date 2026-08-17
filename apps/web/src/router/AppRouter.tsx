@@ -35,10 +35,7 @@ function LandingActions() {
 
   if (isAuthenticated && user) {
     return (
-      <Link
-        to={roleHomePath(user.role)}
-        className="inline-flex h-9 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-      >
+      <Link to={roleHomePath(user.role)} className="ucg-cta-primary">
         Go to portal
       </Link>
     )
@@ -46,16 +43,10 @@ function LandingActions() {
 
   return (
     <>
-      <Link
-        to="/auth/login"
-        className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-      >
+      <Link to="/auth/login" className="ucg-cta-outline">
         Sign in
       </Link>
-      <Link
-        to="/auth/register"
-        className="inline-flex h-9 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-      >
+      <Link to="/auth/register" className="ucg-cta-primary">
         Register
       </Link>
     </>
@@ -69,7 +60,7 @@ export function AppRouter() {
       <Route
         path="/"
         element={
-          <PublicLayout nav={<PublicNav />} actions={<LandingActions />}>
+          <PublicLayout nav={<PublicNav />} actions={<LandingActions />} tone="dark">
             <HomePage />
           </PublicLayout>
         }
