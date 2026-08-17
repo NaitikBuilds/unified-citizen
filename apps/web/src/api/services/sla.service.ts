@@ -4,10 +4,9 @@ import type { Sla, SlaListParams } from '../../contracts/sla'
 /**
  * SLA service interface.
  *
- * MOCK ONLY: the backend currently creates SLA records internally
- * (apps/api/src/services/sla.service.ts) but exposes no SLA endpoints.
- * The registry wires this to the mock implementation until a backend
- * endpoint exists.
+ * Real API (V6.0a): GET /api/v1/slas and GET /api/v1/slas/:grievanceId,
+ * implemented in adapters/sla.adapter.ts and scoped server-side by token.
+ * Mock mode remains available for standalone development.
  */
 export interface SlaService {
   getByGrievance(grievanceId: string): Promise<Sla | null>

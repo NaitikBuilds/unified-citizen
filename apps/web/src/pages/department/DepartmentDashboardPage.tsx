@@ -262,8 +262,12 @@ export function DepartmentDashboardPage() {
                 <Timer className="size-3.5" aria-hidden="true" />
                 SLA status
               </p>
-              <span className="dp-demo-badge" title="Mock service — no backend endpoint">
-                Demo data
+              <span
+                className="dp-status-pill"
+                title="Served by the real SLA API, scoped to this department"
+              >
+                <span className="dp-status-dot" aria-hidden="true" />
+                Live
               </span>
             </div>
             {slaQuery.isLoading ? (

@@ -15,6 +15,7 @@ import { apiUserService } from './adapters/user.adapter'
 import { apiDepartmentService } from './adapters/department.adapter'
 import { apiGrievanceService } from './adapters/grievance.adapter'
 import { apiNotificationService } from './adapters/notification.adapter'
+import { apiSlaService } from './adapters/sla.adapter'
 
 import { mockAuthService } from '../mocks/services/auth.service'
 import { mockUserService } from '../mocks/services/user.service'
@@ -37,7 +38,7 @@ import { mockAiService } from '../mocks/services/ai.service'
  * Components must never branch on `config.useMockApi` directly — they consume
  * `services.<domain>` and remain agnostic to the source.
  *
- * Services without a backend endpoint yet (SLA, escalation, analytics, audit,
+ * Services without a backend endpoint yet (escalation, analytics, audit,
  * AI) are wired to mocks in both modes until the backend exposes them.
  */
 export const services = {
@@ -49,8 +50,11 @@ export const services = {
     ? mockNotificationService
     : apiNotificationService,
 
+  // SLA is now REAL API backed (V6.0a: GET /api/v1/slas endpoints); mock mode
+  // remains available for standalone development.
+  sla: config.useMockApi ? mockSlaService : apiSlaService,
+
   // MOCK ONLY — no backend endpoints exist yet (see each service doc comment).
-  sla: mockSlaService,
   escalation: mockEscalationService,
   analytics: mockAnalyticsService,
   audit: mockAuditService,
