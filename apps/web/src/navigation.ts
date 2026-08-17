@@ -1,5 +1,6 @@
 import {
   Bell,
+  Building2,
   CircleHelp,
   LayoutDashboard,
   ListTodo,
@@ -32,5 +33,7 @@ export const portalNavigation = {
 
   admin: [
     { key: 'dashboard', label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { key: 'users', label: 'Users', href: '/admin/users', icon: UserRound },
+    { key: 'departments', label: 'Departments', href: '/admin/departments', icon: Building2 },
   ] satisfies NavItem[],
 } satisfies Record<'citizen' | 'department' | 'admin', NavItem[]>

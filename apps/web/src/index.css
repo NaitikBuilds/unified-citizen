@@ -2704,6 +2704,300 @@
 }
 
 /* ============================================================
+   VISUAL PHASE V4.5c — ADMIN / CIVIC COMMAND
+   Executive governance surface: midnight analytical panels,
+   indigo/plum accents, dense tables, muted gold reserved for
+   governance emphasis. The shell itself stays paper.
+   ============================================================ */
+@layer utilities {
+  /* Governance hero — midnight + indigo glow, never aggressive. */
+  .ad-hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    border-radius: 1.25rem;
+    background:
+      linear-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+      radial-gradient(115% 150% at 88% -10%, rgba(67, 56, 202, 0.45), transparent 55%),
+      var(--color-admin-midnight);
+    background-size:
+      40px 40px,
+      40px 40px,
+      auto,
+      auto;
+    color: #ffffff;
+  }
+
+  .ad-hero-overline {
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(216, 214, 255, 0.7);
+  }
+
+  .ad-hero-title {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .ad-hero-sub {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: rgba(216, 214, 255, 0.8);
+  }
+
+  .ad-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    border-radius: 9999px;
+    background: rgba(124, 58, 237, 0.14);
+    padding: 0.3rem 0.8rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #dcd8ff;
+  }
+
+  .ad-status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #67e8f9;
+    box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.16);
+  }
+
+  /* Dense governance metric cards. */
+  .ad-metric {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-ucg-fog);
+    border-top: 2px solid var(--color-admin-indigo);
+    border-radius: 0.9rem;
+    background: #ffffff;
+    padding: 0.9rem 1rem;
+    transition:
+      border-color var(--ucg-dur-micro) ease,
+      box-shadow var(--ucg-dur-micro) ease,
+      transform var(--ucg-dur-micro) ease;
+  }
+
+  .ad-metric:hover {
+    border-color: rgba(67, 56, 202, 0.35);
+    box-shadow: 0 8px 22px -10px rgba(9, 12, 18, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .ad-metric-label {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5b6675;
+  }
+
+  .ad-metric-value {
+    margin-top: 0.4rem;
+    font-family: var(--font-system);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-ucg-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ad-metric-note {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  /* Midnight analytical panels. */
+  .ad-panel-midnight {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(124, 58, 237, 0.22);
+    border-radius: 1rem;
+    background:
+      linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+      var(--color-admin-midnight);
+    background-size:
+      36px 36px,
+      36px 36px,
+      auto;
+    padding: 1.25rem;
+    color: #ffffff;
+  }
+
+  .ad-panel-label {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8f8ae0;
+  }
+
+  /* Demo badge inside midnight panels. */
+  .ad-panel-midnight .dp-demo-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e4e1ff;
+  }
+
+  /* Dense selects inside admin table rows. */
+  .ad-table-row .ucg-input-field {
+    padding-top: 0.375rem !important;
+    padding-bottom: 0.375rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Distribution bars. */
+  .ad-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .ad-bar-label {
+    width: 7.5rem;
+    flex: none;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(216, 214, 255, 0.75);
+    text-align: right;
+  }
+
+  .ad-bar-track {
+    height: 0.5rem;
+    flex: 1;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: rgba(124, 58, 237, 0.14);
+  }
+
+  .ad-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--color-admin-indigo), var(--color-admin-plum));
+  }
+
+  .ad-bar-value {
+    width: 2.25rem;
+    flex: none;
+    font-family: var(--font-system);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Monthly trend bars. */
+  .ad-trend {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    height: 9rem;
+  }
+
+  .ad-trend-col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    height: 100%;
+  }
+
+  .ad-trend-bar {
+    width: 100%;
+    max-width: 2rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+    transition: height var(--ucg-dur-section) var(--ucg-ease-editorial);
+  }
+
+  .ad-trend-created {
+    background: linear-gradient(180deg, var(--color-admin-plum), var(--color-admin-indigo));
+  }
+
+  .ad-trend-resolved {
+    background: rgba(103, 232, 249, 0.55);
+  }
+
+  .ad-trend-label {
+    font-family: var(--font-system);
+    font-size: 0.5625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(216, 214, 255, 0.6);
+  }
+
+  /* Governance gold — muted, for emphasis only. */
+  .ad-gold {
+    color: #b79a4e;
+  }
+
+  /* Dense admin table rows. */
+  .ad-table-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem 1rem;
+    border-bottom: 1px solid var(--color-ucg-fog);
+    padding: 0.8rem 0.25rem;
+    transition: background var(--ucg-dur-micro) ease;
+  }
+
+  @media (min-width: 768px) {
+    .ad-table-row {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) 7rem 8rem minmax(0, 1fr) auto;
+      align-items: center;
+      padding: 0.6rem 0.5rem;
+    }
+  }
+
+  .ad-table-row:hover {
+    background: rgba(67, 56, 202, 0.04);
+  }
+
+  .ad-head {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .ad-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) 7rem 8rem minmax(0, 1fr) auto;
+      gap: 1rem;
+      border-bottom: 1px solid var(--color-ucg-fog);
+      padding: 0.4rem 0.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ad-metric {
+      transition: none;
+    }
+
+    .ad-metric:hover {
+      transform: none;
+    }
+
+    .ad-trend-bar {
+      transition: none;
+    }
+  }
+}
+
+/* ============================================================
    VISUAL PHASE V4.2a — CITIZEN DASHBOARD
    Midnight civic hero, system-readout metrics, editorial sections.
    ============================================================ */

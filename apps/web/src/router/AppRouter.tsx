@@ -29,6 +29,8 @@ import { DepartmentDashboardPage } from '../pages/department/DepartmentDashboard
 import { DepartmentGrievanceListPage } from '../pages/department/DepartmentGrievanceListPage'
 import { DepartmentGrievanceDetailPage } from '../pages/department/DepartmentGrievanceDetailPage'
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
+import { AdminUsersPage } from '../pages/admin/AdminUsersPage'
+import { AdminDepartmentsPage } from '../pages/admin/AdminDepartmentsPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { FoundationPage } from '../pages/FoundationPage'
 
@@ -204,6 +206,8 @@ export function AppRouter() {
         }
       >
         <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route path="/admin/users" element={<AdminUsersPage />} />
+        <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
       </Route>
 
       {/* 404 */}
