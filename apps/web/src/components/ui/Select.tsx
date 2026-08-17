@@ -12,6 +12,8 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   error?: string
   placeholder?: string
   options: SelectOption[]
+  /** Extra classes for the label element (when `label` is provided). */
+  labelClassName?: string
   ref?: Ref<HTMLSelectElement>
 }
 
@@ -21,6 +23,7 @@ export function Select({
   error,
   placeholder,
   options,
+  labelClassName,
   className,
   id,
   ref,
@@ -32,7 +35,10 @@ export function Select({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={selectId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        <label
+          htmlFor={selectId}
+          className={cn('mb-1.5 block text-sm font-medium text-slate-700', labelClassName)}
+        >
           {label}
         </label>
       )}

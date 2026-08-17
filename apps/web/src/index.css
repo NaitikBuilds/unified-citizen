@@ -2669,3 +2669,167 @@
     }
   }
 }
+
+/* ============================================================
+   VISUAL PHASE V4.2b — CITIZEN GRIEVANCE LIST
+   Civic case-management surface.
+   ============================================================ */
+@layer utilities {
+  /* Page header — mono eyebrow + editorial title + context. */
+  .gl-eyebrow {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #7c8aa0;
+  }
+
+  .gl-title {
+    font-family: var(--font-editorial);
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--color-ucg-ink);
+  }
+
+  .gl-subtitle {
+    max-width: 34rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #5b6675;
+  }
+
+  /* Command bar — one cohesive filter surface. */
+  .gl-command-bar {
+    border: 1px solid rgba(9, 12, 18, 0.09);
+    border-radius: 1rem;
+    background: var(--color-ucg-white);
+    box-shadow: 0 1px 2px rgba(9, 12, 18, 0.04);
+  }
+
+  .gl-field-label {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7c8aa0;
+  }
+
+  /* Status filter chips — compact mono system voice. */
+  .gl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid rgba(9, 12, 18, 0.14);
+    border-radius: 9999px;
+    background: var(--color-ucg-white);
+    padding: 0.4rem 0.85rem;
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #3f4a5c;
+    transition:
+      border-color var(--ucg-dur-micro) linear,
+      background-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .gl-chip:hover {
+    border-color: rgba(37, 99, 235, 0.4);
+    color: var(--color-ucg-ink);
+  }
+
+  .gl-chip:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .gl-chip-active {
+    border-color: var(--color-ucg-blue);
+    background: var(--color-ucg-blue);
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .gl-chip-active::before {
+    content: '';
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background: #ffffff;
+    opacity: 0.9;
+  }
+
+  .gl-chip-active:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+    color: #ffffff;
+  }
+
+  /* Result readout — system metadata above the list. */
+  .gl-readout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7c8aa0;
+  }
+
+  .gl-readout-flag {
+    color: var(--color-ucg-blue);
+    font-weight: 600;
+  }
+
+  /* List surface + row interaction. */
+  .gl-list {
+    overflow: hidden;
+    border: 1px solid rgba(9, 12, 18, 0.09);
+    border-radius: 1rem;
+    background: var(--color-ucg-white);
+  }
+
+  .gl-row {
+    position: relative;
+    display: block;
+    transition: background-color var(--ucg-dur-micro) linear;
+  }
+
+  .gl-row:hover {
+    background: rgba(37, 99, 235, 0.035);
+  }
+
+  .gl-row:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+  }
+
+  .gl-row + .gl-row {
+    border-top: 1px solid rgba(9, 12, 18, 0.06);
+  }
+
+  /* Empty-state surface. */
+  .gl-empty {
+    border: 1px solid rgba(9, 12, 18, 0.09);
+    border-radius: 1rem;
+    background: var(--color-ucg-white);
+  }
+
+  /* Pagination footer strip. */
+  .gl-pagination {
+    border-top: 1px solid rgba(9, 12, 18, 0.08);
+    padding-top: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gl-chip,
+    .gl-row {
+      transition: none;
+    }
+  }
+}
