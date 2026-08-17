@@ -1,64 +1,109 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, Landmark } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui'
 import { Footer } from '../components/layout/Footer'
+import { CitySkyline } from '../components/hero/CitySkyline'
+
+export interface AuthNarrative {
+  /** Mono eyebrow shown above the headline, e.g. "CITIZEN ACCESS". */
+  eyebrow: string
+  /** Editorial serif headline in the civic panel. */
+  headline: string
+  /** Supporting description. */
+  description: string
+}
 
 export interface AuthLayoutProps {
   title: string
   subtitle?: string
   children: ReactNode
-  /** Cross-link row under the card, e.g. "Don't have an account? Create one". */
+  /** Cross-link row under the panel, e.g. "Don't have an account? Create one". */
   footer?: ReactNode
+  narrative: AuthNarrative
 }
 
 /**
- * Shared shell for the authentication screens. Matches the landing page
- * design language (brand header + footer, centered card) and stays
- * responsive on mobile.
+ * V2 authentication shell: a split-screen CivicOS surface.
+ *
+ * Desktop — left: midnight civic narrative (grid, system readout, skyline);
+ * right: paper/light form surface. Mobile — the narrative collapses into a
+ * compact cinematic header above the form so signing in stays immediate.
+ * Presentation only; no auth behavior lives here.
  */
-export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProps) {
+export function AuthLayout({ title, subtitle, children, footer, narrative }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link
-            to="/"
-            className="flex items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            <span className="flex size-9 items-center justify-center rounded-lg bg-blue-600">
-              <Landmark className="size-5 text-white" aria-hidden="true" />
+    <div className="flex min-h-screen flex-col bg-ucg-paper lg:flex-row">
+      {/* Desktop civic narrative */}
+      <aside className="auth-narrative" aria-label="About the platform">
+        <div className="auth-narrative-inner">
+          <Link to="/" className="ucg-logo" aria-label="Unified Citizen — home">
+            <span className="ucg-logo-mark">
+              <Landmark className="size-4" aria-hidden="true" />
             </span>
-            <span className="hidden text-sm font-semibold text-slate-900 sm:block">
-              Unified Citizen Governance
-            </span>
+            <span className="ucg-wordmark">Unified Citizen</span>
           </Link>
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
+
+          <div className="auth-narrative-copy">
+            <p className="eyebrow text-ucg-signal">{narrative.eyebrow}</p>
+            <h1 className="display-serif-sm mt-5">{narrative.headline}</h1>
+            <p className="auth-narrative-desc mt-5">{narrative.description}</p>
+          </div>
+
+          <span className="auth-system-readout">
+            <span className="auth-system-dot" aria-hidden="true" />
+            CIVIC GRID · SECURE ACCESS
+          </span>
+        </div>
+        <div className="auth-skyline" aria-hidden="true">
+          <CitySkyline />
+        </div>
+      </aside>
+
+      {/* Light surface */}
+      <div className="relative flex flex-1 flex-col">
+        <div className="auth-topbar">
+          <Link to="/" className="flex items-center gap-2 lg:hidden" aria-label="Unified Citizen — home">
+            <span className="ucg-logo-mark">
+              <Landmark className="size-4" aria-hidden="true" />
+            </span>
+            <span className="ucg-wordmark">Unified Citizen</span>
+          </Link>
+          <Link to="/" className="auth-back">
             <ChevronLeft className="size-4" aria-hidden="true" />
             Back to home
           </Link>
         </div>
-      </header>
 
-      <main className="flex flex-1 items-start justify-center px-4 py-10 sm:items-center sm:py-14">
-        <div className="w-full max-w-md">
-          <Card>
-            <CardHeader>
-              <CardTitle>{title}</CardTitle>
-              {subtitle && <CardDescription>{subtitle}</CardDescription>}
-            </CardHeader>
-            <CardContent>{children}</CardContent>
-          </Card>
-          {footer && (
-            <div className="mt-4 text-center text-sm text-slate-500">{footer}</div>
-          )}
+        {/* Mobile: compact cinematic header */}
+        <div className="auth-mobile-hero lg:hidden">
+          <div className="auth-skyline" aria-hidden="true">
+            <CitySkyline />
+          </div>
+          <div className="relative z-[1]">
+            <p className="eyebrow text-ucg-signal">{narrative.eyebrow}</p>
+            <h1 className="display-serif-sm mt-4">{narrative.headline}</h1>
+            <p className="auth-narrative-desc mt-3">{narrative.description}</p>
+          </div>
         </div>
-      </main>
 
-      <Footer />
+        <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6 sm:py-14">
+          <div className="w-full max-w-md">
+            <div className="auth-panel">
+              <p className="auth-panel-eyebrow">{title.toUpperCase()}</p>
+              <h2 className="mt-3">{title}</h2>
+              {subtitle && <p className="auth-panel-sub">{subtitle}</p>}
+              <div className="mt-6">{children}</div>
+            </div>
+            {footer && (
+              <p className="mt-5 text-center text-sm text-slate-500">{footer}</p>
+            )}
+          </div>
+        </main>
+
+        <div className="lg:hidden">
+          <Footer />
+        </div>
+      </div>
     </div>
   )
 }

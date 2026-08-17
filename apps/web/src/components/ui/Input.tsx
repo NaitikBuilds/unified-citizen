@@ -9,6 +9,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   leftSlot?: ReactNode
   /** Optional element rendered inside the input on the right (e.g. a visibility toggle). */
   rightSlot?: ReactNode
+  /** Extra classes for the label element (when `label` is provided). */
+  labelClassName?: string
   ref?: Ref<HTMLInputElement>
 }
 
@@ -18,6 +20,7 @@ export function Input({
   error,
   leftSlot,
   rightSlot,
+  labelClassName,
   className,
   id,
   ref,
@@ -33,7 +36,10 @@ export function Input({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        <label
+          htmlFor={inputId}
+          className={cn('mb-1.5 block text-sm font-medium text-slate-700', labelClassName)}
+        >
           {label}
         </label>
       )}

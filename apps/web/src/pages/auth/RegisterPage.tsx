@@ -109,12 +109,18 @@ export function RegisterPage() {
     <AuthLayout
       title="Create an account"
       subtitle="Free registration — submit and track grievances in minutes."
+      narrative={{
+        eyebrow: 'Join the civic grid',
+        headline: 'Your voice in the city\u2019s system.',
+        description:
+          'A free account lets you report issues, receive updates and stay in control of every resolution.',
+      }}
       footer={
         <>
           Already have an account?{' '}
           <Link
             to="/auth/login"
-            className="font-medium text-blue-600 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="auth-crosslink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
             Sign in
           </Link>
@@ -122,10 +128,7 @@ export function RegisterPage() {
       }
     >
       {errors.form && (
-        <div
-          role="alert"
-          className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700"
-        >
+        <div role="alert" className="auth-alert auth-alert-error mb-5">
           {errors.form}
         </div>
       )}
@@ -142,6 +145,8 @@ export function RegisterPage() {
           error={errors.name}
           disabled={isSubmitting}
           required
+          className="ucg-input-field"
+          labelClassName="auth-label"
         />
 
         <Input
@@ -155,6 +160,8 @@ export function RegisterPage() {
           error={errors.email}
           disabled={isSubmitting}
           required
+          className="ucg-input-field"
+          labelClassName="auth-label"
         />
 
         <Input
@@ -169,12 +176,14 @@ export function RegisterPage() {
           error={errors.password}
           disabled={isSubmitting}
           required
+          className="ucg-input-field"
+          labelClassName="auth-label"
           rightSlot={
             <button
               type="button"
               onClick={() => setShowPassword((visible) => !visible)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="rounded-md p-1.5 text-slate-400 transition-colors hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               {showPassword ? (
                 <EyeOff className="size-4" aria-hidden="true" />
@@ -196,9 +205,11 @@ export function RegisterPage() {
           error={errors.confirm}
           disabled={isSubmitting}
           required
+          className="ucg-input-field"
+          labelClassName="auth-label"
         />
 
-        <Button type="submit" size="lg" className="w-full" isLoading={isSubmitting}>
+        <Button type="submit" size="lg" className="ucg-btn-submit w-full" isLoading={isSubmitting}>
           <UserPlus className="size-4" aria-hidden="true" />
           Create account
         </Button>

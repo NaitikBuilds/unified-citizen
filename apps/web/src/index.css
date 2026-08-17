@@ -1352,3 +1352,321 @@
     }
   }
 }
+
+/* ============================================================
+   VISUAL PHASE V2 — AUTH EXPERIENCE INTEGRATION
+   Split-screen civic narrative + light auth surface.
+   ============================================================ */
+@layer utilities {
+  /* Left narrative panel — desktop only. */
+  .auth-narrative {
+    position: relative;
+    display: none;
+    width: 44%;
+    flex: none;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 78% 10%, rgba(37, 99, 235, 0.18), transparent 46%),
+      radial-gradient(ellipse at 16% 88%, rgba(103, 232, 249, 0.1), transparent 42%),
+      var(--color-ucg-midnight);
+    color: #e8edf5;
+  }
+
+  @media (min-width: 1024px) {
+    .auth-narrative {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+    }
+  }
+
+  .auth-narrative::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(120, 150, 200, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 150, 200, 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at 50% 42%, rgba(0, 0, 0, 0.9), transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 42%, rgba(0, 0, 0, 0.9), transparent 80%);
+  }
+
+  .auth-narrative-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2.6rem;
+    padding: 2.6rem;
+  }
+
+  .auth-narrative .ucg-wordmark {
+    color: #f2f4f8;
+  }
+
+  .auth-narrative-copy h1 {
+    color: #f2f5fa;
+  }
+
+  .auth-narrative-copy .auth-narrative-desc {
+    max-width: 24rem;
+    color: rgba(200, 212, 232, 0.72);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  /* Narrative entrances — one gentle pass, editorial easing. */
+  .auth-narrative-copy > * {
+    animation: auth-rise 0.7s var(--ucg-ease-editorial) both;
+  }
+  .auth-narrative-copy > *:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  .auth-narrative-copy > *:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+
+  @keyframes auth-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .auth-system-readout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    align-self: flex-start;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 9999px;
+    padding: 0.5rem 0.95rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    color: rgba(190, 205, 230, 0.85);
+  }
+
+  .auth-system-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: var(--color-ucg-signal);
+    box-shadow: 0 0 8px rgba(103, 232, 249, 0.9);
+    animation: gov-blink 1.4s steps(2, start) infinite;
+  }
+
+  .auth-skyline {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 38%;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .auth-skyline svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Light surface — top bar + mobile cinematic header. */
+  .auth-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .auth-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+    border-radius: 9999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #3f4a5c;
+    transition:
+      background-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .auth-back:hover {
+    background: rgba(9, 12, 18, 0.06);
+    color: var(--color-ucg-ink);
+  }
+
+  .auth-mobile-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 82% 0%, rgba(37, 99, 235, 0.2), transparent 52%),
+      var(--color-ucg-midnight);
+    padding: 2.4rem 1.5rem 5.6rem;
+  }
+
+  .auth-mobile-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(120, 150, 200, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 150, 200, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .auth-mobile-hero .auth-skyline {
+    height: 30%;
+    opacity: 0.5;
+  }
+
+  .auth-mobile-hero h1 {
+    color: #f2f5fa;
+    font-size: clamp(1.75rem, 5.5vw, 2.2rem);
+  }
+
+  .auth-mobile-hero .auth-narrative-desc {
+    max-width: 24rem;
+    color: rgba(200, 212, 232, 0.75);
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  /* Form panel — paper surface, hairline, layered depth. */
+  .auth-panel {
+    background: var(--color-ucg-white);
+    border: 1px solid rgba(9, 12, 18, 0.08);
+    border-radius: 1.25rem;
+    box-shadow:
+      0 1px 2px rgba(9, 12, 18, 0.04),
+      0 24px 60px -32px rgba(9, 12, 18, 0.25);
+    padding: 2rem 2.25rem;
+    animation: auth-panel-in 0.6s var(--ucg-ease-editorial) both;
+  }
+
+  @keyframes auth-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .auth-panel-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7c8aa0;
+  }
+
+  .auth-panel-eyebrow::after {
+    content: '';
+    width: 2.5rem;
+    height: 1px;
+    background: rgba(9, 12, 18, 0.14);
+  }
+
+  .auth-panel h2 {
+    font-family: var(--font-editorial);
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-ucg-ink);
+  }
+
+  .auth-panel-sub {
+    margin-top: 0.5rem;
+    color: #5b6675;
+    font-size: 0.9375rem;
+  }
+
+  /* Input refinements inside the auth surface. */
+  .ucg-input-field {
+    border-radius: 0.75rem;
+    border-color: rgba(9, 12, 18, 0.14);
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .ucg-input-field:focus {
+    border-color: var(--color-ucg-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+  }
+
+  .ucg-input-field[aria-invalid='true'] {
+    border-color: #dc2626;
+  }
+
+  .auth-label {
+    font-size: 0.8125rem !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+  }
+
+  /* Submit button — pill, matching the V1 CTA language. */
+  .ucg-btn-submit {
+    border-radius: 9999px !important;
+    height: 2.9rem !important;
+    font-weight: 600;
+  }
+
+  .auth-alert {
+    border-radius: 0.875rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border: 1px solid;
+  }
+
+  .auth-alert-success {
+    border-color: rgba(5, 150, 105, 0.25);
+    background: rgba(236, 253, 245, 0.9);
+    color: #047857;
+  }
+
+  .auth-alert-error {
+    border-color: rgba(220, 38, 38, 0.22);
+    background: rgba(254, 242, 242, 0.92);
+    color: #b91c1c;
+  }
+
+  .auth-crosslink {
+    color: var(--color-ucg-blue);
+    font-weight: 600;
+  }
+
+  .auth-crosslink:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .auth-panel,
+    .auth-narrative-copy > *,
+    .auth-system-dot {
+      animation: none !important;
+    }
+    .auth-system-dot {
+      box-shadow: none;
+    }
+  }
+}

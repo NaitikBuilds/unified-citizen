@@ -86,12 +86,18 @@ export function LoginPage() {
     <AuthLayout
       title="Sign in"
       subtitle="Sign in to submit, track and resolve your grievances."
+      narrative={{
+        eyebrow: 'Citizen access',
+        headline: 'Every complaint, tracked to resolution.',
+        description:
+          'Sign in to submit, follow and resolve grievances across your city\u2019s departments \u2014 with every step of the journey visible.',
+      }}
       footer={
         <>
           Don&apos;t have an account?{' '}
           <Link
             to="/auth/register"
-            className="font-medium text-blue-600 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="auth-crosslink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
             Create one
           </Link>
@@ -99,19 +105,13 @@ export function LoginPage() {
       }
     >
       {registered && (
-        <div
-          role="status"
-          className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
-        >
+        <div role="status" className="auth-alert auth-alert-success mb-5">
           Account created successfully. Please sign in.
         </div>
       )}
 
       {errors.form && (
-        <div
-          role="alert"
-          className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700"
-        >
+        <div role="alert" className="auth-alert auth-alert-error mb-5">
           {errors.form}
         </div>
       )}
@@ -128,6 +128,8 @@ export function LoginPage() {
           error={errors.email}
           disabled={isSubmitting}
           required
+          className="ucg-input-field"
+          labelClassName="auth-label"
         />
 
         <Input
@@ -141,12 +143,14 @@ export function LoginPage() {
           error={errors.password}
           disabled={isSubmitting}
           required
+          className="ucg-input-field"
+          labelClassName="auth-label"
           rightSlot={
             <button
               type="button"
               onClick={() => setShowPassword((visible) => !visible)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="rounded-md p-1.5 text-slate-400 transition-colors hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               {showPassword ? (
                 <EyeOff className="size-4" aria-hidden="true" />
@@ -157,7 +161,7 @@ export function LoginPage() {
           }
         />
 
-        <Button type="submit" size="lg" className="w-full" isLoading={isSubmitting}>
+        <Button type="submit" size="lg" className="ucg-btn-submit w-full" isLoading={isSubmitting}>
           <LogIn className="size-4" aria-hidden="true" />
           Sign in
         </Button>
