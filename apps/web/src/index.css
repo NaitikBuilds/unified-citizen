@@ -2395,3 +2395,277 @@
     }
   }
 }
+
+/* ============================================================
+   VISUAL PHASE V4.2a — CITIZEN DASHBOARD
+   Midnight civic hero, system-readout metrics, editorial sections.
+   ============================================================ */
+@layer utilities {
+  /* Hero — midnight civic surface with faint grid + restrained glow. */
+  .dash-hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.25rem;
+    background:
+      linear-gradient(rgba(94, 167, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(94, 167, 255, 0.055) 1px, transparent 1px),
+      radial-gradient(115% 150% at 88% -10%, rgba(37, 99, 235, 0.28), transparent 55%),
+      var(--color-ucg-midnight);
+    background-size:
+      40px 40px,
+      40px 40px,
+      auto,
+      auto;
+  }
+
+  .dash-hero-overline {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(148, 163, 184, 0.9);
+  }
+
+  .dash-hero-title {
+    font-family: var(--font-editorial);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+    text-wrap: balance;
+  }
+
+  /* Operational status pill with a restrained signal pulse. */
+  .dash-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid rgba(52, 211, 153, 0.28);
+    background: rgba(52, 211, 153, 0.1);
+    color: #6ee7b7;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .dash-status-dot {
+    position: relative;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #34d399;
+  }
+
+  .dash-status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -0.3rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(52, 211, 153, 0.55);
+    animation: dash-pulse 2.4s var(--ucg-ease-editorial) infinite;
+  }
+
+  @keyframes dash-pulse {
+    0% {
+      transform: scale(0.55);
+      opacity: 0.9;
+    }
+    70%,
+    100% {
+      transform: scale(1.35);
+      opacity: 0;
+    }
+  }
+
+  /* Glass readout — digital-intelligence accent inside the hero. */
+  .dash-readout {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.045);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .dash-readout-label {
+    font-family: var(--font-system);
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(148, 163, 184, 0.85);
+  }
+
+  .dash-readout-value {
+    font-family: var(--font-system);
+    font-variant-numeric: tabular-nums;
+    color: #ffffff;
+  }
+
+  /* Metric surface — white civic card, hairline border, signal edge. */
+  .dash-metric {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(9, 12, 18, 0.09);
+    border-radius: 1rem;
+    background: var(--color-ucg-white);
+    text-align: left;
+    transition:
+      transform var(--ucg-dur-ui) var(--ucg-ease-editorial),
+      border-color var(--ucg-dur-ui) linear,
+      box-shadow var(--ucg-dur-ui) var(--ucg-ease-editorial);
+  }
+
+  .dash-metric:hover {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 12px 28px -14px rgba(9, 12, 18, 0.28);
+  }
+
+  .dash-metric:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .dash-metric-icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.75rem;
+    background: rgba(37, 99, 235, 0.09);
+    color: var(--color-ucg-blue);
+  }
+
+  .dash-metric-label {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #5b6675;
+  }
+
+  .dash-metric-count {
+    font-family: var(--font-system);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--color-ucg-ink);
+  }
+
+  .dash-metric-desc {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #7c8aa0;
+  }
+
+  /* Recent-grievances list surface + row interaction. */
+  .dash-list {
+    overflow: hidden;
+    border-color: rgba(9, 12, 18, 0.09);
+    background: var(--color-ucg-white);
+  }
+
+  .dash-row-link {
+    position: relative;
+    display: block;
+    transition: background-color var(--ucg-dur-micro) linear;
+  }
+
+  .dash-row-link:hover {
+    background: rgba(37, 99, 235, 0.035);
+  }
+
+  .dash-row-link:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+  }
+
+  /* Editorial section header. */
+  .dash-section-eyebrow {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #7c8aa0;
+  }
+
+  .dash-section-title {
+    font-family: var(--font-editorial);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-ucg-ink);
+  }
+
+  /* View-all pill link. */
+  .dash-viewall {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid rgba(9, 12, 18, 0.16);
+    border-radius: 9999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #3f4a5c;
+    transition:
+      border-color var(--ucg-dur-micro) linear,
+      background-color var(--ucg-dur-micro) linear,
+      color var(--ucg-dur-micro) linear;
+  }
+
+  .dash-viewall:hover {
+    border-color: rgba(37, 99, 235, 0.5);
+    background: rgba(37, 99, 235, 0.05);
+    color: var(--color-ucg-blue);
+  }
+
+  .dash-viewall:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  /* Civic empty-state surface. */
+  .dash-empty {
+    border: 1px solid rgba(9, 12, 18, 0.09);
+    border-radius: 1rem;
+    background: var(--color-ucg-white);
+  }
+
+  /* Subtle mount entrances. */
+  .dash-enter {
+    animation: dash-rise 0.7s var(--ucg-ease-editorial) both;
+  }
+
+  @keyframes dash-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dash-enter {
+      animation: none;
+    }
+
+    .dash-status-dot::after {
+      display: none;
+    }
+
+    .dash-metric,
+    .dash-row-link,
+    .dash-viewall {
+      transition: none;
+    }
+  }
+}
