@@ -2,13 +2,17 @@ import { useState, type ReactNode } from 'react'
 import { Topbar } from '../components/layout/Topbar'
 import { Sidebar } from '../components/layout/Sidebar'
 import { MobileNav } from '../components/layout/MobileNav'
+import { cn } from '../utils/cn'
 import type { NavItem } from '../components/layout/types'
+import type { Portal } from '../auth/roles'
 
 export interface AppLayoutProps {
   title?: string
   navItems: NavItem[]
   activeKey?: string
   onNavigate: (key: string) => void
+  /** Role identity for the shell accents. Defaults to the citizen treatment. */
+  tone?: Portal
   topbarRight?: ReactNode
   sidebarFooter?: ReactNode
   children: ReactNode
@@ -26,6 +30,7 @@ export function AppLayout({
   navItems,
   activeKey,
   onNavigate,
+  tone = 'citizen',
   topbarRight,
   sidebarFooter,
   children,
@@ -33,7 +38,7 @@ export function AppLayout({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="portal-shell">
+    <div className={cn('portal-shell', `portal-shell--${tone}`)}>
       <div className="flex flex-1">
         <Sidebar
           navItems={navItems}

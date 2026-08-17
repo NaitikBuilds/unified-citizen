@@ -9,6 +9,11 @@ import { ROLE_LABELS, type Portal } from '../auth/roles'
 
 export interface PortalLayoutProps {
   portal: Portal
+  /**
+   * Visual identity for the shell. Defaults to the portal's own identity;
+   * override only when a portal should wear another role's tone.
+   */
+  tone?: Portal
   /** Extra actions rendered in the topbar before the user chip (e.g. a notification bell). */
   topbarExtra?: ReactNode
 }
@@ -18,21 +23,26 @@ export interface PortalLayoutProps {
  * Resolves the portal's nav config, highlights the active item, and provides
  * the session user chip + logout in the topbar and sidebar footer.
  */
-export function PortalLayout({ portal, topbarExtra }: PortalLayoutProps) {
+export function PortalLayout({ portal, tone = portal, topbarExtra }: PortalLayoutProps) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
   const navItems = portalNavigation[portal]
 
-  const activeKey = navItems.find((item) => {
-    if (!item.href) {
-      return false
+  // Active-route correctness: exact pathname match first, then the longest
+  // matching prefix, otherwise undefined. (Previously the first nav item
+  // whose prefix matched could win over an exact nested route.)
+  const activeKey = (() => {
+    const exact = navItems.find((item) => item.href && location.pathname === item.href)
+    if (exact) {
+      return exact.key
     }
-    return (
-      location.pathname === item.href || location.pathname.startsWith(`${item.href}/`)
-    )
-  })?.key
+    const longestPrefix = navItems
+      .filter((item) => item.href && location.pathname.startsWith(`${item.href}/`))
+      .sort((a, b) => (b.href?.length ?? 0) - (a.href?.length ?? 0))[0]
+    return longestPrefix?.key
+  })()
 
   const handleNavigate = useCallback(
     (key: string) => {
@@ -82,6 +92,7 @@ export function PortalLayout({ portal, topbarExtra }: PortalLayoutProps) {
 
   return (
     <AppLayout
+      tone={tone}
       title={title}
       navItems={navItems}
       activeKey={activeKey}

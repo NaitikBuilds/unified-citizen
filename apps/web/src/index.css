@@ -20,6 +20,18 @@
   --color-ucg-warning: #f4b63c;
   --color-ucg-critical: #ff6b61;
 
+  /* Role accents — DEPARTMENT (Civic Duty) */
+  --color-dept-primary: #1d4ed8;
+  --color-dept-verdant: #15803d;
+  --color-dept-signal: var(--color-ucg-signal);
+
+  /* Role accents — ADMIN (Civic Command); gold is kept extremely
+     restrained and used for governance emphasis only. */
+  --color-admin-indigo: #4338ca;
+  --color-admin-plum: #7c3aed;
+  --color-admin-midnight: #0e1526;
+  --color-admin-gold: #a8842c;
+
   /* Typography systems */
   --font-editorial:
     'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman',
@@ -2393,6 +2405,92 @@
     .portal-menu-btn {
       transition: none;
     }
+  }
+}
+
+/* ============================================================
+   VISUAL PHASE V4.5a — ROLE PORTAL FOUNDATION
+   Role identity enters through the shared shell's 10–20% accent
+   layer only: DEPARTMENT (Civic Duty — deeper blue / verdant)
+   and ADMIN (Civic Command — indigo / plum / restrained gold).
+   The citizen default carries zero overrides, so its render is
+   byte-identical to V4.1–V4.4.
+   ============================================================ */
+@layer utilities {
+  /* Department — Civic Duty: operational signal on the shared shell. */
+  .portal-shell--department .portal-nav-item-active {
+    background: rgba(29, 78, 216, 0.1);
+    color: var(--color-dept-primary);
+  }
+
+  .portal-shell--department .portal-nav-item-active::before {
+    background: var(--color-dept-primary);
+  }
+
+  .portal-shell--department .portal-nav-item:focus-visible {
+    outline-color: var(--color-dept-primary);
+  }
+
+  .portal-shell--department .portal-avatar {
+    background: linear-gradient(
+      135deg,
+      rgba(29, 78, 216, 0.18),
+      rgba(21, 128, 61, 0.12)
+    );
+    border-color: rgba(29, 78, 216, 0.28);
+    color: var(--color-dept-primary);
+  }
+
+  /* Operational signal line under the topbar. */
+  .portal-shell--department .portal-topbar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--color-dept-primary),
+      var(--color-dept-verdant) 55%,
+      transparent
+    );
+    opacity: 0.32;
+    pointer-events: none;
+  }
+
+  /* Admin — Civic Command: indigo/plum accents, governance gold only as
+     a restrained top edge on the sidebar brand. The shell stays paper. */
+  .portal-shell--admin .portal-nav-item-active {
+    background: rgba(67, 56, 202, 0.1);
+    color: var(--color-admin-indigo);
+  }
+
+  .portal-shell--admin .portal-nav-item-active::before {
+    background: linear-gradient(180deg, var(--color-admin-indigo), var(--color-admin-plum));
+  }
+
+  .portal-shell--admin .portal-nav-item:focus-visible {
+    outline-color: var(--color-admin-indigo);
+  }
+
+  .portal-shell--admin .portal-avatar {
+    background: linear-gradient(
+      135deg,
+      rgba(67, 56, 202, 0.16),
+      rgba(124, 58, 237, 0.12)
+    );
+    border-color: rgba(67, 56, 202, 0.26);
+    color: var(--color-admin-indigo);
+  }
+
+  .portal-shell--admin .portal-sidebar-brand {
+    border-top: 2px solid rgba(168, 132, 44, 0.55);
+  }
+
+  .portal-shell--admin .portal-sidebar-brand .ucg-logo-mark {
+    background: rgba(67, 56, 202, 0.12);
+    color: var(--color-admin-indigo);
   }
 }
 
