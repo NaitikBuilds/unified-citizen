@@ -1,5 +1,5 @@
-import { useEffect, type ReactNode } from 'react'
-import { X } from 'lucide-react'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { Landmark, X } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import type { NavItem } from './types'
 
@@ -12,6 +12,12 @@ export interface MobileNavProps {
   footer?: ReactNode
 }
 
+/**
+ * Mobile drawer for the portal shell. Behavior preserved: Escape closes,
+ * overlay click closes, body scroll locks while open, navigation selects and
+ * closes, dialog semantics with inert-when-closed and focus moved into the
+ * panel. Visuals follow the civic portal language.
+ */
 export function MobileNav({
   open,
   navItems,
@@ -20,12 +26,15 @@ export function MobileNav({
   onClose,
   footer,
 }: MobileNavProps) {
+  const closeRef = useRef<HTMLButtonElement>(null)
+
   useEffect(() => {
     if (!open) {
       return
     }
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    closeRef.current?.focus()
 
     const handleKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
@@ -44,10 +53,11 @@ export function MobileNav({
     <div
       className={cn('fixed inset-0 z-40 lg:hidden', open ? '' : 'pointer-events-none')}
       aria-hidden={!open}
+      inert={!open}
     >
       <div
         className={cn(
-          'absolute inset-0 bg-slate-900/50 transition-opacity',
+          'portal-mobile-overlay',
           open ? 'opacity-100' : 'opacity-0',
         )}
         onClick={onClose}
@@ -57,22 +67,31 @@ export function MobileNav({
         aria-modal="true"
         aria-label="Navigation menu"
         className={cn(
-          'absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col bg-white shadow-xl transition-transform',
+          'portal-mobile-drawer',
           open ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-          <span className="text-sm font-semibold text-slate-900">Menu</span>
+        <div className="portal-drawer-brand">
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="ucg-logo-mark">
+              <Landmark className="size-4" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="ucg-wordmark block">Unified Citizen</span>
+              <span className="portal-system-label mt-0.5 block">Operations console</span>
+            </span>
+          </span>
           <button
+            ref={closeRef}
             type="button"
             onClick={onClose}
             aria-label="Close navigation menu"
-            className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="portal-menu-btn"
           >
             <X className="size-5" aria-hidden="true" />
           </button>
         </div>
-        <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3 py-3">
+        <nav aria-label="Primary" className="portal-scroll flex-1 overflow-y-auto px-3 py-4">
           <ul className="space-y-1">
             {navItems.map((item) => {
               const active = item.key === activeKey
@@ -86,15 +105,10 @@ export function MobileNav({
                       onClose()
                     }}
                     aria-current={active ? 'page' : undefined}
-                    className={cn(
-                      'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium',
-                      active
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
-                    )}
+                    className={cn('portal-nav-item', active && 'portal-nav-item-active')}
                   >
                     {Icon && <Icon className="size-4.5 shrink-0" aria-hidden="true" />}
-                    {item.label}
+                    <span className="truncate">{item.label}</span>
                   </button>
                 </li>
               )

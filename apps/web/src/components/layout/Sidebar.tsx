@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Landmark } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import type { NavItem } from './types'
 
@@ -10,15 +11,25 @@ export interface SidebarProps {
   className?: string
 }
 
+/**
+ * Desktop sidebar: product brand header, signal-treated active nav item
+ * (background + edge indicator + icon emphasis — never color alone), thin
+ * civic scrollbar, and the footer (sign-out) area.
+ */
 export function Sidebar({ navItems, activeKey, onSelect, footer, className }: SidebarProps) {
   return (
-    <aside
-      className={cn(
-        'hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex',
-        className,
-      )}
-    >
-      <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3 py-4">
+    <aside className={cn('portal-sidebar', className)}>
+      <div className="portal-sidebar-brand">
+        <span className="ucg-logo-mark">
+          <Landmark className="size-4" aria-hidden="true" />
+        </span>
+        <div className="min-w-0">
+          <p className="ucg-wordmark">Unified Citizen</p>
+          <p className="portal-system-label mt-0.5">Operations console</p>
+        </div>
+      </div>
+
+      <nav aria-label="Primary" className="portal-scroll flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
           {navItems.map((item) => {
             const active = item.key === activeKey
@@ -29,22 +40,17 @@ export function Sidebar({ navItems, activeKey, onSelect, footer, className }: Si
                   type="button"
                   onClick={() => onSelect(item.key)}
                   aria-current={active ? 'page' : undefined}
-                  className={cn(
-                    'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
-                    active
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
-                  )}
+                  className={cn('portal-nav-item', active && 'portal-nav-item-active')}
                 >
                   {Icon && <Icon className="size-4.5 shrink-0" aria-hidden="true" />}
-                  {item.label}
+                  <span className="truncate">{item.label}</span>
                 </button>
               </li>
             )
           })}
         </ul>
       </nav>
+
       {footer && <div className="border-t border-slate-200 p-3">{footer}</div>}
     </aside>
   )

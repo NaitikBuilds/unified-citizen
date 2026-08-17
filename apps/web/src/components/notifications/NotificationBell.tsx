@@ -79,7 +79,7 @@ export function NotificationBell({ className }: NotificationBellProps) {
           : 'Notifications'
       }
       className={cn(
-        'relative inline-flex size-9 items-center justify-center rounded-md text-slate-500 transition-colors',
+        'relative inline-flex size-9 items-center justify-center rounded-full text-slate-500 transition-colors',
         'hover:bg-slate-100 hover:text-slate-700',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
         className,

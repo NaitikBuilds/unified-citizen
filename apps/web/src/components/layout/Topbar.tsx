@@ -7,24 +7,32 @@ export interface TopbarProps {
   right?: ReactNode
 }
 
+/**
+ * Portal topbar: sticky translucent surface, mono system label above the
+ * serif page title, mobile menu trigger on small screens, actions on the
+ * right (notification bell, user chip, sign out).
+ */
 export function Topbar({ title, onMenuClick, right }: TopbarProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
+    <header className="portal-topbar">
+      <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
         {onMenuClick && (
           <button
             type="button"
             onClick={onMenuClick}
             aria-label="Open navigation menu"
-            className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 lg:hidden"
+            className="portal-menu-btn lg:hidden"
           >
             <Menu className="size-5" aria-hidden="true" />
           </button>
         )}
         {title && (
-          <h1 className="truncate text-base font-semibold text-slate-900">{title}</h1>
+          <div className="min-w-0">
+            <p className="portal-system-label">{title.toUpperCase()}</p>
+            <h1 className="portal-title truncate">{title}</h1>
+          </div>
         )}
-        <div className="ml-auto flex items-center gap-2">{right}</div>
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">{right}</div>
       </div>
     </header>
   )

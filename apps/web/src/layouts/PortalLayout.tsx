@@ -60,6 +60,25 @@ export function PortalLayout({ portal, topbarExtra }: PortalLayoutProps) {
 
   const userName = user?.name ?? ''
   const userRole = user ? ROLE_LABELS[user.role] : ''
+  const avatarText = userName
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('')
+
+  const userChip = (
+    <div className="portal-user-chip">
+      <span className="portal-avatar" aria-hidden="true">
+        {avatarText || <UserRound className="size-4" />}
+        <span className="portal-avatar-dot" />
+      </span>
+      <div className="hidden min-w-0 leading-tight sm:block">
+        <p className="truncate text-sm font-medium text-ucg-ink">{userName}</p>
+        <p className="portal-system-label mt-0.5">{userRole.toUpperCase()}</p>
+      </div>
+    </div>
+  )
 
   return (
     <AppLayout
@@ -68,20 +87,13 @@ export function PortalLayout({ portal, topbarExtra }: PortalLayoutProps) {
       activeKey={activeKey}
       onNavigate={handleNavigate}
       topbarRight={
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {topbarExtra}
-          <div className="hidden items-center gap-2 sm:flex">
-            <span className="flex size-8 items-center justify-center rounded-full bg-slate-100">
-              <UserRound className="size-4 text-slate-500" aria-hidden="true" />
-            </span>
-            <div className="leading-tight">
-              <p className="text-sm font-medium text-slate-800">{userName}</p>
-              <p className="text-xs text-slate-500">{userRole}</p>
-            </div>
-          </div>
+          {userChip}
           <Button
             variant="outline"
             size="sm"
+            className="portal-signout"
             onClick={handleLogout}
             aria-label="Sign out"
           >
@@ -91,7 +103,12 @@ export function PortalLayout({ portal, topbarExtra }: PortalLayoutProps) {
         </div>
       }
       sidebarFooter={
-        <Button variant="ghost" size="sm" className="w-full" onClick={handleLogout}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="portal-signout w-full"
+          onClick={handleLogout}
+        >
           <LogOut className="size-4" aria-hidden="true" />
           Sign out
         </Button>

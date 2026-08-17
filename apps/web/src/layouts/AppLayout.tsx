@@ -1,9 +1,7 @@
 import { useState, type ReactNode } from 'react'
-import { Landmark } from 'lucide-react'
 import { Topbar } from '../components/layout/Topbar'
 import { Sidebar } from '../components/layout/Sidebar'
 import { MobileNav } from '../components/layout/MobileNav'
-import { Footer } from '../components/layout/Footer'
 import type { NavItem } from '../components/layout/types'
 
 export interface AppLayoutProps {
@@ -17,9 +15,11 @@ export interface AppLayoutProps {
 }
 
 /**
- * Base authenticated shell shared by the Citizen, Department, and Admin
- * portals. Prop-driven: each portal supplies its own navigation config in
- * later phases. Fully responsive (sidebar → drawer on mobile).
+ * V4.1 civic portal shell shared by the Citizen, Department, and Admin
+ * portals: paper surface with a faint civic grid, white sidebar with a
+ * signal-treated active nav item, sticky translucent topbar, centered
+ * content column, and a slim operational footer. Behavior is unchanged —
+ * this is presentation only.
  */
 export function AppLayout({
   title,
@@ -33,7 +33,7 @@ export function AppLayout({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="portal-shell">
       <div className="flex flex-1">
         <Sidebar
           navItems={navItems}
@@ -57,16 +57,19 @@ export function AppLayout({
             onMenuClick={() => setMobileOpen(true)}
             right={topbarRight}
           />
-          <main className="flex-1 px-4 py-6 sm:px-6">{children}</main>
+          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+            {children}
+          </main>
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-        <div className="flex items-center gap-2 pb-4 pt-2">
-          <Landmark className="size-4 text-slate-400" aria-hidden="true" />
-          <p className="text-xs text-slate-400">Unified Citizen Governance</p>
+      <div className="portal-footer">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-1 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p className="portal-system-label">Unified Citizen Governance · Operations console</p>
+          <p className="text-xs text-slate-500">
+            © {new Date().getFullYear()} City Governance Portal
+          </p>
         </div>
-        <Footer />
       </div>
     </div>
   )
