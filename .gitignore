@@ -33,6 +33,10 @@ Thumbs.db
 *.db
 *.db-journal
 
+# Runtime uploads
+uploads/
+
 # Temporary files
 *.tmp
 *.temp
+.freebuff/

@@ -509,6 +509,7 @@ model Feedback {
 
   @@index([grievanceId])
   @@index([userId])
+  @@unique([grievanceId, userId])
 }
 
 // ============================================================

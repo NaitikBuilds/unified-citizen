@@ -250,6 +250,7 @@ export type FeedbackOrderByWithRelationInput = {
 
 export type FeedbackWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  grievanceId_userId?: Prisma.FeedbackGrievanceIdUserIdCompoundUniqueInput
   AND?: Prisma.FeedbackWhereInput | Prisma.FeedbackWhereInput[]
   OR?: Prisma.FeedbackWhereInput[]
   NOT?: Prisma.FeedbackWhereInput | Prisma.FeedbackWhereInput[]
@@ -261,7 +262,7 @@ export type FeedbackWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Feedback"> | Date | string
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "grievanceId_userId">
 
 export type FeedbackOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -367,6 +368,11 @@ export type FeedbackListRelationFilter = {
 
 export type FeedbackOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeedbackGrievanceIdUserIdCompoundUniqueInput = {
+  grievanceId: string
+  userId: string
 }
 
 export type FeedbackCountOrderByAggregateInput = {

@@ -1,0 +1,63 @@
+name: Backend CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend typecheck / build / prisma / tests
+    runs-on: ubuntu-latest
+
+    services:
+      # Fresh PostgreSQL for applying and verifying the committed migrations.
+      # Test-only database — never production data.
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: unified_citizen
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      # Read by prisma.config.ts (env("DATABASE_URL")) for the CLI and by the
+      # application runtime. No production secrets are required for CI.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/unified_citizen
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies (lockfile)
+        run: npm ci
+
+      - name: Typecheck (backend)
+        run: npm run typecheck --workspace=apps/api
+
+      - name: Build (backend)
+        run: npm run build --workspace=apps/api
+
+      - name: Prisma schema validation
+        run: npx prisma validate
+
+      - name: Apply migrations (CI database)
+        run: npx prisma migrate deploy
+
+      - name: Verify migration status
+        run: npx prisma migrate status
+
+      - name: Backend tests
+        run: npm test --workspace=apps/api
