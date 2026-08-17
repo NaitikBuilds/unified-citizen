@@ -5,7 +5,7 @@ export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        'rounded-xl border border-slate-200 bg-white shadow-sm',
+        'rounded-xl border border-ucg-fog bg-white shadow-[0_1px_2px_rgba(9,12,18,0.04),0_4px_16px_-4px_rgba(9,12,18,0.08)]',
         className,
       )}
       {...rest}
@@ -16,7 +16,7 @@ export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
 export function CardHeader({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col gap-1 border-b border-slate-100 px-5 py-4', className)}
+      className={cn('flex flex-col gap-1 border-b border-ucg-fog px-5 py-4', className)}
       {...rest}
     />
   )
@@ -28,7 +28,7 @@ export function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-base font-semibold text-slate-900', className)}
+      className={cn('font-editorial text-base font-semibold text-ucg-ink', className)}
       {...rest}
     />
   )
@@ -51,7 +51,7 @@ export function CardFooter({ className, ...rest }: HTMLAttributes<HTMLDivElement
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-3 border-t border-slate-100 px-5 py-3',
+        'flex flex-wrap items-center gap-3 border-t border-ucg-fog px-5 py-3',
         className,
       )}
       {...rest}
