@@ -38,7 +38,7 @@ function DetailsSkeleton() {
   return (
     <div className="mx-auto max-w-5xl">
       <Skeleton className="mb-6 h-4 w-40" />
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <Skeleton className="h-64 rounded-xl" />
           <Skeleton className="h-48 rounded-xl" />
@@ -308,7 +308,7 @@ export function GrievanceDetailsPage() {
         Back to my grievances
       </Link>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main column */}
         <div className="space-y-6 lg:col-span-2">
           <Card>

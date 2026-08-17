@@ -55,7 +55,7 @@ export function HowItWorksPage() {
 
       {/* System panels — SLA + human review */}
       <section className="pb-20">
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <SystemPanel
             eyebrow="Service levels"
             title="SLA deadlines"

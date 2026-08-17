@@ -136,7 +136,7 @@ export function FoundationPage() {
         </Card>
 
         {/* State components */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <CardSection title="Empty state" description="Shown when a list has no data.">
             <EmptyState
               title="No notifications"

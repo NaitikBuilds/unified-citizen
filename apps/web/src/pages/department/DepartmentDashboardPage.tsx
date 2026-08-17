@@ -54,7 +54,7 @@ function DashboardSkeleton() {
           <Skeleton key={index} className="h-24 rounded-2xl" />
         ))}
       </div>
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Skeleton className="h-64 rounded-2xl lg:col-span-2" />
         <Skeleton className="h-64 rounded-2xl" />
       </div>
@@ -191,7 +191,7 @@ export function DepartmentDashboardPage() {
         <Metric label="Escalated" value={metrics.escalated} note="Senior attention" />
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Queue preview */}
         <section className="rounded-2xl border border-ucg-fog bg-white p-5 lg:col-span-2">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">

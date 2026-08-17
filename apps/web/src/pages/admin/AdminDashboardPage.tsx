@@ -42,7 +42,7 @@ function DashboardSkeleton() {
           <Skeleton key={index} className="h-24 rounded-2xl" />
         ))}
       </div>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Skeleton className="h-72 rounded-2xl" />
         <Skeleton className="h-72 rounded-2xl" />
       </div>
@@ -178,7 +178,7 @@ export function AdminDashboardPage() {
       </section>
 
       {/* Analytics suite — DEMO DATA */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section className="ad-panel-midnight">
           <div className="mb-5 flex items-center justify-between gap-2">
             <p className="ad-panel-label">Status distribution</p>
@@ -310,7 +310,7 @@ export function AdminDashboardPage() {
         )}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Monthly trend */}
         <section className="ad-panel-midnight">
           <div className="mb-5 flex items-center justify-between gap-2">

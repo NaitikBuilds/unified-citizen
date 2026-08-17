@@ -134,7 +134,7 @@ export function AdminDepartmentsPage() {
           className="mb-6 rounded-2xl border border-admin-indigo/25 bg-white p-5"
         >
           <p className="dp-panel-label mb-4">Create department</p>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
               label="Name"
               name="dept-name"
@@ -179,7 +179,7 @@ export function AdminDepartmentsPage() {
       )}
 
       {query.isLoading ? (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {Array.from({ length: 6 }, (_, index) => (
             <Skeleton key={index} className="h-40 rounded-2xl" />
           ))}
@@ -199,7 +199,7 @@ export function AdminDepartmentsPage() {
           />
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {query.data?.map((department) => {
             const isEditing = editingId === department.id
             return (

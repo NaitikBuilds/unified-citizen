@@ -587,7 +587,7 @@ function DetailSkeleton() {
   return (
     <div className="mx-auto max-w-5xl space-y-4">
       <Skeleton className="h-4 w-40" />
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <Skeleton className="h-64 rounded-2xl" />
           <Skeleton className="h-40 rounded-2xl" />
@@ -652,7 +652,7 @@ export function DepartmentGrievanceDetailPage() {
         Back to the queue
       </Link>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main column */}
         <div className="space-y-6 lg:col-span-2">
           <Card>

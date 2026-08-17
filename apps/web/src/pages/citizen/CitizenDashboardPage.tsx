@@ -183,7 +183,7 @@ function DashboardSkeleton() {
         <Skeleton className="h-7 w-56 bg-slate-200" />
         <Skeleton className="h-8 w-24 rounded-full bg-slate-200" />
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <SkeletonCard />
         <SkeletonCard />
       </div>
