@@ -3059,3 +3059,85 @@
     }
   }
 }
+
+/* ============================================================
+   V4.4 — NOTIFICATIONS + PLACEHOLDER SURFACES (citizen portal)
+   Civic notification rows with signal unread state, and the
+   shared ComingSoon panel restyle (lifts citizen/department/admin
+   placeholders in one shot).
+   ============================================================ */
+@layer utilities {
+  /* Notification rows — read surface */
+  .nt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+    border: 1px solid var(--color-ucg-fog);
+    border-radius: 0.875rem;
+    background: #ffffff;
+    padding: 0.875rem 1rem;
+    text-align: left;
+    transition:
+      border-color var(--ucg-dur-micro) ease,
+      background var(--ucg-dur-micro) ease,
+      box-shadow var(--ucg-dur-micro) ease;
+  }
+
+  .nt-row:hover {
+    border-color: rgba(37, 99, 235, 0.3);
+    background: #fbfcff;
+  }
+
+  /* Unread — subtle blue signal + left edge, never a heavy wash */
+  .nt-row-unread {
+    border-color: rgba(37, 99, 235, 0.28);
+    background: rgba(37, 99, 235, 0.04);
+    box-shadow: inset 2px 0 0 var(--color-ucg-blue);
+  }
+
+  .nt-row-unread:hover {
+    background: rgba(37, 99, 235, 0.07);
+  }
+
+  .nt-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ucg-ink);
+  }
+
+  .nt-message {
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: #475569;
+  }
+
+  .nt-time {
+    margin-top: 0.25rem;
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a93a0;
+  }
+
+  .nt-id {
+    font-family: var(--font-system);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a93a0;
+  }
+
+  /* Pill helper for compact actions (mirrors ucg-btn-submit) */
+  .ucg-btn-pill {
+    border-radius: 9999px !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nt-row {
+      transition: none;
+    }
+  }
+}

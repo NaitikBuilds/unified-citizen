@@ -32,13 +32,13 @@ const TYPE_ICONS: Record<NotificationType, typeof Info> = {
 }
 
 const TYPE_ACCENTS: Record<NotificationType, string> = {
-  GRIEVANCE_CREATED: 'bg-sky-100 text-sky-700',
-  STATUS_CHANGED: 'bg-blue-100 text-blue-700',
-  COMMENT_ADDED: 'bg-violet-100 text-violet-700',
-  ASSIGNMENT_CHANGED: 'bg-emerald-100 text-emerald-700',
-  SLA_WARNING: 'bg-amber-100 text-amber-700',
-  ESCALATION_CREATED: 'bg-red-100 text-red-700',
-  SYSTEM: 'bg-slate-100 text-slate-600',
+  GRIEVANCE_CREATED: 'bg-ucg-blue/10 text-ucg-blue',
+  STATUS_CHANGED: 'bg-ucg-electric/10 text-ucg-electric',
+  COMMENT_ADDED: 'bg-violet-500/10 text-violet-700',
+  ASSIGNMENT_CHANGED: 'bg-emerald-500/10 text-emerald-700',
+  SLA_WARNING: 'bg-amber-500/10 text-amber-700',
+  ESCALATION_CREATED: 'bg-red-500/10 text-red-700',
+  SYSTEM: 'bg-ucg-fog text-slate-600',
 }
 
 /** Notification center — Member 4, Step 94. */
@@ -114,15 +114,16 @@ export function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
-            Citizen Portal
+          <p className="label-mono flex items-center gap-2 text-slate-400">
+            <span className="size-1.5 rounded-full bg-ucg-blue" aria-hidden="true" />
+            Citizen Portal / Activity
           </p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+          <h2 className="mt-2 font-editorial text-3xl font-semibold tracking-tight text-ucg-ink">
             Notifications
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-slate-500">
             {unreadCount > 0
               ? `${unreadCount} unread`
               : 'You are all caught up'}
@@ -133,6 +134,7 @@ export function NotificationsPage() {
           size="sm"
           onClick={markAllRead}
           disabled={unreadCount === 0 || isMutating}
+          className="ucg-btn-pill"
         >
           <CheckCheck className="size-4" aria-hidden="true" />
           Mark all as read
@@ -140,9 +142,19 @@ export function NotificationsPage() {
       </div>
 
       {query.isLoading ? (
-        <div className="space-y-2">
+        <div className="space-y-2" role="status" aria-label="Loading notifications">
           {Array.from({ length: 5 }, (_, index) => (
-            <Skeleton key={index} className="h-20 rounded-xl" />
+            <div
+              key={index}
+              className="flex items-start gap-3 rounded-xl border border-ucg-fog bg-white px-4 py-3.5"
+            >
+              <Skeleton className="size-8 shrink-0 rounded-lg" />
+              <div className="min-w-0 flex-1 space-y-2 pt-1">
+                <Skeleton className="h-3.5 w-2/5" />
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-2.5 w-1/4" />
+              </div>
+            </div>
           ))}
         </div>
       ) : query.isError ? (
@@ -152,11 +164,13 @@ export function NotificationsPage() {
           onRetry={query.reload}
         />
       ) : notifications.length === 0 ? (
-        <EmptyState
-          icon={BellOff}
-          title="No new notifications"
-          description="Updates about your grievances — status changes, SLA warnings and replies — will appear here."
-        />
+        <div className="rounded-xl border border-ucg-fog bg-white p-4">
+          <EmptyState
+            icon={BellOff}
+            title="No new notifications"
+            description="Updates about your grievances — status changes, SLA warnings and replies — will appear here."
+          />
+        </div>
       ) : (
         <ul className="space-y-2">
           {notifications.map((notification) => {
@@ -167,11 +181,8 @@ export function NotificationsPage() {
                   type="button"
                   onClick={() => handleOpen(notification)}
                   className={cn(
-                    'flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left transition-colors',
-                    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
-                    notification.isRead
-                      ? 'border-slate-200 bg-white hover:bg-slate-50'
-                      : 'border-blue-200 bg-blue-50/60 hover:bg-blue-50',
+                    'nt-row focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
+                    !notification.isRead && 'nt-row-unread',
                   )}
                 >
                   <span
@@ -184,22 +195,16 @@ export function NotificationsPage() {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <span className="text-sm font-semibold text-slate-900">
-                        {notification.title}
-                      </span>
+                      <span className="nt-title">{notification.title}</span>
                       {!notification.isRead && (
-                        <span className="size-2 rounded-full bg-blue-600" aria-label="Unread" />
+                        <span className="size-2 rounded-full bg-ucg-blue" aria-label="Unread" />
                       )}
                     </span>
-                    <span className="mt-0.5 block text-sm text-slate-600">
-                      {notification.message}
-                    </span>
-                    <span className="mt-1 block text-xs text-slate-400">
-                      {formatRelativeTime(notification.createdAt)}
-                    </span>
+                    <span className="nt-message block">{notification.message}</span>
+                    <span className="nt-time block">{formatRelativeTime(notification.createdAt)}</span>
                   </span>
                   {notification.grievanceId && (
-                    <span className="hidden shrink-0 font-mono text-xs text-slate-400 sm:block">
+                    <span className="nt-id hidden shrink-0 sm:block">
                       {notification.grievanceId}
                     </span>
                   )}
