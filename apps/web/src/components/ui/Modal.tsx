@@ -79,7 +79,7 @@ export function Modal({
       role="presentation"
     >
       <div
-        className="fixed inset-0 bg-slate-900/50"
+        className="fixed inset-0 bg-ucg-midnight/60"
         aria-hidden="true"
         onClick={onClose}
       />
@@ -91,7 +91,7 @@ export function Modal({
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         className={cn(
-          'relative z-10 my-8 w-full rounded-xl bg-white shadow-xl outline-none',
+          'relative z-10 my-8 w-full rounded-xl border border-ucg-fog bg-white shadow-[0_1px_2px_rgba(9,12,18,0.05),0_24px_64px_-12px_rgba(9,12,18,0.25)] outline-none',
           sizeClasses[size],
           className,
         )}
@@ -99,7 +99,7 @@ export function Modal({
         <div className="flex items-start justify-between gap-4 px-5 py-4">
           <div className="min-w-0">
             {title && (
-              <h2 id={titleId} className="text-lg font-semibold text-slate-900">
+              <h2 id={titleId} className="font-editorial text-lg font-semibold text-ucg-ink">
                 {title}
               </h2>
             )}
@@ -113,14 +113,14 @@ export function Modal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="rounded-md p-1 text-slate-400 transition-colors hover:bg-ucg-fog hover:text-ucg-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ucg-blue"
           >
             <X className="size-5" aria-hidden="true" />
           </button>
         </div>
         {children && <div className="px-5 pb-4">{children}</div>}
         {footer && (
-          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 px-5 py-3">
+          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-ucg-fog px-5 py-3">
             {footer}
           </div>
         )}

@@ -47,7 +47,7 @@ function ProcessingSequence() {
           className="ai-stage-row flex items-center gap-3 text-sm text-slate-300"
           style={{ animationDelay: `${index * 0.18}s` }}
         >
-          <span className="ai-stage-dot size-2 shrink-0 rounded-full bg-blue-400" aria-hidden="true" />
+          <span className="ai-stage-dot size-2 shrink-0 rounded-full bg-ucg-electric" aria-hidden="true" />
           <span>{stage}</span>
         </div>
       ))}
@@ -78,7 +78,7 @@ export function AIAnalysisCard({
       <section
         aria-label="AI analysis"
         className={cn(
-          'relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900 p-5',
+          'relative overflow-hidden rounded-xl border border-white/10 bg-ucg-midnight p-5',
           className,
         )}
       >
@@ -93,7 +93,7 @@ export function AIAnalysisCard({
         />
         <div className="relative">
           <div className="mb-4 flex items-center gap-2">
-            <BrainCircuit className="size-4 text-blue-400" aria-hidden="true" />
+            <BrainCircuit className="size-4 text-ucg-electric" aria-hidden="true" />
             <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
               AI Analysis
             </h3>
@@ -109,7 +109,7 @@ export function AIAnalysisCard({
       <section
         aria-label="AI analysis"
         className={cn(
-          'relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900 p-5',
+          'relative overflow-hidden rounded-xl border border-white/10 bg-ucg-midnight p-5',
           className,
         )}
       >
@@ -127,7 +127,7 @@ export function AIAnalysisCard({
               <button
                 type="button"
                 onClick={onRetry}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ucg-electric"
               >
                 <RefreshCw className="size-3.5" aria-hidden="true" />
                 Try again
@@ -167,7 +167,7 @@ export function AIAnalysisCard({
       <div className="relative">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <BrainCircuit className="size-4 text-blue-400" aria-hidden="true" />
+            <BrainCircuit className="size-4 text-ucg-electric" aria-hidden="true" />
             <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
               AI Analysis
             </h3>
@@ -189,7 +189,7 @@ export function AIAnalysisCard({
           </div>
           <div className="sm:text-right">
             <p className="text-xs uppercase tracking-wider text-slate-500">Confidence</p>
-            <p className="mt-1 font-mono text-3xl font-bold tabular-nums text-blue-400">
+            <p className="mt-1 font-mono text-3xl font-bold tabular-nums text-ucg-electric">
               {formatPercent(confidence)}
             </p>
           </div>
@@ -214,7 +214,7 @@ export function AIAnalysisCard({
         </div>
 
         {classification.summary && (
-          <p className="mt-4 border-t border-slate-800 pt-3 text-sm leading-relaxed text-slate-300">
+          <p className="mt-4 border-t border-white/10 pt-3 text-sm leading-relaxed text-slate-300">
             {classification.summary}
           </p>
         )}
@@ -225,7 +225,7 @@ export function AIAnalysisCard({
               type="button"
               onClick={() => setShowExplanation((open) => !open)}
               aria-expanded={showExplanation}
-              className="inline-flex items-center gap-1 rounded-md text-xs font-medium text-slate-400 transition-colors hover:text-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+              className="inline-flex items-center gap-1 rounded-md text-xs font-medium text-slate-400 transition-colors hover:text-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ucg-electric"
             >
               How was this decided?
               <ChevronDown
@@ -237,7 +237,7 @@ export function AIAnalysisCard({
               />
             </button>
             {showExplanation && (
-              <p className="mt-2 rounded-lg bg-slate-800/70 p-3 text-xs leading-relaxed text-slate-400">
+              <p className="mt-2 rounded-lg bg-white/[0.06] p-3 text-xs leading-relaxed text-slate-400">
                 {classification.explanation}
               </p>
             )}

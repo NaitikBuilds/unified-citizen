@@ -80,8 +80,8 @@ export function NotificationBell({ className }: NotificationBellProps) {
       }
       className={cn(
         'relative inline-flex size-9 items-center justify-center rounded-full text-slate-500 transition-colors',
-        'hover:bg-slate-100 hover:text-slate-700',
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
+        'hover:bg-ucg-fog hover:text-ucg-ink',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ucg-blue',
         className,
       )}
     >

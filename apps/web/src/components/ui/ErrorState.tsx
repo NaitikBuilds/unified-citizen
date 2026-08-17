@@ -19,14 +19,14 @@ export function ErrorState({
     <div
       role="alert"
       className={cn(
-        'flex flex-col items-center justify-center rounded-xl border border-red-200 bg-red-50/50 px-6 py-10 text-center',
+        'flex flex-col items-center justify-center rounded-xl border border-ucg-critical/25 bg-ucg-critical/[0.05] px-6 py-10 text-center',
         className,
       )}
     >
-      <div className="flex size-12 items-center justify-center rounded-full bg-red-100">
-        <AlertTriangle className="size-6 text-red-600" aria-hidden="true" />
+      <div className="flex size-12 items-center justify-center rounded-full bg-ucg-critical/10">
+        <AlertTriangle className="size-6 text-ucg-critical" aria-hidden="true" />
       </div>
-      <h3 className="mt-4 text-base font-semibold text-slate-900">{title}</h3>
+      <h3 className="mt-4 text-base font-semibold text-ucg-ink">{title}</h3>
       {message && <p className="mt-1 max-w-md text-sm text-slate-600">{message}</p>}
       {onRetry && (
         <Button variant="outline" size="sm" onClick={onRetry} className="mt-5">

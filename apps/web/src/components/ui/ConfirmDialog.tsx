@@ -47,12 +47,12 @@ export function ConfirmDialog({
         </>
       }
     >
-      <div className="flex items-start gap-3 rounded-lg bg-slate-50 p-3">
+      <div className="flex items-start gap-3 rounded-lg bg-ucg-paper p-3">
         <AlertTriangle
-          className="mt-0.5 size-5 shrink-0 text-amber-500"
+          className="mt-0.5 size-5 shrink-0 text-ucg-warning"
           aria-hidden="true"
         />
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-ucg-ink/70">
           This action may not be reversible. Please confirm before continuing.
         </p>
       </div>

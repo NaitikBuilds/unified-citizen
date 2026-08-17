@@ -37,7 +37,7 @@ export function Select({
       {label && (
         <label
           htmlFor={selectId}
-          className={cn('mb-1.5 block text-sm font-medium text-slate-700', labelClassName)}
+          className={cn('mb-1.5 block text-sm font-medium text-ucg-ink', labelClassName)}
         >
           {label}
         </label>
@@ -47,10 +47,10 @@ export function Select({
         ref={ref}
         aria-invalid={error ? true : undefined}
         className={cn(
-          'w-full appearance-none rounded-lg border bg-white px-3 py-2 text-sm text-slate-900',
-          'disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500',
-          'focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30',
-          error ? 'border-red-500' : 'border-slate-300',
+          'w-full appearance-none rounded-lg border bg-white px-3 py-2 text-sm text-ucg-ink',
+          'disabled:cursor-not-allowed disabled:bg-ucg-paper disabled:text-slate-500',
+          'focus:border-ucg-blue focus:outline-none focus:ring-2 focus:ring-ucg-blue/30',
+          error ? 'border-red-500' : 'border-ucg-ink/15',
           className,
         )}
         {...rest}

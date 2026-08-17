@@ -38,7 +38,7 @@ export function Input({
       {label && (
         <label
           htmlFor={inputId}
-          className={cn('mb-1.5 block text-sm font-medium text-slate-700', labelClassName)}
+          className={cn('mb-1.5 block text-sm font-medium text-ucg-ink', labelClassName)}
         >
           {label}
         </label>
@@ -55,10 +55,10 @@ export function Input({
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
           className={cn(
-            'w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900',
-            'placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500',
-            'focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30',
-            error ? 'border-red-500' : 'border-slate-300',
+            'w-full rounded-lg border bg-white px-3 py-2 text-sm text-ucg-ink',
+            'placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-ucg-paper disabled:text-slate-500',
+            'focus:border-ucg-blue focus:outline-none focus:ring-2 focus:ring-ucg-blue/30',
+            error ? 'border-red-500' : 'border-ucg-ink/15',
             leftSlot ? 'pl-9' : undefined,
             rightSlot ? 'pr-10' : undefined,
             className,

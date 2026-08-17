@@ -20,7 +20,7 @@ export function Spinner({ size = 'md', label, className }: SpinnerProps) {
       aria-label={label ?? 'Loading'}
       className={cn('inline-flex items-center gap-2', className)}
     >
-      <Loader2 className={cn('animate-spin text-blue-600', sizeClasses[size])} aria-hidden="true" />
+      <Loader2 className={cn('animate-spin text-ucg-blue', sizeClasses[size])} aria-hidden="true" />
       {label && <span className="text-sm text-slate-500">{label}</span>}
     </span>
   )

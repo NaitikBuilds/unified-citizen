@@ -93,7 +93,7 @@ export function Pagination({
       </Button>
 
       {total !== undefined && (
-        <span className="ml-3 text-xs text-slate-500">
+        <span className="ml-3 font-system text-[0.6875rem] uppercase tracking-[0.12em] text-slate-500">
           {total} {total === 1 ? 'item' : 'items'}
         </span>
       )}

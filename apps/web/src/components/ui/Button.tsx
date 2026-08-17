@@ -14,13 +14,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-blue-600 text-white hover:bg-blue-700 focus-visible:outline-blue-600 active:bg-blue-800',
+    'bg-ucg-blue text-white hover:bg-blue-700 focus-visible:outline-ucg-blue active:bg-blue-800',
   secondary:
-    'bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:outline-slate-500 active:bg-slate-300',
+    'bg-ucg-fog text-ucg-ink hover:bg-slate-200 focus-visible:outline-slate-500 active:bg-slate-300',
   outline:
-    'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus-visible:outline-blue-600 active:bg-slate-100',
+    'border border-ucg-fog bg-white text-ucg-ink hover:bg-ucg-paper focus-visible:outline-ucg-blue active:bg-ucg-fog',
   ghost:
-    'bg-transparent text-slate-700 hover:bg-slate-100 focus-visible:outline-slate-500 active:bg-slate-200',
+    'bg-transparent text-ucg-ink hover:bg-ucg-fog focus-visible:outline-slate-500 active:bg-slate-200',
+  // Danger stays on the red scale — a destructive action must read as
+  // unmistakably critical and hold contrast (ucg-critical is a lighter
+  // salmon that fails white-text AA on large fills).
   danger:
     'bg-red-600 text-white hover:bg-red-700 focus-visible:outline-red-600 active:bg-red-800',
 }

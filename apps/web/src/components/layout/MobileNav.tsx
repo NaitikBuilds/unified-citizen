@@ -115,7 +115,7 @@ export function MobileNav({
             })}
           </ul>
         </nav>
-        {footer && <div className="border-t border-slate-200 p-3">{footer}</div>}
+        {footer && <div className="border-t border-ucg-fog p-3">{footer}</div>}
       </div>
     </div>
   )

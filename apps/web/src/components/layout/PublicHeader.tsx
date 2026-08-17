@@ -142,7 +142,7 @@ export function PublicHeader({ nav, actions, tone = 'light' }: PublicHeaderProps
 
         {actions && (
           <div
-            className="mt-auto flex flex-col gap-2 border-t border-slate-200 pt-4"
+            className="mt-auto flex flex-col gap-2 border-t border-ucg-fog pt-4"
             onClick={closeOnNav}
           >
             {actions}

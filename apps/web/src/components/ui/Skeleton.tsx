@@ -7,7 +7,7 @@ export interface SkeletonProps {
 export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
-      className={cn('animate-pulse rounded-md bg-slate-200', className)}
+      className={cn('animate-pulse rounded-md bg-ucg-fog', className)}
       aria-hidden="true"
     />
   )
@@ -33,7 +33,7 @@ export function SkeletonCard({ className }: SkeletonProps) {
   return (
     <div
       className={cn(
-        'rounded-xl border border-slate-200 bg-white p-5 shadow-sm',
+        'rounded-xl border border-ucg-fog bg-white p-5 shadow-[0_1px_2px_rgba(9,12,18,0.04)]',
         className,
       )}
       aria-hidden="true"
