@@ -11,6 +11,7 @@ import {
 import { services } from '../../api/registry'
 import { useAsync } from '../../hooks/useAsync'
 import { useAuth } from '../../auth/auth-context'
+import { config } from '../../config'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDate } from '../../utils/format'
 import { PriorityBadge, StatusBadge } from '../../components/grievance'
@@ -325,9 +326,19 @@ export function DepartmentDashboardPage() {
                 <ShieldAlert className="size-3.5" aria-hidden="true" />
                 Attention
               </p>
-              <span className="dp-demo-badge" title="Mock service — no backend endpoint">
-                Demo data
-              </span>
+              {config.useMockApi ? (
+                <span className="dp-demo-badge" title="Mock service — no backend endpoint">
+                  Demo data
+                </span>
+              ) : (
+                <span
+                  className="dp-status-pill"
+                  title="Served by the real escalation API, scoped to this department"
+                >
+                  <span className="dp-status-dot" aria-hidden="true" />
+                  Live
+                </span>
+              )}
             </div>
             {escalationQuery.isLoading ? (
               <Skeleton className="h-20 rounded-xl" />

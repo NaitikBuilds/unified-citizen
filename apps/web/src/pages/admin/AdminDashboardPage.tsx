@@ -9,6 +9,7 @@ import {
 import { services } from '../../api/registry'
 import { useAsync } from '../../hooks/useAsync'
 import { getErrorMessage } from '../../utils/errors'
+import { config } from '../../config'
 import { formatDate } from '../../utils/format'
 import { GRIEVANCE_STATUS_LABELS, PRIORITY_LABELS } from '../../components/grievance'
 import { ErrorState, Skeleton } from '../../components/ui'
@@ -365,9 +366,19 @@ export function AdminDashboardPage() {
               <ShieldAlert className="size-3.5" aria-hidden="true" />
               Governance attention
             </p>
-            <span className="dp-demo-badge" title="Mock escalation service — no backend endpoint">
-              Demo data
-            </span>
+            {config.useMockApi ? (
+              <span className="dp-demo-badge" title="Mock escalation service — no backend endpoint">
+                Demo data
+              </span>
+            ) : (
+              <span
+                className="dp-status-pill"
+                title="Served by the real escalation API"
+              >
+                <span className="dp-status-dot" aria-hidden="true" />
+                Live
+              </span>
+            )}
           </div>
           {escalationsQuery.isLoading ? (
             <Skeleton className="h-36 rounded-xl" />

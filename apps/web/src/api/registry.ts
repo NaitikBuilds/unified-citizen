@@ -16,6 +16,7 @@ import { apiDepartmentService } from './adapters/department.adapter'
 import { apiGrievanceService } from './adapters/grievance.adapter'
 import { apiNotificationService } from './adapters/notification.adapter'
 import { apiSlaService } from './adapters/sla.adapter'
+import { apiEscalationService } from './adapters/escalation.adapter'
 
 import { mockAuthService } from '../mocks/services/auth.service'
 import { mockUserService } from '../mocks/services/user.service'
@@ -54,8 +55,9 @@ export const services = {
   // remains available for standalone development.
   sla: config.useMockApi ? mockSlaService : apiSlaService,
 
-  // MOCK ONLY — no backend endpoints exist yet (see each service doc comment).
-  escalation: mockEscalationService,
+  // Escalation is now REAL API backed (V6.0b: GET /api/v1/escalations endpoints);
+  // mock mode remains available for standalone development.
+  escalation: config.useMockApi ? mockEscalationService : apiEscalationService,
   analytics: mockAnalyticsService,
   audit: mockAuditService,
   ai: mockAiService,
