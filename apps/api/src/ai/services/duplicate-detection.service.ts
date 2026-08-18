@@ -96,8 +96,6 @@ export async function detectDuplicateGrievance(
     };
   }
 
-  console.log("DUPLICATE CANDIDATES:", candidates);
-
   const candidateText = candidates
     .map(
       (candidate, index) => `
@@ -394,9 +392,6 @@ ${candidateText}
     if (!text) {
       throw new Error("Gemini returned an empty duplicate-detection response");
     }
-
-    console.log("RAW DUPLICATE DETECTION RESPONSE:");
-    console.log(text);
 
     let parsed: unknown;
 

@@ -15,13 +15,6 @@ export async function chat(
 
     const { message } = req.body;
 
-    if (!message || typeof message !== "string") {
-      res.status(400).json({
-        error: "Message is required",
-      });
-      return;
-    }
-
     const response = await chatWithCitizen(req.user.userId, message);
 
     res.status(200).json({

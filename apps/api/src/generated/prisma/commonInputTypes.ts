@@ -140,18 +140,18 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
-export type EnumGrievancePriorityFilter<$PrismaModel = never> = {
-  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
-  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel> | $Enums.GrievancePriority
-}
-
 export type EnumGrievanceStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.GrievanceStatus | Prisma.EnumGrievanceStatusFieldRefInput<$PrismaModel>
   in?: $Enums.GrievanceStatus[] | Prisma.ListEnumGrievanceStatusFieldRefInput<$PrismaModel>
   notIn?: $Enums.GrievanceStatus[] | Prisma.ListEnumGrievanceStatusFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumGrievanceStatusFilter<$PrismaModel> | $Enums.GrievanceStatus
+}
+
+export type EnumGrievancePriorityFilter<$PrismaModel = never> = {
+  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel> | $Enums.GrievancePriority
 }
 
 export type FloatNullableFilter<$PrismaModel = never> = {
@@ -176,16 +176,6 @@ export type DateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
-export type EnumGrievancePriorityWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
-  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGrievancePriorityWithAggregatesFilter<$PrismaModel> | $Enums.GrievancePriority
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
-}
-
 export type EnumGrievanceStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.GrievanceStatus | Prisma.EnumGrievanceStatusFieldRefInput<$PrismaModel>
   in?: $Enums.GrievanceStatus[] | Prisma.ListEnumGrievanceStatusFieldRefInput<$PrismaModel>
@@ -194,6 +184,16 @@ export type EnumGrievanceStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumGrievanceStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumGrievanceStatusFilter<$PrismaModel>
+}
+
+export type EnumGrievancePriorityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGrievancePriorityWithAggregatesFilter<$PrismaModel> | $Enums.GrievancePriority
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
 }
 
 export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -589,18 +589,18 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
-export type NestedEnumGrievancePriorityFilter<$PrismaModel = never> = {
-  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
-  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel> | $Enums.GrievancePriority
-}
-
 export type NestedEnumGrievanceStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.GrievanceStatus | Prisma.EnumGrievanceStatusFieldRefInput<$PrismaModel>
   in?: $Enums.GrievanceStatus[] | Prisma.ListEnumGrievanceStatusFieldRefInput<$PrismaModel>
   notIn?: $Enums.GrievanceStatus[] | Prisma.ListEnumGrievanceStatusFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumGrievanceStatusFilter<$PrismaModel> | $Enums.GrievanceStatus
+}
+
+export type NestedEnumGrievancePriorityFilter<$PrismaModel = never> = {
+  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel> | $Enums.GrievancePriority
 }
 
 export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -625,16 +625,6 @@ export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
-export type NestedEnumGrievancePriorityWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
-  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGrievancePriorityWithAggregatesFilter<$PrismaModel> | $Enums.GrievancePriority
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
-}
-
 export type NestedEnumGrievanceStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.GrievanceStatus | Prisma.EnumGrievanceStatusFieldRefInput<$PrismaModel>
   in?: $Enums.GrievanceStatus[] | Prisma.ListEnumGrievanceStatusFieldRefInput<$PrismaModel>
@@ -643,6 +633,16 @@ export type NestedEnumGrievanceStatusWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumGrievanceStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumGrievanceStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumGrievancePriorityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GrievancePriority | Prisma.EnumGrievancePriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GrievancePriority[] | Prisma.ListEnumGrievancePriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGrievancePriorityWithAggregatesFilter<$PrismaModel> | $Enums.GrievancePriority
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGrievancePriorityFilter<$PrismaModel>
 }
 
 export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {

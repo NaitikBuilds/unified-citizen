@@ -44,9 +44,6 @@ ${buildSpamDetectionPrompt(title, description)}
       throw new Error("Gemini returned an empty spam detection response");
     }
 
-    console.log("RAW SPAM DETECTION RESPONSE:");
-    console.log(text);
-
     let parsed: unknown;
 
     try {

@@ -127,6 +127,7 @@ model AIClassification {
   duplicateScore Float?
   priority       GrievancePriority?
   sentiment      String?
+  severity       String?
   summary        String?
   grievance      Grievance          @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
 

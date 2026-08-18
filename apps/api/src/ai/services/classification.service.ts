@@ -49,9 +49,6 @@ ${buildClassificationPrompt(title, description)}
       throw new Error("Gemini returned an empty response");
     }
 
-    console.log("RAW GEMINI RESPONSE:");
-    console.log(text);
-
     let parsed: unknown;
 
     try {

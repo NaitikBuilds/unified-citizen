@@ -188,6 +188,7 @@ export async function createGrievance(
               priority: aiClassification.priority,
 
               sentiment: aiClassification.sentiment,
+              severity: aiClassification.severity,
               confidence: aiClassification.confidence,
 
               summary: aiClassification.summary,
