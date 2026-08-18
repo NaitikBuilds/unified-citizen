@@ -1,3 +1,6 @@
+import dns from "node:dns";
+
+dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
 import app from "./app.js";
 import { prisma } from "./services/prisma.service.js";
@@ -36,7 +39,9 @@ async function runRefreshTokenCleanup(): Promise<void> {
   try {
     const deleted = await cleanupExpiredRefreshTokens();
     if (deleted > 0) {
-      console.log(`Refresh token cleanup: removed ${deleted} expired/revoked token(s).`);
+      console.log(
+        `Refresh token cleanup: removed ${deleted} expired/revoked token(s).`,
+      );
     }
   } catch (error) {
     console.error("Refresh token cleanup failed:", error);

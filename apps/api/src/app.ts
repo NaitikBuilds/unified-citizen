@@ -6,6 +6,7 @@ import userRoutes from "./routes/user.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
 import grievanceRoutes from "./routes/grievance.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/departments", departmentRoutes);
 app.use("/api/v1/grievances", grievanceRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/chat", chatRoutes);
 
 // JSON 404 for unknown routes (must be registered after all routes)
 app.use((_req, res) => {
