@@ -12,6 +12,15 @@ const duplicateDetectionSchema = z.object({
 
 export type DuplicateDetectionResult = z.infer<typeof duplicateDetectionSchema>;
 
+function createFallbackDuplicateResult(): DuplicateDetectionResult {
+  return {
+    relationship: "UNRELATED",
+    duplicateScore: 0,
+    explanation:
+      "AI duplicate detection was unavailable. The grievance was treated as unique so that a valid citizen complaint is not incorrectly blocked.",
+  };
+}
+
 interface CandidateGrievance {
   ticketId: string;
   title: string;
@@ -374,35 +383,44 @@ EXISTING GRIEVANCES
 ${candidateText}
 `;
 
-  const response = await getGemini().models.generateContent({
-    model: MODEL_NAME,
-    contents: prompt,
-  });
-
-  const text = response.text;
-
-  if (!text) {
-    throw new Error("Gemini returned an empty duplicate-detection response");
-  }
-
-  console.log("RAW DUPLICATE DETECTION RESPONSE:");
-  console.log(text);
-
-  let parsed: unknown;
-
   try {
-    parsed = JSON.parse(text);
-  } catch {
-    throw new Error("Gemini returned invalid duplicate-detection JSON");
-  }
+    const response = await getGemini().models.generateContent({
+      model: MODEL_NAME,
+      contents: prompt,
+    });
 
-  const result = duplicateDetectionSchema.safeParse(parsed);
+    const text = response.text;
 
-  if (!result.success) {
-    throw new Error(
-      `Duplicate detection failed validation: ${result.error.message}`,
+    if (!text) {
+      throw new Error("Gemini returned an empty duplicate-detection response");
+    }
+
+    console.log("RAW DUPLICATE DETECTION RESPONSE:");
+    console.log(text);
+
+    let parsed: unknown;
+
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      throw new Error("Gemini returned invalid duplicate-detection JSON");
+    }
+
+    const result = duplicateDetectionSchema.safeParse(parsed);
+
+    if (!result.success) {
+      throw new Error(
+        `Duplicate detection failed validation: ${result.error.message}`,
+      );
+    }
+
+    return result.data;
+  } catch (error) {
+    console.error(
+      "AI duplicate detection failed. Using safe fallback:",
+      error,
     );
-  }
 
-  return result.data;
+    return createFallbackDuplicateResult();
+  }
 }
