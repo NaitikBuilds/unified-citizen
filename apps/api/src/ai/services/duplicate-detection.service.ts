@@ -1,4 +1,4 @@
-import { gemini } from "../providers/gemini.provider.js";
+import { getGemini } from "../providers/gemini.provider.js";
 import { prisma } from "../../services/prisma.service.js";
 import { z } from "zod";
 
@@ -374,7 +374,7 @@ EXISTING GRIEVANCES
 ${candidateText}
 `;
 
-  const response = await gemini.models.generateContent({
+  const response = await getGemini().models.generateContent({
     model: MODEL_NAME,
     contents: prompt,
   });

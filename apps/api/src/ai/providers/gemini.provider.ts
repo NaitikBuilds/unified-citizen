@@ -3,12 +3,20 @@ import { GoogleGenAI } from "@google/genai";
 
 dns.setDefaultResultOrder("ipv4first");
 
-const apiKey = process.env.GEMINI_API_KEY;
+let gemini: GoogleGenAI | null = null;
 
-if (!apiKey) {
-  throw new Error("GEMINI_API_KEY environment variable is not set");
+export function getGemini(): GoogleGenAI {
+  if (!gemini) {
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY environment variable is not set");
+    }
+
+    gemini = new GoogleGenAI({
+      apiKey,
+    });
+  }
+
+  return gemini;
 }
-
-export const gemini = new GoogleGenAI({
-  apiKey,
-});

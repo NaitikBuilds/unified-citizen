@@ -1,4 +1,4 @@
-import { gemini } from "../providers/gemini.provider.js";
+import { getGemini } from "../providers/gemini.provider.js";
 import { buildChatbotPrompt } from "../prompts/chatbot.prompt.js";
 import { getCitizenContext } from "./citizen-context.service.js";
 
@@ -13,7 +13,7 @@ export async function chatWithCitizen(
 
     const prompt = buildChatbotPrompt(message, context);
 
-    const response = await gemini.models.generateContent({
+    const response = await getGemini().models.generateContent({
       model: MODEL_NAME,
       contents: prompt,
     });
