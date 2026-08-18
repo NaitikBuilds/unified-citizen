@@ -1512,9 +1512,9 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   phone: 'phone',
   role: 'role',
-  departmentId: 'departmentId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  departmentId: 'departmentId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1523,11 +1523,11 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  code: 'code',
   description: 'description',
-  isActive: 'isActive',
+  code: 'code',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive'
 } as const
 
 export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
@@ -1536,21 +1536,21 @@ export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof
 export const GrievanceScalarFieldEnum = {
   id: 'id',
   ticketId: 'ticketId',
-  citizenId: 'citizenId',
   title: 'title',
   description: 'description',
   category: 'category',
   subcategory: 'subcategory',
-  priority: 'priority',
   status: 'status',
-  departmentId: 'departmentId',
+  priority: 'priority',
   location: 'location',
-  address: 'address',
   latitude: 'latitude',
   longitude: 'longitude',
+  citizenId: 'citizenId',
+  departmentId: 'departmentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  resolvedAt: 'resolvedAt'
+  resolvedAt: 'resolvedAt',
+  address: 'address'
 } as const
 
 export type GrievanceScalarFieldEnum = (typeof GrievanceScalarFieldEnum)[keyof typeof GrievanceScalarFieldEnum]
@@ -1561,9 +1561,9 @@ export const AssignmentScalarFieldEnum = {
   grievanceId: 'grievanceId',
   officerId: 'officerId',
   departmentId: 'departmentId',
-  assignedById: 'assignedById',
   type: 'type',
   status: 'status',
+  assignedById: 'assignedById',
   assignedAt: 'assignedAt',
   completedAt: 'completedAt',
   reason: 'reason'
@@ -1575,18 +1575,19 @@ export type AssignmentScalarFieldEnum = (typeof AssignmentScalarFieldEnum)[keyof
 export const AIClassificationScalarFieldEnum = {
   id: 'id',
   grievanceId: 'grievanceId',
-  category: 'category',
-  department: 'department',
-  priority: 'priority',
   confidence: 'confidence',
-  summary: 'summary',
-  duplicateScore: 'duplicateScore',
-  sentiment: 'sentiment',
   modelName: 'modelName',
   modelVersion: 'modelVersion',
   explanation: 'explanation',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  category: 'category',
+  department: 'department',
+  duplicateScore: 'duplicateScore',
+  priority: 'priority',
+  sentiment: 'sentiment',
+  severity: 'severity',
+  summary: 'summary'
 } as const
 
 export type AIClassificationScalarFieldEnum = (typeof AIClassificationScalarFieldEnum)[keyof typeof AIClassificationScalarFieldEnum]
@@ -1595,11 +1596,11 @@ export type AIClassificationScalarFieldEnum = (typeof AIClassificationScalarFiel
 export const CommentScalarFieldEnum = {
   id: 'id',
   grievanceId: 'grievanceId',
-  userId: 'userId',
-  message: 'message',
   isInternal: 'isInternal',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  message: 'message',
+  userId: 'userId'
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
@@ -1607,11 +1608,11 @@ export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeo
 
 export const AttachmentScalarFieldEnum = {
   id: 'id',
-  grievanceId: 'grievanceId',
   fileName: 'fileName',
-  fileType: 'fileType',
   fileUrl: 'fileUrl',
+  fileType: 'fileType',
   fileSize: 'fileSize',
+  grievanceId: 'grievanceId',
   uploadedById: 'uploadedById',
   createdAt: 'createdAt'
 } as const
@@ -1621,12 +1622,12 @@ export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof
 
 export const NotificationScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  grievanceId: 'grievanceId',
+  type: 'type',
   title: 'title',
   message: 'message',
-  type: 'type',
   isRead: 'isRead',
+  userId: 'userId',
+  grievanceId: 'grievanceId',
   createdAt: 'createdAt'
 } as const
 
@@ -1635,13 +1636,13 @@ export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[k
 
 export const AuditLogScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  grievanceId: 'grievanceId',
   action: 'action',
-  oldValue: 'oldValue',
-  newValue: 'newValue',
   metadata: 'metadata',
-  createdAt: 'createdAt'
+  userId: 'userId',
+  createdAt: 'createdAt',
+  grievanceId: 'grievanceId',
+  newValue: 'newValue',
+  oldValue: 'oldValue'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
@@ -1679,7 +1680,6 @@ export type SLAPolicyScalarFieldEnum = (typeof SLAPolicyScalarFieldEnum)[keyof t
 export const SLAScalarFieldEnum = {
   id: 'id',
   grievanceId: 'grievanceId',
-  policyId: 'policyId',
   departmentId: 'departmentId',
   responseTimeHours: 'responseTimeHours',
   resolutionTimeHours: 'resolutionTimeHours',
@@ -1690,7 +1690,8 @@ export const SLAScalarFieldEnum = {
   resolutionCompletedAt: 'resolutionCompletedAt',
   breachedAt: 'breachedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  policyId: 'policyId'
 } as const
 
 export type SLAScalarFieldEnum = (typeof SLAScalarFieldEnum)[keyof typeof SLAScalarFieldEnum]
@@ -1717,8 +1718,8 @@ export const EscalationScalarFieldEnum = {
   reason: 'reason',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  escalatedAt: 'escalatedAt',
-  resolvedAt: 'resolvedAt'
+  resolvedAt: 'resolvedAt',
+  escalatedAt: 'escalatedAt'
 } as const
 
 export type EscalationScalarFieldEnum = (typeof EscalationScalarFieldEnum)[keyof typeof EscalationScalarFieldEnum]
@@ -1821,20 +1822,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'GrievancePriority'
- */
-export type EnumGrievancePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrievancePriority'>
-    
-
-
-/**
- * Reference to a field of type 'GrievancePriority[]'
- */
-export type ListEnumGrievancePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrievancePriority[]'>
-    
-
-
-/**
  * Reference to a field of type 'GrievanceStatus'
  */
 export type EnumGrievanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrievanceStatus'>
@@ -1845,6 +1832,20 @@ export type EnumGrievanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'GrievanceStatus[]'
  */
 export type ListEnumGrievanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrievanceStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GrievancePriority'
+ */
+export type EnumGrievancePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrievancePriority'>
+    
+
+
+/**
+ * Reference to a field of type 'GrievancePriority[]'
+ */
+export type ListEnumGrievancePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrievancePriority[]'>
     
 
 

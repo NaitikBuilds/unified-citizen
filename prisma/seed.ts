@@ -74,6 +74,11 @@ async function main() {
       code: "MUNICIPAL",
       description: "General municipal services and civic administration.",
     },
+    {
+      name: "Other Department",
+      code: "OTHER",
+      description: "General complaints and uncategorized grievances. Catch-all for AI classification fallback.",
+    },
   ];
 
   const departments: Record<string, any> = {};

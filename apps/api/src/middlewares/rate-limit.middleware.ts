@@ -28,3 +28,10 @@ export const authLimiter = rateLimit({
   ...baseConfig,
   limit: 20,
 });
+
+// AI chatbot endpoints are expensive: each call consumes Gemini tokens.
+// A moderate limit prevents quota abuse while allowing normal usage.
+export const chatLimiter = rateLimit({
+  ...baseConfig,
+  limit: 30,
+});
