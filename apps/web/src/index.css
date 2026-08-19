@@ -17,25 +17,69 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: oklch(98% 0 0);
+  background: #0a0a0a;
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(70% 0.1 270);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
 }
-
-/* DaisyUI theme overrides to match codesarthi.in */
-:root[data-theme="light"] {
-  --color-primary: oklch(45% 0.24 277);
-  --color-primary-content: oklch(93% 0.034 273);
-  --color-secondary: oklch(65% 0.241 354);
-  --color-secondary-content: oklch(94% 0.028 342);
-  --color-accent: oklch(77% 0.152 182);
-  --color-accent-content: oklch(38% 0.063 188);
-  --color-success: oklch(76% 0.177 163);
-  --color-success-content: oklch(37% 0.077 169);
-  --color-warning: oklch(82% 0.189 84);
-  --color-warning-content: oklch(41% 0.112 46);
-  --color-error: oklch(71% 0.194 13);
-  --color-error-content: oklch(27% 0.105 12);
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
+
+/* Hide native browser password reveal button */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* CodeSarthi-style: pure black grid & card utilities */
+
+/* Fixed full-page background grid overlay — apply to a fixed div */
+.page-grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+}
+
+/* Inline usage via Tailwind (for bento cards etc.) */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+}
+
+.bg-grid-pattern-light {
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
+/* Card hover: subtle white border, no glow */
+.dark-card {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dark-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.04); }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 10s ease-in-out infinite;
+}
+
