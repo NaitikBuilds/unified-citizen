@@ -13,6 +13,14 @@ interface ChatResponse {
 }
 
 /**
+ * Explicit marker written by the backend when the Gemini provider is not
+ * configured (apps/api/src/ai/services/analysis.service.ts). When this value
+ * appears on a persisted classification the UI MUST treat it as "AI analysis
+ * unavailable" and never display it as a real AI result.
+ */
+const UNCONFIGURED_MODEL_NAME = 'unconfigured'
+
+/**
  * Real API adapter for the AI subsystem.
  *
  * - chat: calls POST /api/v1/chat with { message } and maps data.message -> reply.
@@ -41,6 +49,17 @@ export const apiAiService: AiService = {
       const classification = grievance.aiClassification
 
       if (!classification) {
+        return {
+          availability: 'unavailable',
+          classification: null,
+          duplicates: [],
+        }
+      }
+
+      // Explicit unconfigured marker: the backend stored a stub because
+      // GEMINI_API_KEY was not set. Render as unavailable and do not show
+      // any of the placeholder values as if they were a real AI result.
+      if (classification.modelName === UNCONFIGURED_MODEL_NAME) {
         return {
           availability: 'unavailable',
           classification: null,

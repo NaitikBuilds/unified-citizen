@@ -18,7 +18,7 @@ export function RoleRoute({ roles, children }: RoleRouteProps) {
   const { user } = useAuth()
 
   if (!user) {
-    return null
+    return <Navigate to="/auth/login" replace />
   }
 
   if (!roles.includes(user.role)) {
