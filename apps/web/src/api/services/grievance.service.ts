@@ -8,6 +8,7 @@ import type {
 import type {
   AssignGrievanceRequest,
   CreateGrievanceRequest,
+  EscalateGrievanceRequest,
   Grievance,
   GrievanceListParams,
   UpdateGrievanceRequest,
@@ -25,11 +26,12 @@ export interface GrievanceService {
   updateStatus(id: string, request: UpdateGrievanceStatusRequest): Promise<Grievance>
   remove(id: string): Promise<void>
   assign(id: string, request: AssignGrievanceRequest): Promise<Grievance>
-  escalate(id: string): Promise<Grievance>
+  escalate(id: string, request: EscalateGrievanceRequest): Promise<Grievance>
   reopen(id: string, reason?: string): Promise<Grievance>
   submitFeedback(id: string, request: CreateFeedbackRequest): Promise<Feedback>
   getComments(id: string): Promise<Comment[]>
   addComment(id: string, request: CreateCommentRequest): Promise<Comment>
   getAttachments(id: string): Promise<Attachment[]>
   uploadAttachment(id: string, file: File): Promise<Attachment>
+  downloadAttachment(grievanceId: string, attachmentId: string, filename?: string): Promise<void>
 }

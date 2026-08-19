@@ -4,9 +4,11 @@ import {
   ArrowLeft,
   Building2,
   CalendarDays,
+  Download,
   FileText,
   FolderOpen,
   Lock,
+  Loader2,
   MapPin,
   MessageSquareText,
   SearchX,
@@ -26,6 +28,7 @@ import type { Sla } from '../../contracts/sla'
 import { PriorityBadge, StatusBadge } from '../../components/grievance'
 import { SLAIndicator } from '../../components/sla/SLAIndicator'
 import { GrievanceTimeline } from '../../components/timeline'
+import { AuditTimeline } from '../../components/audit'
 import {
   Button,
   Card,
@@ -331,6 +334,21 @@ function OfficerActions({ grievanceId }: { grievanceId: string }) {
 
 function AttachmentsSection({ grievanceId }: { grievanceId: string }) {
   const query = useAsync(() => services.grievance.getAttachments(grievanceId), [grievanceId])
+  const [downloadingId, setDownloadingId] = useState<string | null>(null)
+  const [downloadError, setDownloadError] = useState<string | null>(null)
+
+  async function handleDownload(attachment: Attachment) {
+    if (downloadingId) return
+    setDownloadingId(attachment.id)
+    setDownloadError(null)
+    try {
+      await services.grievance.downloadAttachment(grievanceId, attachment.id, attachment.fileName)
+    } catch (err) {
+      setDownloadError(getErrorMessage(err))
+    } finally {
+      setDownloadingId(null)
+    }
+  }
 
   return (
     <Card>
@@ -339,6 +357,9 @@ function AttachmentsSection({ grievanceId }: { grievanceId: string }) {
         <CardDescription>Photos and documents submitted with this grievance.</CardDescription>
       </CardHeader>
       <CardContent>
+        {downloadError && (
+          <p className="mb-3 text-xs text-red-600">Download failed: {downloadError}</p>
+        )}
         {query.isLoading ? (
           <Skeleton className="h-12 rounded-xl" />
         ) : query.isError ? (
@@ -356,27 +377,37 @@ function AttachmentsSection({ grievanceId }: { grievanceId: string }) {
           <p className="text-sm text-slate-500">No attachments were added.</p>
         ) : (
           <ul className="space-y-2">
-            {query.data?.map((attachment: Attachment) => (
-              <li key={attachment.id}>
-                <a
-                  href={attachment.fileUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="gd-file focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                >
-                  <span className="gd-file-icon">
-                    <FileText className="size-4.5" aria-hidden="true" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="gd-file-name block truncate">{attachment.fileName}</span>
-                    <span className="gd-file-meta block">
-                      {formatFileSize(attachment.fileSize)} · {formatDateTime(attachment.createdAt)}
+            {query.data?.map((attachment: Attachment) => {
+              const isDownloading = downloadingId === attachment.id
+              return (
+                <li key={attachment.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(attachment)}
+                    disabled={isDownloading}
+                    className="gd-file w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-60"
+                  >
+                    <span className="gd-file-icon">
+                      {isDownloading ? (
+                        <Loader2 className="size-4.5 animate-spin text-ucg-blue" aria-hidden="true" />
+                      ) : (
+                        <FileText className="size-4.5" aria-hidden="true" />
+                      )}
                     </span>
-                  </span>
-                  <span className="gd-file-open">Open</span>
-                </a>
-              </li>
-            ))}
+                    <span className="min-w-0 flex-1">
+                      <span className="gd-file-name block truncate">{attachment.fileName}</span>
+                      <span className="gd-file-meta block">
+                        {formatFileSize(attachment.fileSize)} · {formatDateTime(attachment.createdAt)}
+                      </span>
+                    </span>
+                    <span className="gd-file-open inline-flex items-center gap-1">
+                      <Download className="size-3.5" aria-hidden="true" />
+                      {isDownloading ? 'Downloading...' : 'Download'}
+                    </span>
+                  </button>
+                </li>
+              )
+            })}
           </ul>
         )}
       </CardContent>
@@ -734,6 +765,7 @@ export function DepartmentGrievanceDetailPage() {
 
           <AttachmentsSection grievanceId={grievance.id} />
           <CommentsSection grievanceId={grievance.id} />
+          <AuditTimeline grievanceId={grievance.id} title="Governance audit trail" />
         </div>
 
         {/* Right rail */}

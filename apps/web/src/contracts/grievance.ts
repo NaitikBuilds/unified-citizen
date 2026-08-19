@@ -97,6 +97,11 @@ export type AssignGrievanceRequest = {
   reason?: string
 }
 
+export type EscalateGrievanceRequest = {
+  level: 'LEVEL_1' | 'LEVEL_2' | 'LEVEL_3' | 'ADMIN'
+  reason: string
+}
+
 export type GrievanceSortField = 'createdAt' | 'updatedAt' | 'priority' | 'status'
 
 export type SortDirection = 'asc' | 'desc'

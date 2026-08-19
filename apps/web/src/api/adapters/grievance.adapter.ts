@@ -8,6 +8,7 @@ import type {
 import type {
   AssignGrievanceRequest,
   CreateGrievanceRequest,
+  EscalateGrievanceRequest,
   Grievance,
   GrievanceStatus,
   Priority,
@@ -18,7 +19,7 @@ import type {
   GrievanceFilters,
   GrievanceService,
 } from '../services/grievance.service'
-import { client } from '../client'
+import { client, downloadBlob } from '../client'
 import { toPaginated } from './mapper'
 
 interface GrievancesResponse {
@@ -183,8 +184,11 @@ export const apiGrievanceService: GrievanceService = {
     return data.grievance
   },
 
-  async escalate(id: string): Promise<Grievance> {
-    const { data } = await client.post<GrievanceResponse>(`/grievances/${id}/escalate`)
+  async escalate(id: string, request: EscalateGrievanceRequest): Promise<Grievance> {
+    const { data } = await client.post<GrievanceResponse>(`/grievances/${id}/escalate`, {
+      level: request.level,
+      reason: request.reason,
+    })
     return data.grievance
   },
 
@@ -232,5 +236,9 @@ export const apiGrievanceService: GrievanceService = {
       },
     )
     return data.attachment
+  },
+
+  async downloadAttachment(grievanceId: string, attachmentId: string, filename?: string): Promise<void> {
+    await downloadBlob(`/grievances/${grievanceId}/attachments/${attachmentId}`, filename)
   },
 }

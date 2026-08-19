@@ -8,6 +8,7 @@ import type {
 import type {
   AssignGrievanceRequest,
   CreateGrievanceRequest,
+  EscalateGrievanceRequest,
   Grievance,
   UpdateGrievanceRequest,
   UpdateGrievanceStatusRequest,
@@ -23,6 +24,7 @@ import { mockDepartments } from '../data/departments'
 import { mockComments } from '../data/comments'
 import { mockAttachments } from '../data/attachments'
 import { mockFeedback } from '../data/feedback'
+import { mockEscalations } from '../data/escalations'
 import { getMockUser } from '../data/users'
 import { matchesSearch, maybeFail, paginate, simulateLatency } from './mockUtils'
 
@@ -285,7 +287,7 @@ export const mockGrievanceService: GrievanceService = {
     return cloneGrievance(mockGrievances[index])
   },
 
-  async escalate(id: string): Promise<Grievance> {
+  async escalate(id: string, request: EscalateGrievanceRequest): Promise<Grievance> {
     maybeFail('grievance.escalate')
     await simulateLatency()
 
@@ -300,6 +302,18 @@ export const mockGrievanceService: GrievanceService = {
       status: 'ESCALATED',
       updatedAt: new Date().toISOString(),
     }
+
+    const user = tokenStorage.getStoredUser()
+    mockEscalations.unshift({
+      id: `esc-mock-${Date.now()}`,
+      grievanceId: id,
+      level: request.level,
+      status: 'OPEN',
+      reason: request.reason,
+      createdById: user?.id ?? null,
+      createdAt: new Date().toISOString(),
+      escalatedAt: new Date().toISOString(),
+    })
 
     return cloneGrievance(mockGrievances[index])
   },
@@ -441,5 +455,21 @@ export const mockGrievanceService: GrievanceService = {
 
     mockAttachments.push(attachment)
     return attachment
+  },
+
+  async downloadAttachment(grievanceId: string, attachmentId: string, filename?: string): Promise<void> {
+    maybeFail('grievance.downloadAttachment')
+    await simulateLatency(100, 300)
+    const blob = new Blob([`Mock file content for attachment ${attachmentId} of grievance ${grievanceId}`], {
+      type: 'text/plain;charset=utf-8',
+    })
+    const blobUrl = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = blobUrl
+    link.download = filename ?? `attachment-${attachmentId}.txt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(blobUrl)
   },
 }

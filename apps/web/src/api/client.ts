@@ -109,3 +109,38 @@ client.interceptors.response.use(
     throw normalizeError(error)
   },
 )
+
+/**
+ * Fetches a protected binary resource with active authentication headers and
+ * securely triggers a browser download. Preserves filename from Content-Disposition
+ * when provided by the backend. Cleans up object URLs immediately.
+ */
+export async function downloadBlob(url: string, fallbackFilename = 'download'): Promise<void> {
+  const response = await client.get(url, {
+    responseType: 'blob',
+  })
+
+  let filename = fallbackFilename
+  const disposition = response.headers['content-disposition'] || response.headers['Content-Disposition']
+  if (typeof disposition === 'string') {
+    const filenameMatch = disposition.match(/filename\*?=(?:UTF-8'')?["']?([^;"'\n]*)["']?/)
+    if (filenameMatch?.[1]) {
+      filename = decodeURIComponent(filenameMatch[1].trim())
+    }
+  }
+
+  const rawContentType = response.headers['content-type'] || response.headers['Content-Type']
+  const contentType = typeof rawContentType === 'string' ? rawContentType : 'application/octet-stream'
+
+  const blob = new Blob([response.data], {
+    type: contentType,
+  })
+  const blobUrl = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = blobUrl
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(blobUrl)
+}
