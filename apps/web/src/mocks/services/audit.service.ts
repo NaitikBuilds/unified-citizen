@@ -5,7 +5,8 @@ import { mockAuditLogs } from '../data/audit'
 import { matchesSearch, maybeFail, paginate, simulateLatency } from './mockUtils'
 
 /**
- * MOCK audit service. MOCK ONLY — the backend exposes no audit endpoints.
+ * MOCK audit service. Exercises both collection and per-grievance reads
+ * against local fixture data.
  */
 export const mockAuditService: AuditService = {
   async list(params: AuditListParams = {}): Promise<Paginated<AuditLog>> {
@@ -33,5 +34,13 @@ export const mockAuditService: AuditService = {
     }
 
     return paginate(results.map((item) => ({ ...item })), params.page ?? 1, params.limit ?? 10)
+  },
+
+  async getByGrievance(grievanceId: string): Promise<AuditLog[]> {
+    maybeFail('audit.getByGrievance')
+    await simulateLatency(100, 300)
+    return mockAuditLogs
+      .filter((item) => item.grievanceId === grievanceId)
+      .map((item) => ({ ...item }))
   },
 }

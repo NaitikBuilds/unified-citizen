@@ -17,6 +17,7 @@ import { apiGrievanceService } from './adapters/grievance.adapter'
 import { apiNotificationService } from './adapters/notification.adapter'
 import { apiSlaService } from './adapters/sla.adapter'
 import { apiEscalationService } from './adapters/escalation.adapter'
+import { apiAuditService } from './adapters/audit.adapter'
 
 import { mockAuthService } from '../mocks/services/auth.service'
 import { mockUserService } from '../mocks/services/user.service'
@@ -59,7 +60,10 @@ export const services = {
   // mock mode remains available for standalone development.
   escalation: config.useMockApi ? mockEscalationService : apiEscalationService,
   analytics: mockAnalyticsService,
-  audit: mockAuditService,
+
+  // Audit is now REAL API backed (V6.0c: GET /api/v1/audit-logs endpoints);
+  // mock mode remains available for standalone development.
+  audit: config.useMockApi ? mockAuditService : apiAuditService,
   ai: mockAiService,
 } satisfies {
   auth: AuthService
