@@ -27,31 +27,31 @@ export type AggregateComment = {
 export type CommentMinAggregateOutputType = {
   id: string | null
   grievanceId: string | null
-  userId: string | null
-  message: string | null
   isInternal: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  message: string | null
+  userId: string | null
 }
 
 export type CommentMaxAggregateOutputType = {
   id: string | null
   grievanceId: string | null
-  userId: string | null
-  message: string | null
   isInternal: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  message: string | null
+  userId: string | null
 }
 
 export type CommentCountAggregateOutputType = {
   id: number
   grievanceId: number
-  userId: number
-  message: number
   isInternal: number
   createdAt: number
   updatedAt: number
+  message: number
+  userId: number
   _all: number
 }
 
@@ -59,31 +59,31 @@ export type CommentCountAggregateOutputType = {
 export type CommentMinAggregateInputType = {
   id?: true
   grievanceId?: true
-  userId?: true
-  message?: true
   isInternal?: true
   createdAt?: true
   updatedAt?: true
+  message?: true
+  userId?: true
 }
 
 export type CommentMaxAggregateInputType = {
   id?: true
   grievanceId?: true
-  userId?: true
-  message?: true
   isInternal?: true
   createdAt?: true
   updatedAt?: true
+  message?: true
+  userId?: true
 }
 
 export type CommentCountAggregateInputType = {
   id?: true
   grievanceId?: true
-  userId?: true
-  message?: true
   isInternal?: true
   createdAt?: true
   updatedAt?: true
+  message?: true
+  userId?: true
   _all?: true
 }
 
@@ -162,11 +162,11 @@ export type CommentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type CommentGroupByOutputType = {
   id: string
   grievanceId: string
-  userId: string
-  message: string
   isInternal: boolean
   createdAt: Date
   updatedAt: Date
+  message: string
+  userId: string
   _count: CommentCountAggregateOutputType | null
   _min: CommentMinAggregateOutputType | null
   _max: CommentMaxAggregateOutputType | null
@@ -193,11 +193,11 @@ export type CommentWhereInput = {
   NOT?: Prisma.CommentWhereInput | Prisma.CommentWhereInput[]
   id?: Prisma.StringFilter<"Comment"> | string
   grievanceId?: Prisma.StringFilter<"Comment"> | string
-  userId?: Prisma.StringFilter<"Comment"> | string
-  message?: Prisma.StringFilter<"Comment"> | string
   isInternal?: Prisma.BoolFilter<"Comment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Comment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Comment"> | Date | string
+  message?: Prisma.StringFilter<"Comment"> | string
+  userId?: Prisma.StringFilter<"Comment"> | string
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -205,11 +205,11 @@ export type CommentWhereInput = {
 export type CommentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  message?: Prisma.SortOrder
   isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   grievance?: Prisma.GrievanceOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -220,11 +220,11 @@ export type CommentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CommentWhereInput[]
   NOT?: Prisma.CommentWhereInput | Prisma.CommentWhereInput[]
   grievanceId?: Prisma.StringFilter<"Comment"> | string
-  userId?: Prisma.StringFilter<"Comment"> | string
-  message?: Prisma.StringFilter<"Comment"> | string
   isInternal?: Prisma.BoolFilter<"Comment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Comment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Comment"> | Date | string
+  message?: Prisma.StringFilter<"Comment"> | string
+  userId?: Prisma.StringFilter<"Comment"> | string
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -232,11 +232,11 @@ export type CommentWhereUniqueInput = Prisma.AtLeast<{
 export type CommentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  message?: Prisma.SortOrder
   isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   _count?: Prisma.CommentCountOrderByAggregateInput
   _max?: Prisma.CommentMaxOrderByAggregateInput
   _min?: Prisma.CommentMinOrderByAggregateInput
@@ -248,19 +248,19 @@ export type CommentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CommentScalarWhereWithAggregatesInput | Prisma.CommentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Comment"> | string
   grievanceId?: Prisma.StringWithAggregatesFilter<"Comment"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"Comment"> | string
-  message?: Prisma.StringWithAggregatesFilter<"Comment"> | string
   isInternal?: Prisma.BoolWithAggregatesFilter<"Comment"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Comment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Comment"> | Date | string
+  message?: Prisma.StringWithAggregatesFilter<"Comment"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"Comment"> | string
 }
 
 export type CommentCreateInput = {
   id?: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
   grievance: Prisma.GrievanceCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
 }
@@ -268,19 +268,19 @@ export type CommentCreateInput = {
 export type CommentUncheckedCreateInput = {
   id?: string
   grievanceId: string
-  userId: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
+  userId: string
 }
 
 export type CommentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
 }
@@ -288,39 +288,39 @@ export type CommentUpdateInput = {
 export type CommentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CommentCreateManyInput = {
   id?: string
   grievanceId: string
-  userId: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
+  userId: string
 }
 
 export type CommentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CommentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CommentListRelationFilter = {
@@ -336,31 +336,31 @@ export type CommentOrderByRelationAggregateInput = {
 export type CommentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  message?: Prisma.SortOrder
   isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type CommentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  message?: Prisma.SortOrder
   isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type CommentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  message?: Prisma.SortOrder
   isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type CommentCreateNestedManyWithoutUserInput = {
@@ -449,20 +449,20 @@ export type CommentUncheckedUpdateManyWithoutGrievanceNestedInput = {
 
 export type CommentCreateWithoutUserInput = {
   id?: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
   grievance: Prisma.GrievanceCreateNestedOneWithoutCommentsInput
 }
 
 export type CommentUncheckedCreateWithoutUserInput = {
   id?: string
   grievanceId: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
 }
 
 export type CommentCreateOrConnectWithoutUserInput = {
@@ -497,29 +497,29 @@ export type CommentScalarWhereInput = {
   NOT?: Prisma.CommentScalarWhereInput | Prisma.CommentScalarWhereInput[]
   id?: Prisma.StringFilter<"Comment"> | string
   grievanceId?: Prisma.StringFilter<"Comment"> | string
-  userId?: Prisma.StringFilter<"Comment"> | string
-  message?: Prisma.StringFilter<"Comment"> | string
   isInternal?: Prisma.BoolFilter<"Comment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Comment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Comment"> | Date | string
+  message?: Prisma.StringFilter<"Comment"> | string
+  userId?: Prisma.StringFilter<"Comment"> | string
 }
 
 export type CommentCreateWithoutGrievanceInput = {
   id?: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
 }
 
 export type CommentUncheckedCreateWithoutGrievanceInput = {
   id?: string
-  userId: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
+  userId: string
 }
 
 export type CommentCreateOrConnectWithoutGrievanceInput = {
@@ -551,73 +551,73 @@ export type CommentUpdateManyWithWhereWithoutGrievanceInput = {
 export type CommentCreateManyUserInput = {
   id?: string
   grievanceId: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
 }
 
 export type CommentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutCommentsNestedInput
 }
 
 export type CommentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CommentUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CommentCreateManyGrievanceInput = {
   id?: string
-  userId: string
-  message: string
   isInternal?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  message: string
+  userId: string
 }
 
 export type CommentUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
 }
 
 export type CommentUncheckedUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CommentUncheckedUpdateManyWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  message?: Prisma.StringFieldUpdateOperationsInput | string
   isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -625,11 +625,11 @@ export type CommentUncheckedUpdateManyWithoutGrievanceInput = {
 export type CommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
-  userId?: boolean
-  message?: boolean
   isInternal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  message?: boolean
+  userId?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comment"]>
@@ -637,11 +637,11 @@ export type CommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type CommentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
-  userId?: boolean
-  message?: boolean
   isInternal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  message?: boolean
+  userId?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comment"]>
@@ -649,11 +649,11 @@ export type CommentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type CommentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
-  userId?: boolean
-  message?: boolean
   isInternal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  message?: boolean
+  userId?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comment"]>
@@ -661,14 +661,14 @@ export type CommentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type CommentSelectScalar = {
   id?: boolean
   grievanceId?: boolean
-  userId?: boolean
-  message?: boolean
   isInternal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  message?: boolean
+  userId?: boolean
 }
 
-export type CommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "userId" | "message" | "isInternal" | "createdAt" | "updatedAt", ExtArgs["result"]["comment"]>
+export type CommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "isInternal" | "createdAt" | "updatedAt" | "message" | "userId", ExtArgs["result"]["comment"]>
 export type CommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -691,11 +691,11 @@ export type $CommentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     grievanceId: string
-    userId: string
-    message: string
     isInternal: boolean
     createdAt: Date
     updatedAt: Date
+    message: string
+    userId: string
   }, ExtArgs["result"]["comment"]>
   composites: {}
 }
@@ -1123,11 +1123,11 @@ export interface Prisma__CommentClient<T, Null = never, ExtArgs extends runtime.
 export interface CommentFieldRefs {
   readonly id: Prisma.FieldRef<"Comment", 'String'>
   readonly grievanceId: Prisma.FieldRef<"Comment", 'String'>
-  readonly userId: Prisma.FieldRef<"Comment", 'String'>
-  readonly message: Prisma.FieldRef<"Comment", 'String'>
   readonly isInternal: Prisma.FieldRef<"Comment", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Comment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Comment", 'DateTime'>
+  readonly message: Prisma.FieldRef<"Comment", 'String'>
+  readonly userId: Prisma.FieldRef<"Comment", 'String'>
 }
     
 

@@ -9,6 +9,7 @@ import notificationRoutes from "./routes/notification.routes.js";
 import slaRoutes from "./routes/sla.routes.js";
 import escalationRoutes from "./routes/escalation.routes.js";
 import auditRoutes from "./routes/audit.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -44,6 +45,7 @@ app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/slas", slaRoutes);
 app.use("/api/v1/escalations", escalationRoutes);
 app.use("/api/v1/audit-logs", auditRoutes);
+app.use("/api/v1/chat", chatRoutes);
 
 // JSON 404 for unknown routes (must be registered after all routes)
 app.use((_req, res) => {

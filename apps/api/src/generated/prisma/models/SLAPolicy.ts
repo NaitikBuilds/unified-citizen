@@ -268,8 +268,8 @@ export type SLAPolicyWhereInput = {
   isActive?: Prisma.BoolFilter<"SLAPolicy"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SLAPolicy"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SLAPolicy"> | Date | string
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   slas?: Prisma.SLAListRelationFilter
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
 }
 
 export type SLAPolicyOrderByWithRelationInput = {
@@ -284,8 +284,8 @@ export type SLAPolicyOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  department?: Prisma.DepartmentOrderByWithRelationInput
   slas?: Prisma.SLAOrderByRelationAggregateInput
+  department?: Prisma.DepartmentOrderByWithRelationInput
 }
 
 export type SLAPolicyWhereUniqueInput = Prisma.AtLeast<{
@@ -303,8 +303,8 @@ export type SLAPolicyWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"SLAPolicy"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SLAPolicy"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SLAPolicy"> | Date | string
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   slas?: Prisma.SLAListRelationFilter
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
 }, "id">
 
 export type SLAPolicyOrderByWithAggregationInput = {
@@ -354,8 +354,8 @@ export type SLAPolicyCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  department: Prisma.DepartmentCreateNestedOneWithoutSlaPoliciesInput
   slas?: Prisma.SLACreateNestedManyWithoutPolicyInput
+  department: Prisma.DepartmentCreateNestedOneWithoutSlaPoliciesInput
 }
 
 export type SLAPolicyUncheckedCreateInput = {
@@ -384,8 +384,8 @@ export type SLAPolicyUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutSlaPoliciesNestedInput
   slas?: Prisma.SLAUpdateManyWithoutPolicyNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutSlaPoliciesNestedInput
 }
 
 export type SLAPolicyUncheckedUpdateInput = {
@@ -817,8 +817,8 @@ export type SLAPolicySelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   slas?: boolean | Prisma.SLAPolicy$slasArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.SLAPolicyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sLAPolicy"]>
 
@@ -868,8 +868,8 @@ export type SLAPolicySelectScalar = {
 
 export type SLAPolicyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "departmentId" | "category" | "priority" | "responseTimeHours" | "resolutionTimeHours" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["sLAPolicy"]>
 export type SLAPolicyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   slas?: boolean | Prisma.SLAPolicy$slasArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.SLAPolicyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SLAPolicyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -882,8 +882,8 @@ export type SLAPolicyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $SLAPolicyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SLAPolicy"
   objects: {
-    department: Prisma.$DepartmentPayload<ExtArgs>
     slas: Prisma.$SLAPayload<ExtArgs>[]
+    department: Prisma.$DepartmentPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1291,8 +1291,8 @@ readonly fields: SLAPolicyFieldRefs;
  */
 export interface Prisma__SLAPolicyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   slas<T extends Prisma.SLAPolicy$slasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SLAPolicy$slasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SLAPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

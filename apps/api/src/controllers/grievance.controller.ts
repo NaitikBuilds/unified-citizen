@@ -1,3 +1,5 @@
+import { analyzeGrievance } from "../ai/services/analysis.service.js";
+
 import path from "path";
 import fs from "fs";
 import { Response, NextFunction } from "express";
@@ -38,36 +40,219 @@ export async function createGrievance(
       longitude,
       address,
     } = req.body;
+
     const userId = req.user.userId;
 
+    /*
+     * Basic validation.
+     *
+     * The grievance API requires title, description and category
+     * according to the existing request validation.
+     */
+    if (!title || typeof title !== "string") {
+      res.status(400).json({
+        error: "Title is required",
+      });
+      return;
+    }
+
+    if (!description || typeof description !== "string") {
+      res.status(400).json({
+        error: "Description is required",
+      });
+      return;
+    }
+
+    if (!category || typeof category !== "string") {
+      res.status(400).json({
+        error: "Category is required",
+      });
+      return;
+    }
+
+    /*
+     * ---------------------------------------------------------
+     * STEP 1: AI CLASSIFICATION
+     * ---------------------------------------------------------
+     *
+     * Gemini determines:
+     * - category
+     * - department
+     * - priority
+     * - sentiment
+     * - confidence
+     * - summary
+     * - explanation
+     */
+    const aiAnalysis = await analyzeGrievance(
+      title,
+      description,
+      category ?? null,
+      null,
+      userId,
+    );
+
+    const {
+      classification: aiClassification,
+      duplicateDetection,
+      spamDetection,
+    } = aiAnalysis;
+
+    if (spamDetection.isSpam) {
+      res.status(400).json({
+        error: "Grievance rejected as spam",
+        spamDetection,
+      });
+      return;
+    }
+
+    /*
+     * ---------------------------------------------------------
+     * STEP 3: DATABASE TRANSACTION
+     * ---------------------------------------------------------
+     */
     const result = await prisma.$transaction(async (tx) => {
-      const grievance = await tx.grievance.create({
-        data: {
-          ticketId: `GRV-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
-          title,
-          description,
-          category,
-          departmentId,
-          priority: priority || "MEDIUM",
-          citizenId: userId,
-          latitude: latitude ? parseFloat(latitude) : null,
-          longitude: longitude ? parseFloat(longitude) : null,
-          address: address || null,
-          status: "SUBMITTED",
+      /*
+       * AI department is represented by Department.code
+       * in the existing Prisma schema.
+       */
+      const aiDepartment = await tx.department.findUnique({
+        where: {
+          code: aiClassification.department,
         },
       });
 
+      if (!aiDepartment || !aiDepartment.isActive) {
+        throw new Error(
+          `AI returned invalid or inactive department: ${aiClassification.department}`,
+        );
+      }
+
+      /*
+       * Create the main grievance.
+       *
+       * Only fields that actually exist in the Prisma
+       * Grievance model are used here.
+       */
+      const grievance = await tx.grievance.create({
+        data: {
+          ticketId: `GRV-${Date.now()}-${Math.floor(
+            1000 + Math.random() * 9000,
+          )}`,
+
+          title,
+          description,
+
+          /*
+           * AI classification is the source for the
+           * stored category and priority.
+           */
+          category: aiClassification.category,
+          priority: aiClassification.priority,
+
+          /*
+           * AI recommended department.
+           */
+          departmentId: aiDepartment.id,
+
+          citizenId: userId,
+
+          latitude:
+            latitude !== undefined && latitude !== null && latitude !== ""
+              ? Number(latitude)
+              : null,
+
+          longitude:
+            longitude !== undefined && longitude !== null && longitude !== ""
+              ? Number(longitude)
+              : null,
+
+          address: address !== undefined && address !== "" ? address : null,
+
+          status: "SUBMITTED",
+
+          /*
+           * AIClassification is a one-to-one relation:
+           *
+           * Grievance -> AIClassification
+           *
+           * The Prisma schema contains:
+           * duplicateScore Float?
+           *
+           * Therefore the duplicate score is stored here.
+           */
+          aiClassification: {
+            create: {
+              category: aiClassification.category,
+              department: aiClassification.department,
+              priority: aiClassification.priority,
+
+              sentiment: aiClassification.sentiment,
+              severity: aiClassification.severity,
+              confidence: aiClassification.confidence,
+
+              summary: aiClassification.summary,
+              explanation: aiClassification.explanation,
+
+              duplicateScore: duplicateDetection.duplicateScore,
+
+              modelName: "gemini-3.5-flash",
+              modelVersion: "3.5",
+            },
+          },
+        },
+
+        /*
+         * Return the AI classification as part of the created
+         * grievance response.
+         */
+        include: {
+          aiClassification: true,
+          department: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+            },
+          },
+        },
+      });
+
+      /*
+       * -------------------------------------------------------
+       * STEP 4: AUDIT LOG
+       * -------------------------------------------------------
+       *
+       * AuditLog is already part of the Prisma schema.
+       */
       await createAuditLog({
         userId,
         grievanceId: grievance.id,
         action: "CREATE_GRIEVANCE",
-        newValue: { title, category, departmentId, status: "SUBMITTED" },
+
+        newValue: {
+          title: grievance.title,
+          category: grievance.category,
+          departmentId: grievance.departmentId,
+          priority: grievance.priority,
+          status: grievance.status,
+          duplicateScore: duplicateDetection.duplicateScore,
+          duplicateRelationship: duplicateDetection.relationship,
+        },
+
         tx,
       });
 
-      // SLA creation runs inside the same transaction as the grievance: if it
-      // fails the grievance is rolled back, so no orphaned/inconsistent state
-      // can remain. When the grievance has no department, no SLA is created.
+      /*
+       * -------------------------------------------------------
+       * STEP 5: SLA
+       * -------------------------------------------------------
+       *
+       * SLA and SLAPolicy already exist in Prisma.
+       *
+       * The SLA is created using the actual department and
+       * AI-selected priority.
+       */
       await createSLAForGrievance(
         grievance.id,
         grievance.departmentId,
@@ -78,9 +263,25 @@ export async function createGrievance(
       return grievance;
     });
 
-    res
-      .status(201)
-      .json({ message: "Grievance created successfully", grievance: result });
+    /*
+     * ---------------------------------------------------------
+     * STEP 6: RESPONSE
+     * ---------------------------------------------------------
+     *
+     * Return both the created grievance and the duplicate
+     * detection result.
+     */
+    res.status(201).json({
+      message: "Grievance created successfully",
+
+      grievance: result,
+
+      duplicateDetection: {
+        relationship: duplicateDetection.relationship,
+        duplicateScore: duplicateDetection.duplicateScore,
+        explanation: duplicateDetection.explanation,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -1098,13 +1299,7 @@ export async function escalateGrievance(
         throw new Error("Grievance is already escalated");
       }
 
-      const escalation = await createEscalation(
-        id,
-        userId,
-        level,
-        reason,
-        tx,
-      );
+      const escalation = await createEscalation(id, userId, level, reason, tx);
 
       const updated = await tx.grievance.update({
         where: { id },

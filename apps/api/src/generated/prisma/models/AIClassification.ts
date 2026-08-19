@@ -39,52 +39,55 @@ export type AIClassificationSumAggregateOutputType = {
 export type AIClassificationMinAggregateOutputType = {
   id: string | null
   grievanceId: string | null
-  category: string | null
-  department: string | null
-  priority: $Enums.GrievancePriority | null
   confidence: number | null
-  summary: string | null
-  duplicateScore: number | null
-  sentiment: string | null
   modelName: string | null
   modelVersion: string | null
   explanation: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  category: string | null
+  department: string | null
+  duplicateScore: number | null
+  priority: $Enums.GrievancePriority | null
+  sentiment: string | null
+  severity: string | null
+  summary: string | null
 }
 
 export type AIClassificationMaxAggregateOutputType = {
   id: string | null
   grievanceId: string | null
-  category: string | null
-  department: string | null
-  priority: $Enums.GrievancePriority | null
   confidence: number | null
-  summary: string | null
-  duplicateScore: number | null
-  sentiment: string | null
   modelName: string | null
   modelVersion: string | null
   explanation: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  category: string | null
+  department: string | null
+  duplicateScore: number | null
+  priority: $Enums.GrievancePriority | null
+  sentiment: string | null
+  severity: string | null
+  summary: string | null
 }
 
 export type AIClassificationCountAggregateOutputType = {
   id: number
   grievanceId: number
-  category: number
-  department: number
-  priority: number
   confidence: number
-  summary: number
-  duplicateScore: number
-  sentiment: number
   modelName: number
   modelVersion: number
   explanation: number
   createdAt: number
   updatedAt: number
+  category: number
+  department: number
+  duplicateScore: number
+  priority: number
+  sentiment: number
+  severity: number
+  summary: number
   _all: number
 }
 
@@ -102,52 +105,55 @@ export type AIClassificationSumAggregateInputType = {
 export type AIClassificationMinAggregateInputType = {
   id?: true
   grievanceId?: true
-  category?: true
-  department?: true
-  priority?: true
   confidence?: true
-  summary?: true
-  duplicateScore?: true
-  sentiment?: true
   modelName?: true
   modelVersion?: true
   explanation?: true
   createdAt?: true
   updatedAt?: true
+  category?: true
+  department?: true
+  duplicateScore?: true
+  priority?: true
+  sentiment?: true
+  severity?: true
+  summary?: true
 }
 
 export type AIClassificationMaxAggregateInputType = {
   id?: true
   grievanceId?: true
-  category?: true
-  department?: true
-  priority?: true
   confidence?: true
-  summary?: true
-  duplicateScore?: true
-  sentiment?: true
   modelName?: true
   modelVersion?: true
   explanation?: true
   createdAt?: true
   updatedAt?: true
+  category?: true
+  department?: true
+  duplicateScore?: true
+  priority?: true
+  sentiment?: true
+  severity?: true
+  summary?: true
 }
 
 export type AIClassificationCountAggregateInputType = {
   id?: true
   grievanceId?: true
-  category?: true
-  department?: true
-  priority?: true
   confidence?: true
-  summary?: true
-  duplicateScore?: true
-  sentiment?: true
   modelName?: true
   modelVersion?: true
   explanation?: true
   createdAt?: true
   updatedAt?: true
+  category?: true
+  department?: true
+  duplicateScore?: true
+  priority?: true
+  sentiment?: true
+  severity?: true
+  summary?: true
   _all?: true
 }
 
@@ -240,18 +246,19 @@ export type AIClassificationGroupByArgs<ExtArgs extends runtime.Types.Extensions
 export type AIClassificationGroupByOutputType = {
   id: string
   grievanceId: string
-  category: string | null
-  department: string | null
-  priority: $Enums.GrievancePriority | null
   confidence: number | null
-  summary: string | null
-  duplicateScore: number | null
-  sentiment: string | null
   modelName: string | null
   modelVersion: string | null
   explanation: string | null
   createdAt: Date
   updatedAt: Date
+  category: string | null
+  department: string | null
+  duplicateScore: number | null
+  priority: $Enums.GrievancePriority | null
+  sentiment: string | null
+  severity: string | null
+  summary: string | null
   _count: AIClassificationCountAggregateOutputType | null
   _avg: AIClassificationAvgAggregateOutputType | null
   _sum: AIClassificationSumAggregateOutputType | null
@@ -280,36 +287,38 @@ export type AIClassificationWhereInput = {
   NOT?: Prisma.AIClassificationWhereInput | Prisma.AIClassificationWhereInput[]
   id?: Prisma.StringFilter<"AIClassification"> | string
   grievanceId?: Prisma.StringFilter<"AIClassification"> | string
-  category?: Prisma.StringNullableFilter<"AIClassification"> | string | null
-  department?: Prisma.StringNullableFilter<"AIClassification"> | string | null
-  priority?: Prisma.EnumGrievancePriorityNullableFilter<"AIClassification"> | $Enums.GrievancePriority | null
   confidence?: Prisma.FloatNullableFilter<"AIClassification"> | number | null
-  summary?: Prisma.StringNullableFilter<"AIClassification"> | string | null
-  duplicateScore?: Prisma.FloatNullableFilter<"AIClassification"> | number | null
-  sentiment?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   modelName?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   modelVersion?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   explanation?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AIClassification"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AIClassification"> | Date | string
+  category?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  department?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  duplicateScore?: Prisma.FloatNullableFilter<"AIClassification"> | number | null
+  priority?: Prisma.EnumGrievancePriorityNullableFilter<"AIClassification"> | $Enums.GrievancePriority | null
+  sentiment?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  severity?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  summary?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
 }
 
 export type AIClassificationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  category?: Prisma.SortOrderInput | Prisma.SortOrder
-  department?: Prisma.SortOrderInput | Prisma.SortOrder
-  priority?: Prisma.SortOrderInput | Prisma.SortOrder
   confidence?: Prisma.SortOrderInput | Prisma.SortOrder
-  summary?: Prisma.SortOrderInput | Prisma.SortOrder
-  duplicateScore?: Prisma.SortOrderInput | Prisma.SortOrder
-  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   modelName?: Prisma.SortOrderInput | Prisma.SortOrder
   modelVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   explanation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  department?: Prisma.SortOrderInput | Prisma.SortOrder
+  duplicateScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  priority?: Prisma.SortOrderInput | Prisma.SortOrder
+  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
+  severity?: Prisma.SortOrderInput | Prisma.SortOrder
+  summary?: Prisma.SortOrderInput | Prisma.SortOrder
   grievance?: Prisma.GrievanceOrderByWithRelationInput
 }
 
@@ -319,36 +328,38 @@ export type AIClassificationWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AIClassificationWhereInput | Prisma.AIClassificationWhereInput[]
   OR?: Prisma.AIClassificationWhereInput[]
   NOT?: Prisma.AIClassificationWhereInput | Prisma.AIClassificationWhereInput[]
-  category?: Prisma.StringNullableFilter<"AIClassification"> | string | null
-  department?: Prisma.StringNullableFilter<"AIClassification"> | string | null
-  priority?: Prisma.EnumGrievancePriorityNullableFilter<"AIClassification"> | $Enums.GrievancePriority | null
   confidence?: Prisma.FloatNullableFilter<"AIClassification"> | number | null
-  summary?: Prisma.StringNullableFilter<"AIClassification"> | string | null
-  duplicateScore?: Prisma.FloatNullableFilter<"AIClassification"> | number | null
-  sentiment?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   modelName?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   modelVersion?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   explanation?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AIClassification"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AIClassification"> | Date | string
+  category?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  department?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  duplicateScore?: Prisma.FloatNullableFilter<"AIClassification"> | number | null
+  priority?: Prisma.EnumGrievancePriorityNullableFilter<"AIClassification"> | $Enums.GrievancePriority | null
+  sentiment?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  severity?: Prisma.StringNullableFilter<"AIClassification"> | string | null
+  summary?: Prisma.StringNullableFilter<"AIClassification"> | string | null
   grievance?: Prisma.XOR<Prisma.GrievanceScalarRelationFilter, Prisma.GrievanceWhereInput>
 }, "id" | "grievanceId">
 
 export type AIClassificationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  category?: Prisma.SortOrderInput | Prisma.SortOrder
-  department?: Prisma.SortOrderInput | Prisma.SortOrder
-  priority?: Prisma.SortOrderInput | Prisma.SortOrder
   confidence?: Prisma.SortOrderInput | Prisma.SortOrder
-  summary?: Prisma.SortOrderInput | Prisma.SortOrder
-  duplicateScore?: Prisma.SortOrderInput | Prisma.SortOrder
-  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   modelName?: Prisma.SortOrderInput | Prisma.SortOrder
   modelVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   explanation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  department?: Prisma.SortOrderInput | Prisma.SortOrder
+  duplicateScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  priority?: Prisma.SortOrderInput | Prisma.SortOrder
+  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
+  severity?: Prisma.SortOrderInput | Prisma.SortOrder
+  summary?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AIClassificationCountOrderByAggregateInput
   _avg?: Prisma.AIClassificationAvgOrderByAggregateInput
   _max?: Prisma.AIClassificationMaxOrderByAggregateInput
@@ -362,136 +373,144 @@ export type AIClassificationScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AIClassificationScalarWhereWithAggregatesInput | Prisma.AIClassificationScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AIClassification"> | string
   grievanceId?: Prisma.StringWithAggregatesFilter<"AIClassification"> | string
-  category?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
-  department?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
-  priority?: Prisma.EnumGrievancePriorityNullableWithAggregatesFilter<"AIClassification"> | $Enums.GrievancePriority | null
   confidence?: Prisma.FloatNullableWithAggregatesFilter<"AIClassification"> | number | null
-  summary?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
-  duplicateScore?: Prisma.FloatNullableWithAggregatesFilter<"AIClassification"> | number | null
-  sentiment?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
   modelName?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
   modelVersion?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
   explanation?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AIClassification"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AIClassification"> | Date | string
+  category?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
+  department?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
+  duplicateScore?: Prisma.FloatNullableWithAggregatesFilter<"AIClassification"> | number | null
+  priority?: Prisma.EnumGrievancePriorityNullableWithAggregatesFilter<"AIClassification"> | $Enums.GrievancePriority | null
+  sentiment?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
+  severity?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
+  summary?: Prisma.StringNullableWithAggregatesFilter<"AIClassification"> | string | null
 }
 
 export type AIClassificationCreateInput = {
   id?: string
-  category?: string | null
-  department?: string | null
-  priority?: $Enums.GrievancePriority | null
   confidence?: number | null
-  summary?: string | null
-  duplicateScore?: number | null
-  sentiment?: string | null
   modelName?: string | null
   modelVersion?: string | null
   explanation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: string | null
+  department?: string | null
+  duplicateScore?: number | null
+  priority?: $Enums.GrievancePriority | null
+  sentiment?: string | null
+  severity?: string | null
+  summary?: string | null
   grievance: Prisma.GrievanceCreateNestedOneWithoutAiClassificationInput
 }
 
 export type AIClassificationUncheckedCreateInput = {
   id?: string
   grievanceId: string
-  category?: string | null
-  department?: string | null
-  priority?: $Enums.GrievancePriority | null
   confidence?: number | null
-  summary?: string | null
-  duplicateScore?: number | null
-  sentiment?: string | null
   modelName?: string | null
   modelVersion?: string | null
   explanation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: string | null
+  department?: string | null
+  duplicateScore?: number | null
+  priority?: $Enums.GrievancePriority | null
+  sentiment?: string | null
+  severity?: string | null
+  summary?: string | null
 }
 
 export type AIClassificationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
   confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
+  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  severity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grievance?: Prisma.GrievanceUpdateOneRequiredWithoutAiClassificationNestedInput
 }
 
 export type AIClassificationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
   confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
+  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  severity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AIClassificationCreateManyInput = {
   id?: string
   grievanceId: string
-  category?: string | null
-  department?: string | null
-  priority?: $Enums.GrievancePriority | null
   confidence?: number | null
-  summary?: string | null
-  duplicateScore?: number | null
-  sentiment?: string | null
   modelName?: string | null
   modelVersion?: string | null
   explanation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: string | null
+  department?: string | null
+  duplicateScore?: number | null
+  priority?: $Enums.GrievancePriority | null
+  sentiment?: string | null
+  severity?: string | null
+  summary?: string | null
 }
 
 export type AIClassificationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
   confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
+  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  severity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AIClassificationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   grievanceId?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
   confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
+  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  severity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AIClassificationNullableScalarRelationFilter = {
@@ -502,18 +521,19 @@ export type AIClassificationNullableScalarRelationFilter = {
 export type AIClassificationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  department?: Prisma.SortOrder
-  priority?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
-  summary?: Prisma.SortOrder
-  duplicateScore?: Prisma.SortOrder
-  sentiment?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
   modelVersion?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  department?: Prisma.SortOrder
+  duplicateScore?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  sentiment?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  summary?: Prisma.SortOrder
 }
 
 export type AIClassificationAvgOrderByAggregateInput = {
@@ -524,35 +544,37 @@ export type AIClassificationAvgOrderByAggregateInput = {
 export type AIClassificationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  department?: Prisma.SortOrder
-  priority?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
-  summary?: Prisma.SortOrder
-  duplicateScore?: Prisma.SortOrder
-  sentiment?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
   modelVersion?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  department?: Prisma.SortOrder
+  duplicateScore?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  sentiment?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  summary?: Prisma.SortOrder
 }
 
 export type AIClassificationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grievanceId?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  department?: Prisma.SortOrder
-  priority?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
-  summary?: Prisma.SortOrder
-  duplicateScore?: Prisma.SortOrder
-  sentiment?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
   modelVersion?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  department?: Prisma.SortOrder
+  duplicateScore?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  sentiment?: Prisma.SortOrder
+  severity?: Prisma.SortOrder
+  summary?: Prisma.SortOrder
 }
 
 export type AIClassificationSumOrderByAggregateInput = {
@@ -598,34 +620,36 @@ export type NullableEnumGrievancePriorityFieldUpdateOperationsInput = {
 
 export type AIClassificationCreateWithoutGrievanceInput = {
   id?: string
-  category?: string | null
-  department?: string | null
-  priority?: $Enums.GrievancePriority | null
   confidence?: number | null
-  summary?: string | null
-  duplicateScore?: number | null
-  sentiment?: string | null
   modelName?: string | null
   modelVersion?: string | null
   explanation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: string | null
+  department?: string | null
+  duplicateScore?: number | null
+  priority?: $Enums.GrievancePriority | null
+  sentiment?: string | null
+  severity?: string | null
+  summary?: string | null
 }
 
 export type AIClassificationUncheckedCreateWithoutGrievanceInput = {
   id?: string
-  category?: string | null
-  department?: string | null
-  priority?: $Enums.GrievancePriority | null
   confidence?: number | null
-  summary?: string | null
-  duplicateScore?: number | null
-  sentiment?: string | null
   modelName?: string | null
   modelVersion?: string | null
   explanation?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: string | null
+  department?: string | null
+  duplicateScore?: number | null
+  priority?: $Enums.GrievancePriority | null
+  sentiment?: string | null
+  severity?: string | null
+  summary?: string | null
 }
 
 export type AIClassificationCreateOrConnectWithoutGrievanceInput = {
@@ -646,34 +670,36 @@ export type AIClassificationUpdateToOneWithWhereWithoutGrievanceInput = {
 
 export type AIClassificationUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
   confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
+  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  severity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AIClassificationUncheckedUpdateWithoutGrievanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
   confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplicateScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  priority?: Prisma.NullableEnumGrievancePriorityFieldUpdateOperationsInput | $Enums.GrievancePriority | null
+  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  severity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -681,75 +707,79 @@ export type AIClassificationUncheckedUpdateWithoutGrievanceInput = {
 export type AIClassificationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
-  category?: boolean
-  department?: boolean
-  priority?: boolean
   confidence?: boolean
-  summary?: boolean
-  duplicateScore?: boolean
-  sentiment?: boolean
   modelName?: boolean
   modelVersion?: boolean
   explanation?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  category?: boolean
+  department?: boolean
+  duplicateScore?: boolean
+  priority?: boolean
+  sentiment?: boolean
+  severity?: boolean
+  summary?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aIClassification"]>
 
 export type AIClassificationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
-  category?: boolean
-  department?: boolean
-  priority?: boolean
   confidence?: boolean
-  summary?: boolean
-  duplicateScore?: boolean
-  sentiment?: boolean
   modelName?: boolean
   modelVersion?: boolean
   explanation?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  category?: boolean
+  department?: boolean
+  duplicateScore?: boolean
+  priority?: boolean
+  sentiment?: boolean
+  severity?: boolean
+  summary?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aIClassification"]>
 
 export type AIClassificationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   grievanceId?: boolean
-  category?: boolean
-  department?: boolean
-  priority?: boolean
   confidence?: boolean
-  summary?: boolean
-  duplicateScore?: boolean
-  sentiment?: boolean
   modelName?: boolean
   modelVersion?: boolean
   explanation?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  category?: boolean
+  department?: boolean
+  duplicateScore?: boolean
+  priority?: boolean
+  sentiment?: boolean
+  severity?: boolean
+  summary?: boolean
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aIClassification"]>
 
 export type AIClassificationSelectScalar = {
   id?: boolean
   grievanceId?: boolean
-  category?: boolean
-  department?: boolean
-  priority?: boolean
   confidence?: boolean
-  summary?: boolean
-  duplicateScore?: boolean
-  sentiment?: boolean
   modelName?: boolean
   modelVersion?: boolean
   explanation?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  category?: boolean
+  department?: boolean
+  duplicateScore?: boolean
+  priority?: boolean
+  sentiment?: boolean
+  severity?: boolean
+  summary?: boolean
 }
 
-export type AIClassificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "category" | "department" | "priority" | "confidence" | "summary" | "duplicateScore" | "sentiment" | "modelName" | "modelVersion" | "explanation" | "createdAt" | "updatedAt", ExtArgs["result"]["aIClassification"]>
+export type AIClassificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "grievanceId" | "confidence" | "modelName" | "modelVersion" | "explanation" | "createdAt" | "updatedAt" | "category" | "department" | "duplicateScore" | "priority" | "sentiment" | "severity" | "summary", ExtArgs["result"]["aIClassification"]>
 export type AIClassificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   grievance?: boolean | Prisma.GrievanceDefaultArgs<ExtArgs>
 }
@@ -768,18 +798,19 @@ export type $AIClassificationPayload<ExtArgs extends runtime.Types.Extensions.In
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     grievanceId: string
-    category: string | null
-    department: string | null
-    priority: $Enums.GrievancePriority | null
     confidence: number | null
-    summary: string | null
-    duplicateScore: number | null
-    sentiment: string | null
     modelName: string | null
     modelVersion: string | null
     explanation: string | null
     createdAt: Date
     updatedAt: Date
+    category: string | null
+    department: string | null
+    duplicateScore: number | null
+    priority: $Enums.GrievancePriority | null
+    sentiment: string | null
+    severity: string | null
+    summary: string | null
   }, ExtArgs["result"]["aIClassification"]>
   composites: {}
 }
@@ -1206,18 +1237,19 @@ export interface Prisma__AIClassificationClient<T, Null = never, ExtArgs extends
 export interface AIClassificationFieldRefs {
   readonly id: Prisma.FieldRef<"AIClassification", 'String'>
   readonly grievanceId: Prisma.FieldRef<"AIClassification", 'String'>
-  readonly category: Prisma.FieldRef<"AIClassification", 'String'>
-  readonly department: Prisma.FieldRef<"AIClassification", 'String'>
-  readonly priority: Prisma.FieldRef<"AIClassification", 'GrievancePriority'>
   readonly confidence: Prisma.FieldRef<"AIClassification", 'Float'>
-  readonly summary: Prisma.FieldRef<"AIClassification", 'String'>
-  readonly duplicateScore: Prisma.FieldRef<"AIClassification", 'Float'>
-  readonly sentiment: Prisma.FieldRef<"AIClassification", 'String'>
   readonly modelName: Prisma.FieldRef<"AIClassification", 'String'>
   readonly modelVersion: Prisma.FieldRef<"AIClassification", 'String'>
   readonly explanation: Prisma.FieldRef<"AIClassification", 'String'>
   readonly createdAt: Prisma.FieldRef<"AIClassification", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AIClassification", 'DateTime'>
+  readonly category: Prisma.FieldRef<"AIClassification", 'String'>
+  readonly department: Prisma.FieldRef<"AIClassification", 'String'>
+  readonly duplicateScore: Prisma.FieldRef<"AIClassification", 'Float'>
+  readonly priority: Prisma.FieldRef<"AIClassification", 'GrievancePriority'>
+  readonly sentiment: Prisma.FieldRef<"AIClassification", 'String'>
+  readonly severity: Prisma.FieldRef<"AIClassification", 'String'>
+  readonly summary: Prisma.FieldRef<"AIClassification", 'String'>
 }
     
 
