@@ -1,8 +1,13 @@
+import path from "path";
+import fs from "fs";
 import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import { prisma } from "../services/prisma.service.js";
 import { createSLAForGrievance } from "../services/sla.service.js";
+import { createEscalation } from "../services/escalation.service.js";
 import { createAuditLog } from "../services/audit.service.js";
+import { createNotification } from "../services/notification.service.js";
+import { validateFileSignature } from "../middlewares/upload.middleware.js";
 import {
   addCommentToGrievance as addCommentService,
   addAttachmentToGrievance as addAttachmentService,
@@ -60,10 +65,18 @@ export async function createGrievance(
         tx,
       });
 
+      // SLA creation runs inside the same transaction as the grievance: if it
+      // fails the grievance is rolled back, so no orphaned/inconsistent state
+      // can remain. When the grievance has no department, no SLA is created.
+      await createSLAForGrievance(
+        grievance.id,
+        grievance.departmentId,
+        grievance.priority,
+        tx,
+      );
+
       return grievance;
     });
-
-    await createSLAForGrievance(result.id, departmentId, result.priority);
 
     res
       .status(201)
@@ -88,28 +101,62 @@ export async function getGrievances(
     const role = req.user.role;
     const userId = req.user.userId;
     const departmentId = req.user.departmentId;
-    let grievances;
+
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Number(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
+
+    let where: any = {};
 
     if (role === "CITIZEN") {
-      grievances = await prisma.grievance.findMany({
-        where: { citizenId: userId },
-        orderBy: { createdAt: "desc" },
-      });
+      where = { citizenId: userId };
     } else if (role === "OFFICER" || role === "DEPARTMENT_ADMIN") {
-      grievances = await prisma.grievance.findMany({
-        where: { departmentId: departmentId ?? undefined },
-        orderBy: { createdAt: "desc" },
-      });
+      // A staff user without a department must never be able to list
+      // grievances outside any scope (departmentId: undefined would match
+      // every grievance).
+      if (!departmentId) {
+        res.status(403).json({
+          error: "Forbidden: You are not assigned to a department",
+        });
+        return;
+      }
+      // Officers see only grievances actively assigned to them; department
+      // admins see the full department scope (per governance requirements).
+      where =
+        role === "OFFICER"
+          ? {
+              departmentId,
+              assignments: {
+                some: { officerId: userId, status: "ACTIVE" },
+              },
+            }
+          : { departmentId };
     } else if (role === "SUPER_ADMIN") {
-      grievances = await prisma.grievance.findMany({
-        orderBy: { createdAt: "desc" },
-      });
+      where = {};
     } else {
       res.status(403).json({ error: "Forbidden" });
       return;
     }
 
-    res.json({ grievances });
+    const [grievances, total] = await Promise.all([
+      prisma.grievance.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.grievance.count({ where }),
+    ]);
+
+    res.json({
+      grievances,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -150,11 +197,27 @@ export async function getGrievanceById(
       return;
     }
     if (
-      (role === "OFFICER" || role === "DEPARTMENT_ADMIN") &&
-      grievance.departmentId !== departmentId
+      role === "DEPARTMENT_ADMIN" &&
+      (!departmentId || grievance.departmentId !== departmentId)
     ) {
       res.status(403).json({ error: "Forbidden" });
       return;
+    }
+
+    // Officers may only access grievances actively assigned to them.
+    if (role === "OFFICER") {
+      if (!departmentId || grievance.departmentId !== departmentId) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
+      const assignment = await prisma.assignment.findFirst({
+        where: { grievanceId: id, officerId: userId, status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!assignment) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
     }
 
     res.json({ grievance });
@@ -199,12 +262,33 @@ export async function updateGrievance(
       return;
     }
 
+    // A citizen may only edit a grievance before the department starts
+    // processing it; afterwards the record is the official investigation basis.
+    if (role === "CITIZEN" && grievance.status !== "SUBMITTED") {
+      res.status(400).json({
+        error: "Cannot update a grievance after it has been processed",
+      });
+      return;
+    }
+
     if (
       (role === "OFFICER" || role === "DEPARTMENT_ADMIN") &&
       grievance.departmentId !== req.user.departmentId
     ) {
       res.status(403).json({ error: "Forbidden" });
       return;
+    }
+
+    // Officers may only update grievances actively assigned to them.
+    if (role === "OFFICER") {
+      const assignment = await prisma.assignment.findFirst({
+        where: { grievanceId: id, officerId: userId, status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!assignment) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
     }
 
     const updatedGrievance = await prisma.$transaction(async (tx) => {
@@ -346,8 +430,31 @@ export async function updateGrievanceStatus(
     const updatedGrievance = await prisma.$transaction(async (tx) => {
       const updated = await tx.grievance.update({
         where: { id },
-        data: { status },
+        data: {
+          status,
+          // Record when the grievance reached RESOLVED for lifecycle reporting.
+          ...(status === "RESOLVED" && { resolvedAt: new Date() }),
+        },
       });
+
+      // RESOLVED or REJECTED terminates the SLA lifecycle:
+      // - RESOLVED completes the SLA (work finished, deadlines met)
+      // - REJECTED completes the SLA so a terminal grievance can never
+      //   falsely accrue a WARNING/BREACHED state and notify the citizen.
+      if (status === "RESOLVED" || status === "REJECTED") {
+        await tx.sLA.updateMany({
+          where: {
+            grievanceId: id,
+            status: { in: ["ACTIVE", "WARNING", "BREACHED"] },
+          },
+          data: {
+            status: "COMPLETED",
+            ...(status === "RESOLVED" && {
+              resolutionCompletedAt: new Date(),
+            }),
+          },
+        });
+      }
 
       await createAuditLog({
         userId,
@@ -360,6 +467,14 @@ export async function updateGrievanceStatus(
       });
 
       return updated;
+    });
+
+    await createNotification({
+      userId: grievance.citizenId,
+      title: "Grievance status updated",
+      message: `Your grievance status has changed to ${status}.`,
+      type: "STATUS_CHANGED",
+      grievanceId: id,
     });
 
     res.json({
@@ -406,7 +521,8 @@ export async function deleteGrievance(
     }
 
     await prisma.$transaction(async (tx) => {
-      await tx.grievance.delete({ where: { id } });
+      // Insert the audit entry BEFORE deleting the grievance; an insert after
+      // the delete would violate the foreign key and be silently dropped.
       await createAuditLog({
         userId,
         grievanceId: id,
@@ -414,6 +530,7 @@ export async function deleteGrievance(
         oldValue: grievance,
         tx,
       });
+      await tx.grievance.delete({ where: { id } });
     });
 
     res.json({ message: "Grievance deleted successfully" });
@@ -529,6 +646,13 @@ export async function assignGrievance(
     }
 
     const result = await prisma.$transaction(async (tx) => {
+      // Reassignment: revoke any previous ACTIVE assignment for this
+      // grievance so the former officer no longer holds active authority.
+      await tx.assignment.updateMany({
+        where: { grievanceId: id, status: "ACTIVE" },
+        data: { status: "CANCELLED" },
+      });
+
       const updatedGrievance = await tx.grievance.update({
         where: { id },
         data: {
@@ -557,6 +681,22 @@ export async function assignGrievance(
       });
 
       return updatedGrievance;
+    });
+
+    await createNotification({
+      userId: grievance.citizenId,
+      title: "Grievance assigned",
+      message: "Your grievance has been assigned to an officer.",
+      type: "ASSIGNMENT_CHANGED",
+      grievanceId: id,
+    });
+
+    await createNotification({
+      userId: officerId,
+      title: "New grievance assigned",
+      message: `You have been assigned grievance ${grievance.ticketId}.`,
+      type: "ASSIGNMENT_CHANGED",
+      grievanceId: id,
     });
 
     res.json({ message: "Grievance assigned successfully", grievance: result });
@@ -595,6 +735,24 @@ export async function addGrievanceComment(
       message,
       isInternal === true,
     );
+
+    // Notify the citizen when staff comment publicly on their grievance
+    // (internal comments are staff-only and do not trigger notifications).
+    if (isInternal !== true && req.user.role !== "CITIZEN") {
+      const grievanceOwner = await prisma.grievance.findUnique({
+        where: { id },
+        select: { citizenId: true },
+      });
+      if (grievanceOwner && grievanceOwner.citizenId !== req.user.userId) {
+        await createNotification({
+          userId: grievanceOwner.citizenId,
+          title: "New comment on your grievance",
+          message: "A staff member added a comment to your grievance.",
+          type: "COMMENT_ADDED",
+          grievanceId: id,
+        });
+      }
+    }
 
     res.status(201).json({ message: "Comment added successfully", comment });
   } catch (error: any) {
@@ -644,17 +802,34 @@ export async function getGrievanceComments(
       whereClause.isInternal = false;
     }
 
-    const comments = await prisma.comment.findMany({
-      where: whereClause,
-      include: {
-        user: {
-          select: { id: true, name: true, role: true },
-        },
-      },
-      orderBy: { createdAt: "asc" },
-    });
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Number(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
 
-    res.json({ comments });
+    const [comments, total] = await Promise.all([
+      prisma.comment.findMany({
+        where: whereClause,
+        include: {
+          user: {
+            select: { id: true, name: true, role: true },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+        skip,
+        take: limit,
+      }),
+      prisma.comment.count({ where: whereClause }),
+    ]);
+
+    res.json({
+      comments,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -666,6 +841,12 @@ export async function uploadGrievanceAttachment(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
+  // The multer-written file is removed on EVERY non-success path so failed or
+  // unauthorized uploads can never accumulate orphaned files on disk. It is
+  // kept only when the attachment record is successfully created.
+  let uploadedFilePath: string | null = null;
+  let keepFile = false;
+
   try {
     if (!req.user) {
       res.status(401).json({ error: "Unauthorized" });
@@ -677,6 +858,21 @@ export async function uploadGrievanceAttachment(
 
     if (!file) {
       res.status(400).json({ error: "No file uploaded or invalid file type" });
+      return;
+    }
+
+    uploadedFilePath = path.join(process.cwd(), "uploads", file.filename);
+
+    // Verify the actual file content matches the declared MIME type (the
+    // client-supplied MIME header is trivially spoofable).
+    const signatureValid = await validateFileSignature(
+      uploadedFilePath,
+      file.mimetype,
+    );
+    if (!signatureValid) {
+      res.status(400).json({
+        error: "File content does not match the declared file type",
+      });
       return;
     }
 
@@ -692,6 +888,7 @@ export async function uploadGrievanceAttachment(
       file.originalname,
     );
 
+    keepFile = true;
     res.status(201).json({ message: "File uploaded successfully", attachment });
   } catch (error: any) {
     if (error.message?.includes("Forbidden")) {
@@ -699,6 +896,11 @@ export async function uploadGrievanceAttachment(
       return;
     }
     next(error);
+  } finally {
+    // Keep the file only on success; delete it in every other case.
+    if (uploadedFilePath && !keepFile) {
+      await fs.promises.unlink(uploadedFilePath).catch(() => {});
+    }
   }
 }
 
@@ -749,6 +951,70 @@ export async function getGrievanceAttachments(
   }
 }
 
+// GET /api/grievances/:id/attachments/:attachmentId
+export async function downloadGrievanceAttachment(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const id = req.params.id as string;
+    const attachmentId = req.params.attachmentId as string;
+
+    const attachment = await prisma.attachment.findUnique({
+      where: { id: attachmentId },
+    });
+
+    if (!attachment || attachment.grievanceId !== id) {
+      res.status(404).json({ error: "Attachment not found" });
+      return;
+    }
+
+    const allowed = await canAccessGrievanceSubResource(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    });
+
+    if (!allowed) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    // fileUrl is server-generated as `/uploads/<random-filename>`; resolve it
+    // with path.basename so traversal attempts can never escape the uploads
+    // directory.
+    const uploadsDir = path.join(process.cwd(), "uploads");
+    const fileName = path.basename(attachment.fileUrl);
+    const filePath = path.join(uploadsDir, fileName);
+
+    if (!filePath.startsWith(uploadsDir)) {
+      res.status(400).json({ error: "Invalid attachment path" });
+      return;
+    }
+
+    try {
+      await fs.promises.access(filePath);
+    } catch {
+      res.status(404).json({ error: "Attachment file not found" });
+      return;
+    }
+
+    const safeName = (attachment.fileName || fileName).replace(
+      /["\\\r\n]/g,
+      "_",
+    );
+    res.download(filePath, safeName);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // POST /api/grievances/:id/escalate
 export async function escalateGrievance(
   req: AuthenticatedRequest,
@@ -762,10 +1028,18 @@ export async function escalateGrievance(
     }
 
     const id = req.params.id as string;
+    const { level, reason } = req.body;
     const userId = req.user.userId;
+
+    if (!level || !reason) {
+      res
+        .status(400)
+        .json({ error: "Escalation level and reason are required" });
+      return;
+    }
+
     const grievance = await prisma.grievance.findUnique({
       where: { id },
-      include: { sla: true },
     });
 
     if (!grievance) {
@@ -774,44 +1048,100 @@ export async function escalateGrievance(
     }
 
     const role = req.user.role;
+    const departmentId = req.user.departmentId;
+
+    // Ownership/department boundary:
+    // - CITIZEN: only their own grievance
+    // - OFFICER / DEPARTMENT_ADMIN: only grievances in their department
+    // - SUPER_ADMIN: system-wide
     if (role === "CITIZEN" && grievance.citizenId !== userId) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }
 
-    const updatedGrievance = await prisma.$transaction(async (tx) => {
-      const updated = await tx.grievance.update({
-        where: { id },
-        data: {
-          priority: "CRITICAL",
-          status: "ESCALATED",
-        },
+    if (
+      (role === "OFFICER" || role === "DEPARTMENT_ADMIN") &&
+      (!departmentId || grievance.departmentId !== departmentId)
+    ) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    // Officers may only escalate grievances actively assigned to them.
+    if (role === "OFFICER") {
+      const assignment = await prisma.assignment.findFirst({
+        where: { grievanceId: id, officerId: userId, status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!assignment) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
+    }
+
+    // Escalation eligibility: only grievances in a state that permits
+    // transitioning to ESCALATED may be escalated.
+    if (!canTransitionGrievanceStatus(grievance.status, "ESCALATED")) {
+      res.status(400).json({
+        error: `Grievance cannot be escalated from status ${grievance.status}`,
+      });
+      return;
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Prevent duplicate open escalations for the same grievance.
+      const existing = await tx.escalation.findFirst({
+        where: { grievanceId: id, status: "OPEN" },
       });
 
-      if (grievance.sla) {
-        await tx.sLA.update({
-          where: { id: grievance.sla.id },
-          data: { status: "BREACHED" },
-        });
+      if (existing) {
+        throw new Error("Grievance is already escalated");
       }
+
+      const escalation = await createEscalation(
+        id,
+        userId,
+        level,
+        reason,
+        tx,
+      );
+
+      const updated = await tx.grievance.update({
+        where: { id },
+        data: { status: "ESCALATED" },
+      });
 
       await createAuditLog({
         userId,
         grievanceId: id,
         action: "ESCALATE_GRIEVANCE",
         oldValue: { status: grievance.status, priority: grievance.priority },
-        newValue: { status: "ESCALATED", priority: "CRITICAL" },
+        newValue: { status: "ESCALATED", level },
+        metadata: { reason },
         tx,
       });
 
-      return updated;
+      return { escalation, updated };
+    });
+
+    await createNotification({
+      userId: grievance.citizenId,
+      title: "Grievance escalated",
+      message: "Your grievance has been escalated for urgent handling.",
+      type: "ESCALATION_CREATED",
+      grievanceId: id,
     });
 
     res.json({
       message: "Grievance escalated successfully",
-      grievance: updatedGrievance,
+      escalation: result.escalation,
+      grievance: result.updated,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.message === "Grievance is already escalated") {
+      res.status(409).json({ error: error.message });
+      return;
+    }
     next(error);
   }
 }
@@ -899,6 +1229,59 @@ export async function addGrievanceFeedback(
   }
 }
 
+// GET /api/grievances/:id/feedback
+export async function getGrievanceFeedback(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const id = req.params.id as string;
+
+    const grievance = await prisma.grievance.findUnique({ where: { id } });
+
+    if (!grievance) {
+      res.status(404).json({ error: "Grievance not found" });
+      return;
+    }
+
+    const allowed = await canAccessGrievanceSubResource(id, {
+      userId: req.user.userId,
+      role: req.user.role,
+      departmentId: req.user.departmentId ?? null,
+    });
+
+    if (!allowed) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    // Citizens see only their own feedback; staff see all feedback for the
+    // grievance (ratings are part of the governance record).
+    const where =
+      req.user.role === "CITIZEN"
+        ? { grievanceId: id, userId: req.user.userId }
+        : { grievanceId: id };
+
+    const feedback = await prisma.feedback.findMany({
+      where,
+      include: {
+        user: { select: { id: true, name: true, role: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json({ feedback });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // POST /api/grievances/:id/reopen
 export async function reopenGrievance(
   req: AuthenticatedRequest,
@@ -948,7 +1331,7 @@ export async function reopenGrievance(
             message: `Grievance reopened by citizen. Reason: ${reason}`,
             grievanceId: id,
             userId: userId,
-          } as any,
+          },
         });
       }
 
@@ -963,6 +1346,22 @@ export async function reopenGrievance(
 
       return updatedGrievance;
     });
+
+    // Notify the officer holding the active assignment (if any) so the
+    // reopened grievance re-enters the workflow.
+    const activeAssignment = await prisma.assignment.findFirst({
+      where: { grievanceId: id, status: "ACTIVE" },
+      select: { officerId: true },
+    });
+    if (activeAssignment) {
+      await createNotification({
+        userId: activeAssignment.officerId,
+        title: "Grievance reopened",
+        message: `Grievance ${grievance.ticketId} was reopened by the citizen.`,
+        type: "STATUS_CHANGED",
+        grievanceId: id,
+      });
+    }
 
     res.json({
       message: "Grievance reopened successfully",

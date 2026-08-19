@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import path from "path";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
@@ -18,15 +17,16 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   })
 );
 
 app.use(express.json());
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+// Uploaded files are NOT served statically. They are only accessible through
+// the protected attachment download endpoint which enforces authentication
+// and grievance-level authorization.
 
 app.get("/api/v1/health", (_req, res) => {
   res.json({
@@ -44,6 +44,11 @@ app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/slas", slaRoutes);
 app.use("/api/v1/escalations", escalationRoutes);
 app.use("/api/v1/audit-logs", auditRoutes);
+
+// JSON 404 for unknown routes (must be registered after all routes)
+app.use((_req, res) => {
+  res.status(404).json({ success: false, error: "Route not found" });
+});
 
 // Centralized Error Handler (must be registered after routes)
 app.use(errorHandler);

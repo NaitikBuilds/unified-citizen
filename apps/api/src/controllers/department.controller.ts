@@ -1,10 +1,13 @@
-import { Request, Response } from "express";
+import { Response, NextFunction } from "express";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import { prisma } from "../services/prisma.service.js";
+import { createAuditLog } from "../services/audit.service.js";
 
 // GET /api/departments
 export async function getAllDepartments(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const departments = await prisma.department.findMany({
@@ -26,14 +29,15 @@ export async function getAllDepartments(
 
     res.json({ departments });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }
 
 // GET /api/departments/:id
 export async function getDepartmentById(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const id = req.params.id as string;
@@ -60,22 +64,18 @@ export async function getDepartmentById(
 
     res.json({ department });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }
 
 // Admin: POST /api/departments
 export async function createDepartment(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const { name, description, code } = req.body;
-
-    if (!name) {
-      res.status(400).json({ error: "Department name is required" });
-      return;
-    }
 
     const department = await prisma.department.create({
       data: {
@@ -88,22 +88,45 @@ export async function createDepartment(
       },
     });
 
+    await createAuditLog({
+      userId: req.user?.userId,
+      action: "CREATE_DEPARTMENT",
+      newValue: {
+        id: department.id,
+        name: department.name,
+        code: department.code,
+      },
+      metadata: { departmentId: department.id },
+    });
+
     res
       .status(201)
       .json({ message: "Department created successfully", department });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    // Central handler maps Prisma P2002 (duplicate name/code) to 409.
+    next(error);
   }
 }
 
 // Admin: PATCH /api/departments/:id
 export async function updateDepartment(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const id = req.params.id as string;
     const { name, description } = req.body;
+
+    const existing = await prisma.department.findUnique({
+      where: { id },
+      select: { id: true, name: true, code: true, description: true },
+    });
+
+    if (!existing) {
+      res.status(404).json({ error: "Department not found" });
+      return;
+    }
 
     const department = await prisma.department.update({
       where: { id },
@@ -113,17 +136,30 @@ export async function updateDepartment(
       },
     });
 
+    await createAuditLog({
+      userId: req.user?.userId,
+      action: "UPDATE_DEPARTMENT",
+      oldValue: existing,
+      newValue: {
+        id: department.id,
+        name: department.name,
+        description: department.description,
+      },
+      metadata: { departmentId: id },
+    });
+
     res.json({ message: "Department updated successfully", department });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }
 
 // Admin: DELETE /api/departments/:id
 // Admin: DELETE /api/departments/:id
 export async function deleteDepartment(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
+  next: NextFunction,
 ): Promise<void> {
   try {
     const id = req.params.id as string;
@@ -163,11 +199,19 @@ export async function deleteDepartment(
       },
     });
 
+    await createAuditLog({
+      userId: req.user?.userId,
+      action: "DEACTIVATE_DEPARTMENT",
+      oldValue: { id: department.id, isActive: true },
+      newValue: { id: department.id, isActive: false },
+      metadata: { departmentId: id },
+    });
+
     res.json({
       message: "Department deactivated successfully",
       department: updatedDepartment,
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 }

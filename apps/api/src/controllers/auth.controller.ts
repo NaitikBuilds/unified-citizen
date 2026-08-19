@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { prisma } from "../services/prisma.service.js";
+import { createAuditLog } from "../services/audit.service.js";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 import {
   generateAccessToken,
@@ -42,6 +43,13 @@ export async function register(req: Request, res: Response): Promise<void> {
       select: {
         id: true,
       },
+    });
+
+    await createAuditLog({
+      userId: user.id,
+      action: "USER_REGISTERED",
+      newValue: { role: "CITIZEN" },
+      metadata: { email: normalizedEmail },
     });
 
     res.status(201).json({
@@ -116,6 +124,12 @@ export async function login(req: Request, res: Response): Promise<void> {
         userId: user.id,
         expiresAt,
       },
+    });
+
+    await createAuditLog({
+      userId: user.id,
+      action: "LOGIN",
+      metadata: { method: "password" },
     });
 
     res.status(200).json({
@@ -279,6 +293,13 @@ export async function logout(
       await prisma.refreshToken.updateMany({
         where: { userId: req.user.userId, revokedAt: null },
         data: { revokedAt: new Date() },
+      });
+    }
+
+    if (req.user) {
+      await createAuditLog({
+        userId: req.user.userId,
+        action: "LOGOUT",
       });
     }
 

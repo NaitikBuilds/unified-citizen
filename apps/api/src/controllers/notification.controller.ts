@@ -1,28 +1,45 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware.js';
 import { prisma } from '../services/prisma.service.js';
 
 // GET /api/notifications
-export async function getNotifications(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getNotifications(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    const notifications = await prisma.notification.findMany({
-      where: { userId: req.user.userId },
-      orderBy: { createdAt: 'desc' },
-    });
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Number(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
 
-    res.json({ notifications });
+    const [notifications, total] = await Promise.all([
+      prisma.notification.findMany({
+        where: { userId: req.user.userId },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.notification.count({ where: { userId: req.user.userId } }),
+    ]);
+
+    res.json({
+      notifications,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
 
 // PATCH /api/notifications/:id/read
-export async function markNotificationAsRead(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function markNotificationAsRead(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -45,6 +62,6 @@ export async function markNotificationAsRead(req: AuthenticatedRequest, res: Res
 
     res.json({ message: 'Notification marked as read' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 }
