@@ -7,14 +7,16 @@ interface CreateNotificationParams {
   message: string;
   type?: NotificationType;
   grievanceId?: string;
+  tx?: any;
 }
 
 // Notification failures must never break the primary workflow they accompany
 // (a status change, assignment, escalation, etc.), so creation errors are
 // logged and swallowed instead of thrown.
 export async function createNotification(params: CreateNotificationParams) {
+  const db = params.tx || prisma;
   try {
-    const notification = await prisma.notification.create({
+    const notification = await db.notification.create({
       data: {
         userId: params.userId,
         title: params.title,
