@@ -381,6 +381,7 @@ export async function getGrievanceById(
       include: {
         citizen: { select: { id: true, name: true, email: true } },
         department: { select: { id: true, name: true } },
+        aiClassification: true,
       },
     });
 

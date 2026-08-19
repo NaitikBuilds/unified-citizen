@@ -18,6 +18,7 @@ import { apiNotificationService } from './adapters/notification.adapter'
 import { apiSlaService } from './adapters/sla.adapter'
 import { apiEscalationService } from './adapters/escalation.adapter'
 import { apiAuditService } from './adapters/audit.adapter'
+import { apiAiService } from './adapters/ai.adapter'
 
 import { mockAuthService } from '../mocks/services/auth.service'
 import { mockUserService } from '../mocks/services/user.service'
@@ -40,8 +41,8 @@ import { mockAiService } from '../mocks/services/ai.service'
  * Components must never branch on `config.useMockApi` directly — they consume
  * `services.<domain>` and remain agnostic to the source.
  *
- * Services without a backend endpoint yet (escalation, analytics, audit,
- * AI) are wired to mocks in both modes until the backend exposes them.
+ * Services without a backend endpoint yet (analytics) are wired to mocks
+ * in both modes until the backend exposes them.
  */
 export const services = {
   auth: config.useMockApi ? mockAuthService : apiAuthService,
@@ -64,7 +65,10 @@ export const services = {
   // Audit is now REAL API backed (V6.0c: GET /api/v1/audit-logs endpoints);
   // mock mode remains available for standalone development.
   audit: config.useMockApi ? mockAuditService : apiAuditService,
-  ai: mockAiService,
+
+  // AI is now REAL API backed (Phase 7.1: POST /api/v1/chat and persisted AI classification);
+  // mock mode remains available for standalone development.
+  ai: config.useMockApi ? mockAiService : apiAiService,
 } satisfies {
   auth: AuthService
   user: UserService

@@ -1,4 +1,5 @@
 import type { OfficerSummary } from './department'
+import type { AiClassification } from './ai'
 
 /**
  * Grievance statuses match the backend enum exactly
@@ -51,6 +52,7 @@ export type Grievance = {
   address?: string | null
   latitude?: number | null
   longitude?: number | null
+  aiClassification?: AiClassification | null
   createdAt: string
   updatedAt?: string | null
   resolvedAt?: string | null

@@ -23,6 +23,7 @@ export type AiClassification = {
   summary?: string | null
   duplicateScore?: number | null
   sentiment?: string | null
+  severity?: string | null
   modelName?: string | null
   modelVersion?: string | null
   explanation?: string | null

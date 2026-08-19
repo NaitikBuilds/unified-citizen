@@ -29,6 +29,7 @@ import { PriorityBadge, StatusBadge } from '../../components/grievance'
 import { SLAIndicator } from '../../components/sla/SLAIndicator'
 import { GrievanceTimeline } from '../../components/timeline'
 import { AuditTimeline } from '../../components/audit'
+import { AIAnalysisCard, DuplicateWarning } from '../../components/ai'
 import {
   Button,
   Card,
@@ -641,6 +642,10 @@ export function DepartmentGrievanceDetailPage() {
     () => (id ? services.grievance.getById(id) : Promise.reject(new Error('Missing grievance id'))),
     [id],
   )
+  const aiQuery = useAsync(
+    () => (id ? services.ai.analyzeGrievance(id) : Promise.reject(new Error('Missing grievance id'))),
+    [id],
+  )
 
   if (grievanceQuery.isLoading) {
     return <DetailSkeleton />
@@ -770,6 +775,12 @@ export function DepartmentGrievanceDetailPage() {
 
         {/* Right rail */}
         <div className="space-y-4">
+          <AIAnalysisCard
+            result={aiQuery.data}
+            isLoading={aiQuery.isLoading}
+            onRetry={aiQuery.reload}
+          />
+          <DuplicateWarning matches={aiQuery.data?.duplicates ?? []} />
           <SlaSection grievanceId={grievance.id} />
         </div>
       </div>
