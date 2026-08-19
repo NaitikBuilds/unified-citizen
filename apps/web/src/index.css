@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
+
+@theme inline {
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-poppins);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(98% 0 0);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(70% 0.1 270);
+  border-radius: 3px;
+}
+
+/* DaisyUI theme overrides to match codesarthi.in */
+:root[data-theme="light"] {
+  --color-primary: oklch(45% 0.24 277);
+  --color-primary-content: oklch(93% 0.034 273);
+  --color-secondary: oklch(65% 0.241 354);
+  --color-secondary-content: oklch(94% 0.028 342);
+  --color-accent: oklch(77% 0.152 182);
+  --color-accent-content: oklch(38% 0.063 188);
+  --color-success: oklch(76% 0.177 163);
+  --color-success-content: oklch(37% 0.077 169);
+  --color-warning: oklch(82% 0.189 84);
+  --color-warning-content: oklch(41% 0.112 46);
+  --color-error: oklch(71% 0.194 13);
+  --color-error-content: oklch(27% 0.105 12);
+}
