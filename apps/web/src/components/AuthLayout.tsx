@@ -1,13 +1,11 @@
 import { Outlet, Link } from "react-router-dom";
 import {
-  Shield,
   Brain,
   Clock,
   CheckCircle2,
   ChevronRight,
   ArrowLeft,
 } from "lucide-react";
-import Logo from "./Logo";
 
 export default function AuthLayout() {
   return (
@@ -56,16 +54,16 @@ export default function AuthLayout() {
               <div className="absolute bottom-3 left-3 text-white/20 text-xs font-mono select-none">+</div>
               <div className="absolute bottom-3 right-3 text-white/20 text-xs font-mono select-none">+</div>
 
-              {/* Large Robot / Shield Emblem */}
+              {/* CIVIX Circular Logo Emblem */}
               <div className="w-full py-8 flex items-center justify-center">
-                <div className="relative w-36 h-36 rounded-3xl flex items-center justify-center shadow-xl" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <Shield className="w-20 h-20 text-white stroke-[1.5]" />
+                <div className="relative w-36 h-36 rounded-full flex items-center justify-center shadow-xl overflow-hidden" style={{ background: '#1a1a1a', border: '2px solid rgba(255,255,255,0.15)' }}>
+                  <img src="/civix-logo.png" alt="CIVIX" className="w-full h-full object-cover rounded-full" />
                 </div>
               </div>
 
               {/* Brand Title */}
               <h2 className="text-3xl font-extrabold text-white tracking-tight">
-                Unified Citizen
+                CIVIX
               </h2>
 
               <div className="mt-5 grid grid-cols-2 gap-3 text-xs" style={{ color: '#aaa' }}>
@@ -111,7 +109,7 @@ export default function AuthLayout() {
 
       {/* Footer */}
       <footer className="relative z-20 py-5 px-6 max-w-7xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs" style={{ color: '#444', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <span>© 2026 – Unified Citizen Governance Ecosystem</span>
+        <span>© 2026 – CIVIX Governance Platform</span>
         <div className="flex gap-6">
           <Link to="/" className="hover:text-white transition">Privacy Policy</Link>
           <Link to="/" className="hover:text-white transition">Terms of Governance</Link>

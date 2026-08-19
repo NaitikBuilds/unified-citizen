@@ -13,13 +13,13 @@ export default function Logo({ size = "md", showText = true }: LogoProps) {
   return (
     <div className="flex items-center gap-2">
       <img
-        src="/favicon.svg"
-        alt="Unified Citizen"
-        className={sizes[size].icon}
+        src="/civix-logo.png"
+        alt="CIVIX"
+        className={`${sizes[size].icon} rounded-full object-cover border-2 border-white/20 shadow-sm`}
       />
       {showText && (
         <span className={`font-bold ${sizes[size].text} text-primary`}>
-          Unified Citizen
+          CIVIX
         </span>
       )}
     </div>

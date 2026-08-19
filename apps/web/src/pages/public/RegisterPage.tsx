@@ -11,7 +11,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Circle,
-  Sparkles,
 } from "lucide-react";
 
 export default function RegisterPage() {

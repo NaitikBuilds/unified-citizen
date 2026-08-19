@@ -16,7 +16,7 @@ export default function ChatPage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Hello! I'm your AI assistant for the Unified Citizen Governance Platform. I can help you with:\n\n- Checking the status of your grievances\n- Understanding the grievance process\n- Answering questions about government services\n- Guidance on submitting a new grievance\n\nHow can I help you today?",
+        "Hello! I'm your AI assistant for the CIVIX Governance Platform. I can help you with:\n\n- Checking the status of your grievances\n- Understanding the grievance process\n- Answering questions about government services\n- Guidance on submitting a new grievance\n\nHow can I help you today?",
       timestamp: new Date(),
     },
   ]);

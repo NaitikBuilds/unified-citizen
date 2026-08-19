@@ -143,7 +143,7 @@ export default function LoginPage() {
         {/* Navigation & Help Links */}
         <div className="flex items-center justify-between text-xs text-gray-400 pt-1">
           <div>
-            New to Unified Citizen?{" "}
+            New to CIVIX?{" "}
             <Link to="/register" className="text-white hover:opacity-70 font-semibold underline underline-offset-2">
               Sign Up
             </Link>

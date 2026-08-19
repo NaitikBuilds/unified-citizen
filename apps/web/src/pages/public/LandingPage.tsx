@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Brain,
@@ -137,74 +137,67 @@ export default function LandingPage() {
         />
       </div>
 
-      {/* ─── NAVBAR ─────────────────────────────────────────── */}
-      <header
-        className="sticky top-0 z-50 border-b"
-        style={{ background: "rgba(0,0,0,0.85)", borderColor: "rgba(255,255,255,0.08)", backdropFilter: "blur(16px)" }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div
-              className="p-2 rounded-xl border transition"
-              style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)" }}
-            >
-              <Logo size="sm" showText={false} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-white">Unified Citizen</span>
-              <span className="text-[10px] tracking-wider uppercase font-semibold" style={{ color: "#888" }}>
-                Governance Platform
-              </span>
-            </div>
+      {/* ─── FLOATING NAVBAR ──────────────────────────────────── */}
+      <div className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-2">
+        <header
+          className="max-w-6xl mx-auto px-5 h-12 flex items-center justify-between rounded-full"
+          style={{ background: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.1)" }}
+        >
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <Logo size="sm" showText={false} />
+            <span className="text-lg font-extrabold tracking-tight text-black">CIVIX</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: "#aaa" }}>
-            <a href="#features" className="hover:text-white transition flex items-center gap-1.5">
-              Features <ChevronDown className="w-3.5 h-3.5 opacity-60" />
-            </a>
-            <a href="#workflow" className="hover:text-white transition flex items-center gap-1.5">
-              How It Works <ChevronDown className="w-3.5 h-3.5 opacity-60" />
-            </a>
-            <a href="#impact" className="hover:text-white transition">Impact & Metrics</a>
-            <a href="#portals" className="hover:text-white transition">Portals</a>
-            <a href="#faq" className="hover:text-white transition">FAQ</a>
+          <nav className="hidden md:flex items-center gap-1 text-[13px] font-semibold text-black">
+            {[
+              { href: "#features", label: "Features" },
+              { href: "#workflow", label: "How It Works" },
+              { href: "#impact", label: "Impact" },
+              { href: "#portals", label: "Portals" },
+              { href: "#faq", label: "FAQ" },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="px-3.5 py-1.5 rounded-full hover:bg-gray-100 hover:text-black transition-all duration-200"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Link
               to="/login"
-              className="px-4 py-2 text-sm font-medium rounded-full transition"
-              style={{ color: "#ccc", border: "1px solid rgba(255,255,255,0.12)" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#ccc")}
+              className="px-4 py-1.5 text-[13px] font-semibold rounded-full text-black hover:bg-gray-100 transition-all"
             >
               Sign In
             </Link>
             <Link
               to="/register"
-              className="px-5 py-2.5 text-sm font-bold text-black bg-white rounded-full hover:bg-gray-100 transition"
+              className="px-4 py-1.5 text-[13px] font-bold text-white bg-black rounded-full hover:bg-gray-800 transition-all"
             >
               Sign Up
             </Link>
           </div>
-        </div>
-      </header>
+        </header>
+      </div>
 
       {/* ─── HERO ───────────────────────────────────────────── */}
       <main className="relative z-10">
-        <section className="pt-16 sm:pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+        <section className="pt-24 sm:pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
           {/* Badge pill */}
           <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium mb-8"
             style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#ccc" }}
           >
             <Sparkles className="w-4 h-4" style={{ color: "#fff" }} />
-            AI-Powered Citizen Grievance & Governance Ecosystem
+            AI-Powered Citizen Grievance & Governance Platform
           </div>
 
           {/* Headline */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.1]">
-            Unified Citizen is an Ecosystem designed for{" "}
+            CIVIX is an Ecosystem designed for{" "}
             <span style={{ color: "#aaa" }}>Transparent Governance.</span>
           </h1>
 
@@ -226,7 +219,7 @@ export default function LandingPage() {
               className="px-8 py-3.5 rounded-full text-base font-medium text-white transition flex items-center gap-2"
               style={{ border: "1px solid rgba(255,255,255,0.18)" }}
             >
-              About Unified Citizen
+              About CIVIX
             </Link>
           </div>
 
@@ -251,7 +244,7 @@ export default function LandingPage() {
                     <div className="w-3 h-3 rounded-full" style={{ background: "rgba(40,200,64,0.8)" }} />
                   </div>
                   <span className="text-xs font-medium ml-2" style={{ color: "#666" }}>
-                    Unified Citizen Command Center • AI Engine v2.4 Active
+                    CIVIX Command Center • AI Engine v2.4 Active
                   </span>
                 </div>
                 <span
@@ -500,7 +493,7 @@ export default function LandingPage() {
         <section id="workflow" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#888" }}>End-To-End Lifecycle</span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">How Unified Citizen Works</h2>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">How CIVIX Works</h2>
             <p className="mt-4 text-base" style={{ color: "#666" }}>
               Follow a grievance as it progresses from citizen submission through AI triaging to field verification.
             </p>
@@ -606,7 +599,7 @@ export default function LandingPage() {
         <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Frequently Asked Questions</h2>
-            <p className="mt-4 text-base" style={{ color: "#666" }}>Everything you need to know about the AI Unified Citizen Governance Platform.</p>
+            <p className="mt-4 text-base" style={{ color: "#666" }}>Everything you need to know about the AI CIVIX Governance Platform.</p>
           </div>
           <div className="space-y-4">
             {faqs.map((faq, idx) => (
@@ -656,28 +649,108 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* ─── FOOTER ─────────────────────────────────────────── */}
-      <footer className="border-t py-12 px-4 sm:px-6 lg:px-8" style={{ background: "#000", borderColor: "rgba(255,255,255,0.07)" }}>
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Logo size="sm" showText={false} />
-            <div>
-              <span className="font-bold text-white text-base">Unified Citizen</span>
-              <p className="text-xs" style={{ color: "#555" }}>AI-Powered Governance & Grievance Platform</p>
+      {/* ─── FOOTER (WHITE BOX STYLE) ──────────────────────── */}
+      <div className="px-4 sm:px-6 lg:px-8 pb-6" style={{ background: "#000" }}>
+        <footer
+          className="max-w-7xl mx-auto rounded-3xl overflow-hidden"
+          style={{ background: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.25)" }}
+        >
+          <div className="px-8 sm:px-12 py-14">
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
+              {/* Brand Column */}
+              <div className="col-span-2">
+                <Link to="/" className="flex items-center gap-2.5 mb-4">
+                  <Logo size="sm" showText={false} />
+                  <span className="text-xl font-extrabold text-black">CIVIX</span>
+                </Link>
+                <p className="text-sm leading-relaxed max-w-xs text-gray-500">
+                  AI-powered citizen governance platform. Submit, track, and resolve grievances with intelligent automation and full transparency.
+                </p>
+                <div className="flex items-center gap-3 mt-5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-medium text-gray-400">All Systems Operational</span>
+                </div>
+              </div>
+
+              {/* Product */}
+              <div>
+                <h4 className="text-sm font-bold text-black mb-4">Product</h4>
+                <ul className="space-y-2.5">
+                  {[{ label: "Features", href: "#features" }, { label: "How It Works", href: "#workflow" }, { label: "Portals", href: "#portals" }, { label: "Pricing", href: "#" }, { label: "Changelog", href: "#" }].map((link) => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-sm text-gray-500 hover:text-black transition">{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Resources */}
+              <div>
+                <h4 className="text-sm font-bold text-black mb-4">Resources</h4>
+                <ul className="space-y-2.5">
+                  {[{ label: "Documentation", href: "#" }, { label: "API Reference", href: "#" }, { label: "FAQ", href: "#faq" }, { label: "Status Page", href: "#" }, { label: "Community", href: "#" }].map((link) => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-sm text-gray-500 hover:text-black transition">{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Company */}
+              <div>
+                <h4 className="text-sm font-bold text-black mb-4">Company</h4>
+                <ul className="space-y-2.5">
+                  {[{ label: "About Us", href: "#" }, { label: "Contact", href: "#" }, { label: "Blog", href: "#" }, { label: "Careers", href: "#", badge: "Hiring" }].map((link) => (
+                    <li key={link.label} className="flex items-center gap-2">
+                      <a href={link.href} className="text-sm text-gray-500 hover:text-black transition">{link.label}</a>
+                      {link.badge && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black text-white">{link.badge}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Legal */}
+              <div>
+                <h4 className="text-sm font-bold text-black mb-4">Legal</h4>
+                <ul className="space-y-2.5">
+                  {[{ label: "Privacy Policy", href: "#" }, { label: "Terms of Service", href: "#" }, { label: "Data Policy", href: "#" }, { label: "Cookie Policy", href: "#" }].map((link) => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-sm text-gray-500 hover:text-black transition">{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-6 text-xs" style={{ color: "#555" }}>
-            {["#features", "#workflow", "#impact", "#faq"].map(href => (
-              <a key={href} href={href} className="hover:text-white transition capitalize">{href.replace("#", "")}</a>
-            ))}
-            <Link to="/login" className="hover:text-white transition">Login</Link>
+
+          {/* Bottom Bar */}
+          <div className="border-t border-gray-200">
+            <div className="px-8 sm:px-12 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <span className="text-xs text-gray-400">© 2026 CIVIX. All rights reserved.</span>
+              <div className="flex items-center gap-5">
+                {/* GitHub */}
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black transition">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                {/* Twitter / X */}
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black transition">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                {/* LinkedIn */}
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black transition">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                {/* Email */}
+                <a href="mailto:contact@civix.gov" className="text-gray-400 hover:text-black transition">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-xs" style={{ color: "#444" }}>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>All Services Operational • 2026</span>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
