@@ -131,8 +131,7 @@ export function AdminDashboardPage() {
             <h1 className="ad-hero-title mt-3">Executive Dashboard</h1>
             <p className="ad-hero-sub mt-3">
               {formatDate(new Date().toISOString())} — platform-wide governance
-              metrics. Live counts come from real services; the analytics suite
-              is clearly marked as demo data.
+              metrics, department workload, and live resolution analytics.
             </p>
           </div>
           <div className="flex flex-col items-start gap-3">
@@ -178,14 +177,21 @@ export function AdminDashboardPage() {
         <Metric label="Open escalations" value={openEscalations} note="Attention needed" />
       </section>
 
-      {/* Analytics suite — DEMO DATA */}
+      {/* Analytics suite */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section className="ad-panel-midnight">
           <div className="mb-5 flex items-center justify-between gap-2">
             <p className="ad-panel-label">Status distribution</p>
-            <span className="dp-demo-badge" title="Mock analytics service — no backend endpoint">
-              Demo data
-            </span>
+            {config.useMockApi ? (
+              <span className="dp-demo-badge" title="Mock analytics service">
+                Demo data
+              </span>
+            ) : (
+              <span className="dp-status-pill" title="Served by the real analytics API">
+                <span className="dp-status-dot" aria-hidden="true" />
+                Live
+              </span>
+            )}
           </div>
           {statusQuery.isLoading ? (
             <Skeleton className="h-40 rounded-xl" />
@@ -212,9 +218,16 @@ export function AdminDashboardPage() {
         <section className="ad-panel-midnight">
           <div className="mb-5 flex items-center justify-between gap-2">
             <p className="ad-panel-label">Priority distribution</p>
-            <span className="dp-demo-badge" title="Mock analytics service — no backend endpoint">
-              Demo data
-            </span>
+            {config.useMockApi ? (
+              <span className="dp-demo-badge" title="Mock analytics service">
+                Demo data
+              </span>
+            ) : (
+              <span className="dp-status-pill" title="Served by the real analytics API">
+                <span className="dp-status-dot" aria-hidden="true" />
+                Live
+              </span>
+            )}
           </div>
           {priorityQuery.isLoading ? (
             <Skeleton className="h-40 rounded-xl" />
@@ -251,9 +264,16 @@ export function AdminDashboardPage() {
               How units are performing
             </h2>
           </div>
-          <span className="dp-demo-badge" title="Mock analytics service — no backend endpoint">
-            Demo data
-          </span>
+          {config.useMockApi ? (
+            <span className="dp-demo-badge" title="Mock analytics service">
+              Demo data
+            </span>
+          ) : (
+            <span className="dp-status-pill" title="Served by the real analytics API">
+              <span className="dp-status-dot" aria-hidden="true" />
+              Live
+            </span>
+          )}
         </div>
         {departmentsPerfQuery.isLoading ? (
           <Skeleton className="h-40 rounded-xl" />
@@ -316,9 +336,16 @@ export function AdminDashboardPage() {
         <section className="ad-panel-midnight">
           <div className="mb-5 flex items-center justify-between gap-2">
             <p className="ad-panel-label">Monthly trend</p>
-            <span className="dp-demo-badge" title="Mock analytics service — no backend endpoint">
-              Demo data
-            </span>
+            {config.useMockApi ? (
+              <span className="dp-demo-badge" title="Mock analytics service">
+                Demo data
+              </span>
+            ) : (
+              <span className="dp-status-pill" title="Served by the real analytics API">
+                <span className="dp-status-dot" aria-hidden="true" />
+                Live
+              </span>
+            )}
           </div>
           {trendQuery.isLoading ? (
             <Skeleton className="h-36 rounded-xl" />

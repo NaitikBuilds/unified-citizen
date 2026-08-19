@@ -19,6 +19,7 @@ import { apiSlaService } from './adapters/sla.adapter'
 import { apiEscalationService } from './adapters/escalation.adapter'
 import { apiAuditService } from './adapters/audit.adapter'
 import { apiAiService } from './adapters/ai.adapter'
+import { apiAnalyticsService } from './adapters/analytics.adapter'
 
 import { mockAuthService } from '../mocks/services/auth.service'
 import { mockUserService } from '../mocks/services/user.service'
@@ -60,7 +61,9 @@ export const services = {
   // Escalation is now REAL API backed (V6.0b: GET /api/v1/escalations endpoints);
   // mock mode remains available for standalone development.
   escalation: config.useMockApi ? mockEscalationService : apiEscalationService,
-  analytics: mockAnalyticsService,
+  // Analytics is now REAL API backed (Phase 8.0: GET /api/v1/analytics endpoints);
+  // mock mode remains available for standalone development.
+  analytics: config.useMockApi ? mockAnalyticsService : apiAnalyticsService,
 
   // Audit is now REAL API backed (V6.0c: GET /api/v1/audit-logs endpoints);
   // mock mode remains available for standalone development.
