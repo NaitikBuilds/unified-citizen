@@ -142,3 +142,13 @@ export const listGrievancesSchema = z.object({
     limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
 });
+
+export const analyzeGrievanceSchema = z.object({
+  body: z.object({
+    title: z.string().min(5, "Title must be at least 5 characters long"),
+    description: z
+      .string()
+      .min(10, "Description must be at least 10 characters long"),
+    category: z.string().min(1).optional(),
+  }),
+});

@@ -1,4 +1,6 @@
 import { analyzeGrievance } from "../ai/services/analysis.service.js";
+import { classifyGrievance } from "../ai/services/classification.service.js";
+import { prisma as rootPrisma } from "../services/prisma.service.js";
 
 import path from "path";
 import fs from "fs";
@@ -17,6 +19,57 @@ import {
 } from "../services/subresource.service.js";
 import { canTransitionGrievanceStatus } from "../services/grievance-status.service.js";
 import { canAccessGrievanceSubResource } from "../services/subresource-auth.service.js";
+
+// POST /api/grievances/analyze
+export async function analyzeGrievancePreview(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { title, description, category } = req.body;
+
+    if (!title || typeof title !== "string") {
+      res.status(400).json({ error: "Title is required" });
+      return;
+    }
+
+    if (!description || typeof description !== "string") {
+      res.status(400).json({ error: "Description is required" });
+      return;
+    }
+
+    // Run AI classification only (fast, no DB writes)
+    const classification = await classifyGrievance(title, description);
+
+    // Resolve department code to actual department
+    const department = await rootPrisma.department.findUnique({
+      where: { code: classification.department },
+    });
+
+    res.json({
+      classification: {
+        category: classification.category,
+        department: classification.department,
+        departmentName: department?.name || classification.department,
+        departmentId: department?.id || null,
+        priority: classification.priority,
+        severity: classification.severity,
+        sentiment: classification.sentiment,
+        confidence: classification.confidence,
+        summary: classification.summary,
+        explanation: classification.explanation,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // POST /api/grievances
 export async function createGrievance(

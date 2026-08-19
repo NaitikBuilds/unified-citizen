@@ -121,6 +121,22 @@ export const authApi = {
 
 // ============= GRIEVANCES =============
 export const grievanceApi = {
+  analyze: (data: { title: string; description: string; category?: string }) =>
+    api.post<{
+      classification: {
+        category: string;
+        department: string;
+        departmentName: string;
+        departmentId: string | null;
+        priority: string;
+        severity: string;
+        sentiment: string;
+        confidence: number;
+        summary: string;
+        explanation: string;
+      };
+    }>("/grievances/analyze", data),
+
   create: (data: {
     title: string;
     description: string;
