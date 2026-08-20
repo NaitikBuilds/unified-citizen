@@ -342,3 +342,52 @@ export async function getMe(
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export async function changePassword(
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      select: { id: true, passwordHash: true },
+    });
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.passwordHash);
+
+    if (!isCurrentPasswordValid) {
+      res.status(401).json({ error: "Current password is incorrect" });
+      return;
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: req.user.userId },
+      data: { passwordHash: hashedNewPassword },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "PASSWORD_CHANGED",
+      metadata: { method: "self" },
+    });
+
+    res.json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}

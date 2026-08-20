@@ -18,7 +18,7 @@ export default function Logo({ size = "md", showText = true }: LogoProps) {
         className={`${sizes[size].icon} rounded-full object-cover border-2 border-white/20 shadow-sm`}
       />
       {showText && (
-        <span className={`font-bold ${sizes[size].text} text-primary`}>
+        <span className={`font-bold ${sizes[size].text} text-white`}>
           CIVIX
         </span>
       )}

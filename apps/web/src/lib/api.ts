@@ -111,12 +111,12 @@ export const authApi = {
     api.post<LoginResponse>("/auth/login", data),
 
   refresh: (refreshToken: string) =>
-    api.post<RefreshResponse>("/auth/refresh", { refreshToken }),
-
-  logout: (refreshToken?: string) =>
-    api.post("/auth/logout", refreshToken ? { refreshToken } : {}),
+    api.post<RefreshResponse>("/auth/refresh", { refreshToken }),  logout: (refreshToken?: string) => api.post("/auth/logout", refreshToken ? { refreshToken } : {}),
 
   getMe: () => api.get<{ user: User }>("/auth/me"),
+
+  changePassword: (data: { currentPassword: string; newPassword: string }) =>
+    api.post<{ message: string }>("/auth/change-password", data),
 };
 
 // ============= GRIEVANCES =============
