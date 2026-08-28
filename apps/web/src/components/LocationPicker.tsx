@@ -1,38 +1,18 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin, Crosshair, Search, X, Loader2 } from "lucide-react";
 
-// Fix Leaflet default icon paths (bundled assets)
-delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-});
-
-// Custom red marker icon for the selected location
-const selectedIcon = new L.Icon({
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+// Pure SVG pin — no external images
+const pinSvg = `<svg viewBox="0 0 24 36" width="28" height="40" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="#ef4444"/>
+  <circle cx="12" cy="11" r="5" fill="white"/>
+</svg>`;
+const pinIcon = L.divIcon({
+  className: "",
+  iconSize: [28, 40],
+  iconAnchor: [14, 40],
+  html: pinSvg,
 });
 
 interface LocationValue {
@@ -46,11 +26,7 @@ interface LocationPickerProps {
   onChange: (loc: LocationValue) => void;
 }
 
-// Reverse geocode using Nominatim (OSM) — free, no API key
-async function reverseGeocode(
-  lat: number,
-  lng: number
-): Promise<string> {
+async function reverseGeocode(lat: number, lng: number): Promise<string> {
   const res = await fetch(
     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
     { headers: { "User-Agent": "CIVIX-Grievance-Platform/1.0" } }
@@ -59,7 +35,6 @@ async function reverseGeocode(
   return data.display_name || "";
 }
 
-// Forward geocode (search) using Nominatim
 interface GeocodeResult {
   lat: number;
   lon: number;
@@ -74,35 +49,12 @@ async function forwardGeocode(query: string): Promise<GeocodeResult[]> {
   return res.json();
 }
 
-// Component that handles map click events
-function MapClickHandler({
-  onPositionSelect,
-}: {
-  onPositionSelect: (lat: number, lng: number) => void;
-}) {
-  useMapEvents({
-    click(e) {
-      onPositionSelect(e.latlng.lat, e.latlng.lng);
-    },
-  });
-  return null;
-}
+export default function LocationPicker({ value, onChange }: LocationPickerProps) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<L.Map | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
+  const mountedRef = useRef(true);
 
-// Component that flies the map to a position
-function FlyTo({ position }: { position: [number, number] | null }) {
-  const map = useMap();
-  useEffect(() => {
-    if (position) {
-      map.flyTo(position, 16, { duration: 1.2 });
-    }
-  }, [position, map]);
-  return null;
-}
-
-export default function LocationPicker({
-  value,
-  onChange,
-}: LocationPickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<GeocodeResult[]>([]);
   const [searching, setSearching] = useState(false);
@@ -113,13 +65,67 @@ export default function LocationPicker({
 
   const hasLocation = value.latitude !== 0 && value.longitude !== 0;
 
+  // Initialize map once
+  useEffect(() => {
+    if (!mapRef.current || mapInstance.current) return;
+
+    const map = L.map(mapRef.current, {
+      center: [26.8467, 80.9462],
+      zoom: 12,
+      zoomControl: false,
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    map.on("click", (e: L.LeafletMouseEvent) => {
+      placeMarker(e.latlng.lat, e.latlng.lng);
+    });
+
+    mapInstance.current = map;
+
+    return () => {
+      mountedRef.current = false;
+      map.remove();
+      mapInstance.current = null;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const placeMarker = useCallback(
+    async (lat: number, lng: number) => {
+      const map = mapInstance.current;
+      if (!map) return;
+
+      // Remove old marker
+      if (markerRef.current) {
+        map.removeLayer(markerRef.current);
+        markerRef.current = null;
+      }
+
+      // Add new marker
+      const marker = L.marker([lat, lng], { icon: pinIcon }).addTo(map);
+      markerRef.current = marker;
+
+      // Fly to position
+      map.setView([lat, lng], 16);
+
+      // Defer the parent state update so Leaflet's animation isn't interrupted
+      const coords = { latitude: lat, longitude: lng };
+      setTimeout(() => {
+        if (!mountedRef.current) return;
+        reverseGeocode(lat, lng)
+          .then((address) => { if (mountedRef.current) onChange({ ...coords, address }); })
+          .catch(() => { if (mountedRef.current) onChange({ ...coords, address: `${lat.toFixed(5)}, ${lng.toFixed(5)}` }); });
+      }, 0);
+    },
+    [onChange]
+  );
+
   // Close search results on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        resultsRef.current &&
-        !resultsRef.current.contains(e.target as Node)
-      ) {
+      if (resultsRef.current && !resultsRef.current.contains(e.target as Node)) {
         setShowResults(false);
       }
     }
@@ -127,88 +133,64 @@ export default function LocationPicker({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectPosition = useCallback(
-    async (lat: number, lng: number) => {
-      const address = await reverseGeocode(lat, lng);
-      onChange({ latitude: lat, longitude: lng, address });
-    },
-    [onChange]
-  );
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
 
-  const handleMapClick = useCallback(
-    (lat: number, lng: number) => {
-      selectPosition(lat, lng);
-    },
-    [selectPosition]
-  );
+    if (query.trim().length < 3) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
 
-  const handleSearch = useCallback(
-    (query: string) => {
-      setSearchQuery(query);
-      if (searchTimeout.current) clearTimeout(searchTimeout.current);
-
-      if (query.trim().length < 3) {
+    searchTimeout.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const results = await forwardGeocode(query);
+        setSearchResults(results);
+        setShowResults(results.length > 0);
+      } catch {
         setSearchResults([]);
-        setShowResults(false);
-        return;
+      } finally {
+        setSearching(false);
       }
-
-      searchTimeout.current = setTimeout(async () => {
-        setSearching(true);
-        try {
-          const results = await forwardGeocode(query);
-          setSearchResults(results);
-          setShowResults(results.length > 0);
-        } catch {
-          setSearchResults([]);
-        } finally {
-          setSearching(false);
-        }
-      }, 400);
-    },
-    []
-  );
+    }, 400);
+  }, []);
 
   const handleResultClick = useCallback(
     (result: GeocodeResult) => {
-      onChange({
-        latitude: result.lat,
-        longitude: result.lon,
-        address: result.display_name,
-      });
       setSearchQuery(result.display_name.split(",")[0]);
       setShowResults(false);
+      // Directly place marker — no state-driven re-render of MapContainer
+      placeMarker(result.lat, result.lon);
     },
-    [onChange]
+    [placeMarker]
   );
 
   const handleCurrentLocation = useCallback(() => {
-    if (!navigator.geolocation) {
-      return;
-    }
+    if (!navigator.geolocation) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        await selectPosition(pos.coords.latitude, pos.coords.longitude);
+        await placeMarker(pos.coords.latitude, pos.coords.longitude);
         setLocating(false);
       },
-      () => {
-        setLocating(false);
-      },
+      () => setLocating(false),
       { enableHighAccuracy: true, timeout: 10000 }
     );
-  }, [selectPosition]);
+  }, [placeMarker]);
 
   const handleClear = useCallback(() => {
     onChange({ latitude: 0, longitude: 0, address: "" });
     setSearchQuery("");
     setSearchResults([]);
     setShowResults(false);
+    if (markerRef.current && mapInstance.current) {
+      mapInstance.current.removeLayer(markerRef.current);
+      markerRef.current = null;
+      mapInstance.current.flyTo([26.8467, 80.9462], 12, { duration: 1 });
+    }
   }, [onChange]);
-
-  const center: [number, number] = hasLocation
-    ? [value.latitude, value.longitude]
-    : [26.8467, 80.9462]; // Default: Kanpur, India
 
   const inputStyle = {
     background: "#111",
@@ -221,11 +203,7 @@ export default function LocationPicker({
       <div className="relative" ref={resultsRef}>
         <div className="relative flex items-center rounded-xl" style={inputStyle}>
           <div className="pl-3 text-gray-500">
-            {searching ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Search className="h-4 w-4" />
-            )}
+            {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
           </div>
           <input
             type="text"
@@ -233,24 +211,20 @@ export default function LocationPicker({
             className="w-full px-3 py-2.5 bg-transparent text-sm text-white placeholder:text-gray-600 focus:outline-none"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            onFocus={() =>
-              searchResults.length > 0 && setShowResults(true)
-            }
+            onFocus={() => searchResults.length > 0 && setShowResults(true)}
           />
           {searchQuery && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="pr-3 text-gray-500 hover:text-gray-300 transition"
-            >
+            <button type="button" onClick={handleClear} className="pr-3 text-gray-500 hover:text-gray-300 transition">
               <X className="h-4 w-4" />
             </button>
           )}
         </div>
 
-        {/* Search results dropdown */}
         {showResults && searchResults.length > 0 && (
-          <div className="absolute z-[1000] mt-1 w-full rounded-xl overflow-hidden shadow-lg" style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <div
+            className="absolute z-[1000] mt-1 w-full rounded-xl overflow-hidden shadow-lg"
+            style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)" }}
+          >
             {searchResults.map((r, i) => (
               <button
                 key={i}
@@ -276,11 +250,7 @@ export default function LocationPicker({
           disabled={locating}
           className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-white bg-white/10 hover:bg-white/15 transition disabled:opacity-50"
         >
-          {locating ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Crosshair className="h-3.5 w-3.5" />
-          )}
+          {locating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Crosshair className="h-3.5 w-3.5" />}
           {locating ? "Locating..." : "Use my location"}
         </button>
         {hasLocation && (
@@ -290,39 +260,24 @@ export default function LocationPicker({
         )}
       </div>
 
-      {/* Map */}
-      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-        <MapContainer
-          center={center}
-          zoom={hasLocation ? 16 : 12}
-          className="w-full"
-          style={{ height: "250px" }}
-          zoomControl={false}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <FlyTo position={hasLocation ? [value.latitude, value.longitude] : null} />
-          <MapClickHandler onPositionSelect={handleMapClick} />
-          {hasLocation && (
-            <Marker
-              position={[value.latitude, value.longitude]}
-              icon={selectedIcon}
-            />
-          )}
-        </MapContainer>
-      </div>
+      {/* Map — plain div, Leaflet manages everything imperatively */}
+      <div
+        ref={mapRef}
+        className="w-full rounded-xl"
+        style={{ height: "250px", border: "1px solid rgba(255,255,255,0.1)" }}
+      />
 
       {/* Address preview */}
       {value.address && (
-        <div className="flex items-start gap-2 p-2.5 rounded-lg text-xs text-gray-400" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+        <div
+          className="flex items-start gap-2 p-2.5 rounded-lg text-xs text-gray-400"
+          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
+        >
           <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
           <span className="line-clamp-2">{value.address}</span>
         </div>
       )}
 
-      {/* Instructions */}
       {!hasLocation && (
         <p className="text-[11px] text-gray-600">
           Click on the map to place a pin, search for an address, or use your current location.
