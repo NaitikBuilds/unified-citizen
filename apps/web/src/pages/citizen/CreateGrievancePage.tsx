@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle } from "lucide-react";
 import { grievanceApi } from "../../lib/api";
 import { toast } from "sonner";
+import LocationPicker from "../../components/LocationPicker";
 
 const CATEGORIES = ["Roads & Infrastructure", "Water Supply", "Electricity", "Sanitation & Waste", "Public Safety", "Healthcare", "Education", "Environment", "Housing", "Corruption", "Other"];
 
@@ -15,6 +16,7 @@ export default function CreateGrievancePage() {
   const [analysis, setAnalysis] = useState<AIAnalysis | null>(null);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [form, setForm] = useState({ title: "", description: "", category: "", address: "" });
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0, address: "" });
   const [files, setFiles] = useState<File[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -38,7 +40,14 @@ export default function CreateGrievancePage() {
     if (!form.title || !form.description || !form.category) { toast.error("Please fill in all required fields"); return; }
     setLoading(true);
     try {
-      const { data } = await grievanceApi.create({ title: form.title, description: form.description, category: form.category, address: form.address || undefined });
+      const { data } = await grievanceApi.create({
+        title: form.title,
+        description: form.description,
+        category: form.category,
+        address: location.address || form.address || undefined,
+        latitude: location.latitude || undefined,
+        longitude: location.longitude || undefined,
+      });
       if (files.length > 0 && data.grievance?.id) { const { attachmentApi } = await import("../../lib/api"); for (const file of files) { try { await attachmentApi.upload(data.grievance.id, file); } catch { /* non-critical */ } } }
       toast.success("Grievance submitted!"); navigate(`/citizen/grievances/${data.grievance.id}`);
     } catch (err: unknown) { const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || "Failed to create grievance"; toast.error(msg); } finally { setLoading(false); }
@@ -91,7 +100,7 @@ export default function CreateGrievancePage() {
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-400 mb-1.5"><MapPin className="inline h-3.5 w-3.5 mr-1" />Location / Address <span className="text-gray-600">Optional</span></label>
-          <input type="text" name="address" placeholder="Where is the issue located?" className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none" style={inputStyle} value={form.address} onChange={handleChange} />
+          <LocationPicker value={location} onChange={setLocation} />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-400 mb-1.5"><Upload className="inline h-3.5 w-3.5 mr-1" />Attachments <span className="text-gray-600">Optional</span></label>
