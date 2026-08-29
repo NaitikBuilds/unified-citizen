@@ -40,3 +40,9 @@ uploads/
 *.tmp
 *.temp
 .freebuff/
+
+# Additional security
+.env.*         
+*.pem           
+*.key     
+prisma/*.db       
