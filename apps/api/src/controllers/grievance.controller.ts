@@ -71,6 +71,65 @@ export async function analyzeGrievancePreview(
   }
 }
 
+// POST /api/grievances/generate-email
+export async function generateFormalEmail(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { title, description, category, departmentName, address } = req.body;
+
+    if (!title || !description) {
+      res.status(400).json({ error: "Title and description are required" });
+      return;
+    }
+
+    const { getGemini } = await import("../ai/providers/gemini.provider.js");
+
+    const prompt = `You are a professional legal/civic communications assistant.
+
+Generate a formal complaint email based on the following grievance details.
+The email should be:
+- Written in a professional, respectful, and formal tone
+- Addressed to the relevant government department
+- Include a clear subject line
+- Structured with: Subject, Salutation, Body (problem statement, impact, requested action), Closing
+- Include placeholder for sender name [YOUR NAME] and date [DATE]
+- Mention the grievance details provided below
+
+Grievance Details:
+- Title: ${title}
+- Description: ${description}
+- Category: ${category || "Not specified"}
+- Department: ${departmentName || "Relevant Government Department"}
+${address ? `- Location: ${address}` : ""}
+
+Generate ONLY the email text. No explanations or commentary.`;
+
+    const response = await getGemini().models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+    });
+
+    const text = response.text;
+
+    if (!text) {
+      throw new Error("Gemini returned an empty response for email generation");
+    }
+
+    res.status(200).json({ email: text });
+  } catch (error) {
+    console.error("Email generation failed:", error);
+    res.status(500).json({ error: "Failed to generate email. Please try again." });
+  }
+}
+
 // POST /api/grievances
 export async function createGrievance(
   req: AuthenticatedRequest,

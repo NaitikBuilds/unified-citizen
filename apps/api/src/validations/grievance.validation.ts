@@ -143,6 +143,16 @@ export const listGrievancesSchema = z.object({
   }),
 });
 
+export const generateEmailSchema = z.object({
+  body: z.object({
+    title: z.string().min(5, "Title must be at least 5 characters long"),
+    description: z.string().min(10, "Description must be at least 10 characters long"),
+    category: z.string().min(1).optional(),
+    departmentName: z.string().optional(),
+    address: z.string().optional(),
+  }),
+});
+
 export const analyzeGrievanceSchema = z.object({
   body: z.object({
     title: z.string().min(5, "Title must be at least 5 characters long"),

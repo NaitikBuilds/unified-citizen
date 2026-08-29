@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle } from "lucide-react";
+import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle, Mail, Copy, X } from "lucide-react";
 import { grievanceApi } from "../../lib/api";
 import { toast } from "sonner";
 import LocationPicker from "../../components/LocationPicker";
@@ -18,6 +18,9 @@ export default function CreateGrievancePage() {
   const [form, setForm] = useState({ title: "", description: "", category: "", address: "" });
   const [location, setLocation] = useState({ latitude: 0, longitude: 0, address: "" });
   const [files, setFiles] = useState<File[]>([]);
+  const [generatingEmail, setGeneratingEmail] = useState(false);
+  const [generatedEmail, setGeneratedEmail] = useState<string | null>(null);
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -55,6 +58,36 @@ export default function CreateGrievancePage() {
 
   const priorityColor: Record<string, string> = { LOW: "text-green-400", MEDIUM: "text-yellow-400", HIGH: "text-red-400", CRITICAL: "text-red-500" };
   const sentimentEmoji: Record<string, string> = { POSITIVE: "😊", NEUTRAL: "😐", NEGATIVE: "😟", URGENT: "🚨" };
+
+  const handleGenerateEmail = async () => {
+    if (!form.title || form.title.length < 5 || !form.description || form.description.length < 10) {
+      toast.error("Please enter a title and description first");
+      return;
+    }
+    setGeneratingEmail(true);
+    try {
+      const { data } = await grievanceApi.generateEmail({
+        title: form.title,
+        description: form.description,
+        category: form.category || undefined,
+        departmentName: analysis?.departmentName || undefined,
+        address: location.address || form.address || undefined,
+      });
+      setGeneratedEmail(data.email);
+      setShowEmailModal(true);
+    } catch {
+      toast.error("Failed to generate email. Please try again.");
+    } finally {
+      setGeneratingEmail(false);
+    }
+  };
+
+  const copyEmail = () => {
+    if (generatedEmail) {
+      navigator.clipboard.writeText(generatedEmail);
+      toast.success("Email copied to clipboard!");
+    }
+  };
 
   const inputStyle = { background: "#111", border: "1px solid rgba(255,255,255,0.1)" };
 
@@ -111,11 +144,32 @@ export default function CreateGrievancePage() {
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{analysis ? `AI will route this to the ${analysis.departmentName} department with ${analysis.priority} priority.` : "Your grievance will be analyzed by AI for classification, priority detection, and department routing."}</span>
         </div>
+        <button type="button" className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition disabled:opacity-50" style={{ background: "rgba(124,92,252,0.1)", border: "1px solid rgba(124,92,252,0.3)", color: "#a78bfa" }} disabled={generatingEmail || form.title.length < 5 || form.description.length < 10} onClick={handleGenerateEmail}>
+          {generatingEmail ? <><Loader2 className="h-4 w-4 animate-spin" /> Generating Email...</> : <><Mail className="h-4 w-4" /> Generate Formal Email</>}
+        </button>
+        {form.title.length < 5 || form.description.length < 10 && <span className="text-xs text-gray-600 text-center block">Enter title and description to generate email</span>}
         <div className="flex gap-3 mt-2">
           <button type="button" className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:text-white transition" style={{ border: "1px solid rgba(255,255,255,0.1)" }} onClick={() => navigate(-1)}>Cancel</button>
           <button type="submit" className="flex-1 px-4 py-3 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-200 transition disabled:opacity-50" disabled={loading}>{loading ? "Submitting..." : "Submit Grievance"}</button>
         </div>
       </form>
+
+      {/* Email Modal */}
+      {showEmailModal && generatedEmail && (
+        <div className="fixed inset-0 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)", zIndex: 9999 }} onClick={() => setShowEmailModal(false)}>
+          <div className="w-full max-w-2xl max-h-[80vh] rounded-2xl p-6 overflow-hidden flex flex-col" style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", zIndex: 10000 }} onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2"><Mail className="h-5 w-5 text-purple-400" /> AI-Generated Formal Email</h3>
+              <button className="p-1.5 rounded-lg hover:bg-white/10 transition" onClick={() => setShowEmailModal(false)}><X className="h-5 w-5 text-gray-400" /></button>
+            </div>
+            <div className="flex-1 overflow-y-auto rounded-xl p-4 mb-4 text-sm text-gray-300 whitespace-pre-wrap leading-relaxed" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.05)" }}>{generatedEmail}</div>
+            <div className="flex gap-3">
+              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-200 transition" onClick={copyEmail}><Copy className="h-4 w-4" /> Copy to Clipboard</button>
+              <button className="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:text-white transition" style={{ border: "1px solid rgba(255,255,255,0.1)" }} onClick={() => setShowEmailModal(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

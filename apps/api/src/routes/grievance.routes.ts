@@ -35,13 +35,18 @@ import {
   updateGrievanceSchema,
   reopenGrievanceSchema,
   listGrievancesSchema,
-  grievanceCommentsQuerySchema
+  grievanceCommentsQuerySchema,
+  generateEmailSchema
 } from '../validations/grievance.validation.js';
+import { generateFormalEmail } from '../controllers/grievance.controller.js';
 
 const router = Router();
 
 // Apply authentication to all grievance routes globally
 router.use(authenticate);
+
+// Generate formal email for a grievance
+router.post('/generate-email', requireRole(['CITIZEN']), validate(generateEmailSchema), generateFormalEmail);
 
 // AI analysis preview — citizens analyze before creating
 router.post('/analyze', requireRole(['CITIZEN']), validate(analyzeGrievanceSchema), analyzeGrievancePreview);
