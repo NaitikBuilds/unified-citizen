@@ -10,7 +10,7 @@ import {
 
 export type { SpamDetectionOutput };
 
-const MODEL_NAME = "gemini-3.5-flash";
+const MODEL_NAME = "gemini-3.6-flash";
 
 function createFallbackSpamResult(): SpamDetectionOutput {
   return {

@@ -137,6 +137,12 @@ export default function LocationPicker({ value, onChange }: LocationPickerProps)
     setSearchQuery(query);
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
 
+    // If no marker placed yet, pass the typed text as the address so
+    // the parent always has something to work with.
+    if (!hasLocation && query.trim().length > 2) {
+      onChange({ latitude: 0, longitude: 0, address: query.trim() });
+    }
+
     if (query.trim().length < 3) {
       setSearchResults([]);
       setShowResults(false);
@@ -155,7 +161,7 @@ export default function LocationPicker({ value, onChange }: LocationPickerProps)
         setSearching(false);
       }
     }, 400);
-  }, []);
+  }, [hasLocation, onChange]);
 
   const handleResultClick = useCallback(
     (result: GeocodeResult) => {

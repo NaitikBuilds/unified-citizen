@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle, Mail, Copy, X, Building2, Landmark, MapIcon } from "lucide-react";
 import { grievanceApi } from "../../lib/api";
@@ -23,6 +23,8 @@ export default function CreateGrievancePage() {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [officialContacts, setOfficialContacts] = useState<Array<{ name: string; email: string; level: string; description: string }>>([]);
   const [loadingContacts, setLoadingContacts] = useState(false);
+  const locationRef = useRef(location);
+  useEffect(() => { locationRef.current = location; }, [location]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -77,7 +79,9 @@ export default function CreateGrievancePage() {
       });
       setGeneratedEmail(data.email);
       setShowEmailModal(true);
-      fetchOfficialContacts();
+      // Read from ref to get the absolute latest location (avoids stale closure)
+      const addr = locationRef.current.address || form.address || undefined;
+      fetchOfficialContacts(addr);
     } catch {
       toast.error("Failed to generate email. Please try again.");
     } finally {
@@ -92,14 +96,20 @@ export default function CreateGrievancePage() {
     }
   };
 
-  const fetchOfficialContacts = async () => {
+  const fetchOfficialContacts = async (addressOverride?: string) => {
     if (!form.category) return;
     setLoadingContacts(true);
+    const loc = locationRef.current;
+    const resolvedAddress = addressOverride || loc.address || location.address || form.address || undefined;
+    const lat = loc.latitude || undefined;
+    const lng = loc.longitude || undefined;
     try {
       const { data } = await grievanceApi.getOfficialContacts({
         category: form.category,
         departmentName: analysis?.departmentName || undefined,
-        address: location.address || form.address || undefined,
+        address: resolvedAddress,
+        latitude: lat,
+        longitude: lng,
       });
       setOfficialContacts(data.contacts);
     } catch {
@@ -188,48 +198,58 @@ export default function CreateGrievancePage() {
       {/* Email Modal */}
       {showEmailModal && generatedEmail && (
         <div className="fixed inset-0 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)", zIndex: 9999 }} onClick={() => setShowEmailModal(false)}>
-          <div className="w-full max-w-2xl max-h-[80vh] rounded-2xl p-6 overflow-hidden flex flex-col" style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", zIndex: 10000 }} onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
+          <div className="w-full max-w-5xl h-[90vh] rounded-2xl flex flex-col" style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", zIndex: 10000 }} onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
               <h3 className="text-lg font-bold text-white flex items-center gap-2"><Mail className="h-5 w-5 text-purple-400" /> AI-Generated Formal Email</h3>
-              <button className="p-1.5 rounded-lg hover:bg-white/10 transition" onClick={() => setShowEmailModal(false)}><X className="h-5 w-5 text-gray-400" /></button>
+              <div className="flex items-center gap-3">
+                <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-200 transition" onClick={copyEmail}><Copy className="h-4 w-4" /> Copy Email</button>
+                <button className="p-1.5 rounded-lg hover:bg-white/10 transition" onClick={() => setShowEmailModal(false)}><X className="h-5 w-5 text-gray-400" /></button>
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto rounded-xl p-4 mb-4 text-sm text-gray-300 whitespace-pre-wrap leading-relaxed" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.05)" }}>{generatedEmail}</div>
-            {/* Official Contacts */}
-            {officialContacts.length > 0 && (
-              <div className="mb-4">
-                <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2"><Building2 className="h-4 w-4 text-purple-400" /> Official Government Contacts</h4>
-                {(["NATIONAL", "STATE", "CITY"] as const).map((level) => {
-                  const contacts = officialContacts.filter((c) => c.level === level);
-                  if (contacts.length === 0) return null;
-                  const Icon = levelIcon[level];
-                  return (
-                    <div key={level} className="mb-3">
-                      <div className="text-[10px] uppercase tracking-wide font-semibold mb-1.5 px-1" style={{ color: levelColor[level] }}>{levelLabel[level]}</div>
-                      <div className="space-y-1.5">
-                        {contacts.map((c, i) => (
-                          <div key={i} className="flex items-center justify-between gap-2 p-2.5 rounded-xl" style={{ background: levelBg[level], border: `1px solid ${levelBorder[level]}` }}>
-                            <div className="min-w-0">
-                              <div className="text-xs font-semibold text-white truncate">{c.name}</div>
-                              <div className="text-[11px] text-gray-400 truncate">{c.email}</div>
-                              <div className="text-[10px] text-gray-500 truncate">{c.description}</div>
-                            </div>
-                            <button className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white hover:opacity-80 transition" style={{ background: levelColor[level] === "text-blue-400" ? "#3b82f6" : levelColor[level] === "text-purple-400" ? "#7c3aed" : "#22c55e" }} onClick={() => copyEmailTo(c.email)}><Copy className="h-3 w-3" /> Copy</button>
+
+            {/* Scrollable body — two columns on large screens, stacked on small */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              {/* Email content */}
+              <div>
+                <h4 className="text-sm font-bold text-white mb-2">Your Email</h4>
+                <div className="rounded-xl p-5 text-sm text-gray-300 whitespace-pre-wrap leading-relaxed" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.05)" }}>{generatedEmail}</div>
+              </div>
+
+              {/* Loading contacts */}
+              {loadingContacts && (
+                <div className="flex items-center gap-2 p-3 rounded-xl text-xs text-gray-400" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Finding official government contacts...
+                </div>
+              )}
+
+              {/* Official Contacts */}
+              {officialContacts.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2"><Building2 className="h-4 w-4 text-purple-400" /> Official Government Contacts</h4>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    {(["NATIONAL", "STATE", "CITY"] as const).map((level) => {
+                      const contacts = officialContacts.filter((c) => c.level === level);
+                      if (contacts.length === 0) return null;
+                      return (
+                        <div key={level}>
+                          <div className="text-[10px] uppercase tracking-wide font-semibold mb-2 px-1" style={{ color: levelColor[level] }}>{levelLabel[level]}</div>
+                          <div className="space-y-2">
+                            {contacts.map((c, i) => (
+                              <div key={i} className="p-3 rounded-xl" style={{ background: levelBg[level], border: `1px solid ${levelBorder[level]}` }}>
+                                <div className="text-xs font-semibold text-white mb-0.5">{c.name}</div>
+                                <div className="text-[11px] text-gray-400 mb-1">{c.email}</div>
+                                <div className="text-[10px] text-gray-500 mb-2 leading-relaxed">{c.description}</div>
+                                <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-white hover:opacity-80 transition" style={{ background: level === "NATIONAL" ? "#3b82f6" : level === "STATE" ? "#7c3aed" : "#22c55e" }} onClick={() => copyEmailTo(c.email)}><Copy className="h-3 w-3" /> Copy & Send</button>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-            {loadingContacts && (
-              <div className="flex items-center gap-2 mb-4 p-3 rounded-xl text-xs text-gray-400" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Finding official government contacts...
-              </div>
-            )}
-            <div className="flex gap-3">
-              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-200 transition" onClick={copyEmail}><Copy className="h-4 w-4" /> Copy Email</button>
-              <button className="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:text-white transition" style={{ border: "1px solid rgba(255,255,255,0.1)" }} onClick={() => setShowEmailModal(false)}>Close</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

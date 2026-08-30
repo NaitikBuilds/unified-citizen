@@ -113,7 +113,7 @@ ${address ? `- Location: ${address}` : ""}
 Generate ONLY the email text. No explanations or commentary.`;
 
     const response = await getGemini().models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-3.6-flash",
       contents: prompt,
     });
 
@@ -142,36 +142,62 @@ export async function getOfficialContacts(
       return;
     }
 
-    const { category, departmentName, address } = req.body;
+    const { category, departmentName, address, latitude, longitude } = req.body;
 
     if (!category) {
       res.status(400).json({ error: "Category is required" });
       return;
     }
 
+    // Resolve address: if not provided, try server-side reverse geocoding from coordinates
+    let resolvedAddress = address;
+    if (!resolvedAddress && latitude && longitude) {
+      try {
+        const https = await import("node:https");
+        const geoData = await new Promise<any>((resolve, reject) => {
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+          https.get(url, { headers: { "User-Agent": "CIVIX-Governance-Platform/1.0" } }, (res) => {
+            let data = "";
+            res.on("data", (chunk: string) => data += chunk);
+            res.on("end", () => { try { resolve(JSON.parse(data)); } catch { reject(new Error("Parse error")); } });
+          }).on("error", reject);
+        });
+        resolvedAddress = geoData.display_name || `${latitude}, ${longitude}`;
+      } catch {
+        resolvedAddress = `${latitude}, ${longitude}`;
+      }
+    }
+
     const { getGemini } = await import("../ai/providers/gemini.provider.js");
 
     const prompt = `You are a civic communications assistant for India.
 
-Based on the following grievance details, provide a list of official government email contacts where this complaint should be sent, organized by governance level.
+The user is filing a grievance from a SPECIFIC LOCATION. You MUST identify the city and state from the location/address provided and return ONLY contacts relevant to that exact city and state. Do NOT return contacts from any other city or state.
 
 Grievance Details:
 - Category: ${category}
 - Department: ${departmentName || "Relevant Government Department"}
-${address ? `- Location: ${address}` : ""}
+- Location/Address: ${resolvedAddress || "Not provided"}
+
+CRITICAL RULES:
+1. FIRST: Parse the location/address to extract the CITY and STATE (e.g., "Hazratganj, Lucknow, Uttar Pradesh" → City: Lucknow, State: Uttar Pradesh)
+2. STATE LEVEL contacts MUST be from the SAME STATE extracted from the address (e.g., Uttar Pradesh officials, NOT Karnataka)
+3. CITY LEVEL contacts MUST be from the SAME CITY extracted from the address (e.g., Lucknow Municipal Corporation, NOT Bangalore)
+4. If the address is not provided or unclear, return a message indicating location is needed
+5. NATIONAL contacts are acceptable as they apply nationwide
 
 Provide contacts at these levels:
-1. NATIONAL LEVEL - Central government ministries, departments, and national helplines
-2. STATE LEVEL - State government departments, CM grievance portal, state ministers
-3. CITY/MUNICIPALITY LEVEL - Local municipal corporation, district collector, local ward office
+1. NATIONAL LEVEL - Central government ministries and departments relevant to the category
+2. STATE LEVEL - MUST be from the state in the address (state ministers, state department heads, CM grievance portal for that state)
+3. CITY/MUNICIPALITY LEVEL - MUST be from the city in the address (municipal corporation, district collector, local utility companies for that city)
 
 For each contact, provide:
-- name: Official name/title of the contact
+- name: Official name/title with the state/city name included
 - email: Official email address (use real, publicly available government email addresses)
 - level: "NATIONAL" or "STATE" or "CITY"
-- description: Brief description of who they are and when to contact them
+- description: Brief description including which state/city they serve
 
-IMPORTANT: Only provide REAL, publicly available Indian government email addresses. If you are not sure about an exact email, use the official departmental email format or helpline.
+IMPORTANT: Every STATE and CITY contact MUST mention the correct state and city from the user's address. If the address says Lucknow, Uttar Pradesh, then STATE contacts must be Uttar Pradesh officials and CITY contacts must be Lucknow officials.
 
 Return ONLY a JSON array in this exact format, no other text:
 [
@@ -181,7 +207,7 @@ Return ONLY a JSON array in this exact format, no other text:
 ]`;
 
     const response = await getGemini().models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-3.6-flash",
       contents: prompt,
     });
 
@@ -201,8 +227,8 @@ Return ONLY a JSON array in this exact format, no other text:
     }
 
     res.status(200).json({ contacts });
-  } catch (error) {
-    console.error("Official contacts generation failed:", error);
+  } catch (error: any) {
+    console.error("Official contacts generation failed:", error?.message || String(error));
     res.status(500).json({ error: "Failed to get official contacts. Please try again." });
   }
 }
@@ -385,7 +411,7 @@ export async function createGrievance(
 
               duplicateScore: duplicateDetection.duplicateScore,
 
-              modelName: "gemini-3.5-flash",
+              modelName: "gemini-3.6-flash",
               modelVersion: "3.5",
             },
           },

@@ -148,6 +148,8 @@ export const getOfficialContactsSchema = z.object({
     category: z.string().min(1, "Category is required"),
     departmentName: z.string().optional(),
     address: z.string().optional(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
   }),
 });
 

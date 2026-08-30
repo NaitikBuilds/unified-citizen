@@ -8,7 +8,7 @@ import {
   type AIClassificationOutput,
 } from "../schemas/ai-output.schema.js";
 
-const MODEL_NAME = "gemini-3.5-flash";
+const MODEL_NAME = "gemini-3.6-flash";
 
 /**
  * Smart keyword-based fallback when Gemini is unavailable.
