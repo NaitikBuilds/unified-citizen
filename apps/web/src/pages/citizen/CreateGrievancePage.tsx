@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle, Mail, Copy, X } from "lucide-react";
+import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle, Mail, Copy, X, Building2, Landmark, MapIcon } from "lucide-react";
 import { grievanceApi } from "../../lib/api";
 import { toast } from "sonner";
 import LocationPicker from "../../components/LocationPicker";
@@ -21,6 +21,8 @@ export default function CreateGrievancePage() {
   const [generatingEmail, setGeneratingEmail] = useState(false);
   const [generatedEmail, setGeneratedEmail] = useState<string | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [officialContacts, setOfficialContacts] = useState<Array<{ name: string; email: string; level: string; description: string }>>([]);
+  const [loadingContacts, setLoadingContacts] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -75,6 +77,7 @@ export default function CreateGrievancePage() {
       });
       setGeneratedEmail(data.email);
       setShowEmailModal(true);
+      fetchOfficialContacts();
     } catch {
       toast.error("Failed to generate email. Please try again.");
     } finally {
@@ -88,6 +91,34 @@ export default function CreateGrievancePage() {
       toast.success("Email copied to clipboard!");
     }
   };
+
+  const fetchOfficialContacts = async () => {
+    if (!form.category) return;
+    setLoadingContacts(true);
+    try {
+      const { data } = await grievanceApi.getOfficialContacts({
+        category: form.category,
+        departmentName: analysis?.departmentName || undefined,
+        address: location.address || form.address || undefined,
+      });
+      setOfficialContacts(data.contacts);
+    } catch {
+      // Silently fail — contacts are supplementary
+    } finally {
+      setLoadingContacts(false);
+    }
+  };
+
+  const copyEmailTo = (email: string) => {
+    navigator.clipboard.writeText(generatedEmail || "");
+    toast.success(`Email copied! Paste in To: ${email}`);
+  };
+
+  const levelIcon: Record<string, typeof Building2> = { NATIONAL: Landmark, STATE: Building2, CITY: MapIcon };
+  const levelColor: Record<string, string> = { NATIONAL: "text-blue-400", STATE: "text-purple-400", CITY: "text-green-400" };
+  const levelBg: Record<string, string> = { NATIONAL: "rgba(59,130,246,0.1)", STATE: "rgba(124,92,252,0.1)", CITY: "rgba(34,197,94,0.1)" };
+  const levelBorder: Record<string, string> = { NATIONAL: "rgba(59,130,246,0.3)", STATE: "rgba(124,92,252,0.3)", CITY: "rgba(34,197,94,0.3)" };
+  const levelLabel: Record<string, string> = { NATIONAL: "National", STATE: "State", CITY: "City / Municipality" };
 
   const inputStyle = { background: "#111", border: "1px solid rgba(255,255,255,0.1)" };
 
@@ -163,8 +194,41 @@ export default function CreateGrievancePage() {
               <button className="p-1.5 rounded-lg hover:bg-white/10 transition" onClick={() => setShowEmailModal(false)}><X className="h-5 w-5 text-gray-400" /></button>
             </div>
             <div className="flex-1 overflow-y-auto rounded-xl p-4 mb-4 text-sm text-gray-300 whitespace-pre-wrap leading-relaxed" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.05)" }}>{generatedEmail}</div>
+            {/* Official Contacts */}
+            {officialContacts.length > 0 && (
+              <div className="mb-4">
+                <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2"><Building2 className="h-4 w-4 text-purple-400" /> Official Government Contacts</h4>
+                {(["NATIONAL", "STATE", "CITY"] as const).map((level) => {
+                  const contacts = officialContacts.filter((c) => c.level === level);
+                  if (contacts.length === 0) return null;
+                  const Icon = levelIcon[level];
+                  return (
+                    <div key={level} className="mb-3">
+                      <div className="text-[10px] uppercase tracking-wide font-semibold mb-1.5 px-1" style={{ color: levelColor[level] }}>{levelLabel[level]}</div>
+                      <div className="space-y-1.5">
+                        {contacts.map((c, i) => (
+                          <div key={i} className="flex items-center justify-between gap-2 p-2.5 rounded-xl" style={{ background: levelBg[level], border: `1px solid ${levelBorder[level]}` }}>
+                            <div className="min-w-0">
+                              <div className="text-xs font-semibold text-white truncate">{c.name}</div>
+                              <div className="text-[11px] text-gray-400 truncate">{c.email}</div>
+                              <div className="text-[10px] text-gray-500 truncate">{c.description}</div>
+                            </div>
+                            <button className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white hover:opacity-80 transition" style={{ background: levelColor[level] === "text-blue-400" ? "#3b82f6" : levelColor[level] === "text-purple-400" ? "#7c3aed" : "#22c55e" }} onClick={() => copyEmailTo(c.email)}><Copy className="h-3 w-3" /> Copy</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {loadingContacts && (
+              <div className="flex items-center gap-2 mb-4 p-3 rounded-xl text-xs text-gray-400" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Finding official government contacts...
+              </div>
+            )}
             <div className="flex gap-3">
-              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-200 transition" onClick={copyEmail}><Copy className="h-4 w-4" /> Copy to Clipboard</button>
+              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-200 transition" onClick={copyEmail}><Copy className="h-4 w-4" /> Copy Email</button>
               <button className="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:text-white transition" style={{ border: "1px solid rgba(255,255,255,0.1)" }} onClick={() => setShowEmailModal(false)}>Close</button>
             </div>
           </div>

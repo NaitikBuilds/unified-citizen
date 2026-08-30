@@ -124,6 +124,9 @@ export const grievanceApi = {
   generateEmail: (data: { title: string; description: string; category?: string; departmentName?: string; address?: string }) =>
     api.post<{ email: string }>('/grievances/generate-email', data),
 
+  getOfficialContacts: (data: { category: string; departmentName?: string; address?: string }) =>
+    api.post<{ contacts: Array<{ name: string; email: string; level: string; description: string }> }>('/grievances/get-official-contacts', data),
+
   analyze: (data: { title: string; description: string; category?: string }) =>
     api.post<{
       classification: {

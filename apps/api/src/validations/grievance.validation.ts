@@ -143,6 +143,14 @@ export const listGrievancesSchema = z.object({
   }),
 });
 
+export const getOfficialContactsSchema = z.object({
+  body: z.object({
+    category: z.string().min(1, "Category is required"),
+    departmentName: z.string().optional(),
+    address: z.string().optional(),
+  }),
+});
+
 export const generateEmailSchema = z.object({
   body: z.object({
     title: z.string().min(5, "Title must be at least 5 characters long"),

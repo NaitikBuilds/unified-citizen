@@ -36,9 +36,10 @@ import {
   reopenGrievanceSchema,
   listGrievancesSchema,
   grievanceCommentsQuerySchema,
-  generateEmailSchema
+  generateEmailSchema,
+  getOfficialContactsSchema
 } from '../validations/grievance.validation.js';
-import { generateFormalEmail } from '../controllers/grievance.controller.js';
+import { generateFormalEmail, getOfficialContacts } from '../controllers/grievance.controller.js';
 
 const router = Router();
 
@@ -47,6 +48,9 @@ router.use(authenticate);
 
 // Generate formal email for a grievance
 router.post('/generate-email', requireRole(['CITIZEN']), validate(generateEmailSchema), generateFormalEmail);
+
+// Get official government contacts for a grievance category/location
+router.post('/get-official-contacts', requireRole(['CITIZEN']), validate(getOfficialContactsSchema), getOfficialContacts);
 
 // AI analysis preview — citizens analyze before creating
 router.post('/analyze', requireRole(['CITIZEN']), validate(analyzeGrievanceSchema), analyzeGrievancePreview);

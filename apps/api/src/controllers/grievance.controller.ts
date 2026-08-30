@@ -130,6 +130,83 @@ Generate ONLY the email text. No explanations or commentary.`;
   }
 }
 
+// POST /api/grievances/get-official-contacts
+export async function getOfficialContacts(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { category, departmentName, address } = req.body;
+
+    if (!category) {
+      res.status(400).json({ error: "Category is required" });
+      return;
+    }
+
+    const { getGemini } = await import("../ai/providers/gemini.provider.js");
+
+    const prompt = `You are a civic communications assistant for India.
+
+Based on the following grievance details, provide a list of official government email contacts where this complaint should be sent, organized by governance level.
+
+Grievance Details:
+- Category: ${category}
+- Department: ${departmentName || "Relevant Government Department"}
+${address ? `- Location: ${address}` : ""}
+
+Provide contacts at these levels:
+1. NATIONAL LEVEL - Central government ministries, departments, and national helplines
+2. STATE LEVEL - State government departments, CM grievance portal, state ministers
+3. CITY/MUNICIPALITY LEVEL - Local municipal corporation, district collector, local ward office
+
+For each contact, provide:
+- name: Official name/title of the contact
+- email: Official email address (use real, publicly available government email addresses)
+- level: "NATIONAL" or "STATE" or "CITY"
+- description: Brief description of who they are and when to contact them
+
+IMPORTANT: Only provide REAL, publicly available Indian government email addresses. If you are not sure about an exact email, use the official departmental email format or helpline.
+
+Return ONLY a JSON array in this exact format, no other text:
+[
+  { "name": "...", "email": "...", "level": "NATIONAL", "description": "..." },
+  { "name": "...", "email": "...", "level": "STATE", "description": "..." },
+  { "name": "...", "email": "...", "level": "CITY", "description": "..." }
+]`;
+
+    const response = await getGemini().models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+    });
+
+    const text = response.text;
+
+    if (!text) {
+      throw new Error("Gemini returned empty response for contacts");
+    }
+
+    // Parse JSON from response (may be wrapped in markdown code block)
+    let contacts;
+    try {
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      contacts = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
+    } catch {
+      throw new Error("Failed to parse contacts from AI response");
+    }
+
+    res.status(200).json({ contacts });
+  } catch (error) {
+    console.error("Official contacts generation failed:", error);
+    res.status(500).json({ error: "Failed to get official contacts. Please try again." });
+  }
+}
+
 // POST /api/grievances
 export async function createGrievance(
   req: AuthenticatedRequest,
