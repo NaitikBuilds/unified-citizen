@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle, Mail, Copy, X, Building2, Landmark, MapIcon } from "lucide-react";
+import { MapPin, Upload, AlertCircle, Bot, Loader2, CheckCircle, Mail, Copy, X, Building2, Landmark, MapIcon, ExternalLink } from "lucide-react";
 import { grievanceApi } from "../../lib/api";
 import { toast } from "sonner";
 import LocationPicker from "../../components/LocationPicker";
@@ -124,6 +124,16 @@ export default function CreateGrievancePage() {
     toast.success(`Email copied! Paste in To: ${email}`);
   };
 
+  const sendEmailTo = (email: string) => {
+    const body = generatedEmail || "";
+    const subjectMatch = body.match(/^Subject:\s*(.+)$/m);
+    const subject = subjectMatch ? subjectMatch[1].trim() : "Grievance Submission";
+    const cleanBody = body.replace(/^Subject:.*\n?/, "").trim();
+    // Open Gmail compose directly
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(cleanBody)}`;
+    window.open(gmailUrl, "_blank");
+  };
+
   const levelIcon: Record<string, typeof Building2> = { NATIONAL: Landmark, STATE: Building2, CITY: MapIcon };
   const levelColor: Record<string, string> = { NATIONAL: "text-blue-400", STATE: "text-purple-400", CITY: "text-green-400" };
   const levelBg: Record<string, string> = { NATIONAL: "rgba(59,130,246,0.1)", STATE: "rgba(124,92,252,0.1)", CITY: "rgba(34,197,94,0.1)" };
@@ -240,7 +250,10 @@ export default function CreateGrievancePage() {
                                 <div className="text-xs font-semibold text-white mb-0.5">{c.name}</div>
                                 <div className="text-[11px] text-gray-400 mb-1">{c.email}</div>
                                 <div className="text-[10px] text-gray-500 mb-2 leading-relaxed">{c.description}</div>
-                                <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-white hover:opacity-80 transition" style={{ background: level === "NATIONAL" ? "#3b82f6" : level === "STATE" ? "#7c3aed" : "#22c55e" }} onClick={() => copyEmailTo(c.email)}><Copy className="h-3 w-3" /> Copy & Send</button>
+                                <div className="flex gap-1.5">
+                                  <button className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white hover:opacity-80 transition" style={{ background: level === "NATIONAL" ? "#3b82f6" : level === "STATE" ? "#7c3aed" : "#22c55e" }} onClick={() => copyEmailTo(c.email)}><Copy className="h-3 w-3" /> Copy</button>
+                                  <button className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white hover:opacity-80 transition" style={{ background: level === "NATIONAL" ? "#2563eb" : level === "STATE" ? "#6d28d9" : "#16a34a" }} onClick={() => sendEmailTo(c.email)}><ExternalLink className="h-3 w-3" /> Open in Gmail</button>
+                                </div>
                               </div>
                             ))}
                           </div>
