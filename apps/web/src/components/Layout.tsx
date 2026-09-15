@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
 import Logo from "./Logo";
-import { LayoutDashboard, FileText, Plus, Bell, Users, Building2, ScrollText, MessageSquare, LogOut, Menu, X, ChevronDown, User } from "lucide-react";
+import { LayoutDashboard, FileText, Plus, Bell, Users, Building2, ScrollText, MessageSquare, LogOut, Menu, X, ChevronDown, User, BarChart3 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { notificationApi } from "../lib/api";
 import type { Notification } from "../types";
@@ -26,6 +26,7 @@ const superAdminLinks = [
   { to: "/admin/departments", icon: Building2, label: "Departments" },
   { to: "/admin/grievances", icon: FileText, label: "All Grievances" },
   { to: "/admin/audit", icon: ScrollText, label: "Audit Logs" },
+  { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
 ];
 function getNavLinks(role: string) {
   switch (role) {

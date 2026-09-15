@@ -39,6 +39,7 @@ import SuperAdminUsers from "./pages/super-admin/UsersPage";
 import SuperAdminDepartments from "./pages/super-admin/DepartmentsPage";
 import SuperAdminGrievances from "./pages/super-admin/GrievancesPage";
 import SuperAdminAudit from "./pages/super-admin/AuditPage";
+import SuperAdminAnalytics from "./pages/super-admin/AnalyticsPage";
 
 function App() {
   const loadUser = useAuthStore((s) => s.loadUser);
@@ -94,6 +95,7 @@ function App() {
             <Route path="departments" element={<SuperAdminDepartments />} />
             <Route path="grievances" element={<SuperAdminGrievances />} />
             <Route path="audit" element={<SuperAdminAudit />} />
+            <Route path="analytics" element={<SuperAdminAnalytics />} />
           </Route>
         </Route>
 
