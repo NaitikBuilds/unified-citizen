@@ -3,12 +3,34 @@ import { Send, Bot, User, AlertCircle, Sparkles } from "lucide-react";
 import { chatApi } from "../../lib/api";
 import { toast } from "sonner";
 
-
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+}
+
+function renderMarkdown(text: string): string {
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/^#### (.+)$/gm, '<h4 style="color:#fff;font-weight:600;font-size:0.875rem;margin:0.75rem 0 0.25rem">$1</h4>')
+    .replace(/^### (.+)$/gm, '<h3 style="color:#fff;font-weight:700;margin:1rem 0 0.25rem">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="color:#fff;font-weight:700;font-size:1.125rem;margin:1rem 0 0.25rem">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="color:#fff;font-weight:700;font-size:1.25rem;margin:1rem 0 0.25rem">$1</h1>')
+    .replace(/^---+$/gm, '<hr style="border-color:rgba(255,255,255,0.1);margin:0.75rem 0"/>')
+    .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fff">$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;color:#c4b5fd;font-size:0.75rem">$1</code>')
+    .replace(/^[•\-] (.+)$/gm, '<li style="margin-left:1rem;list-style:disc;color:#d1d5db">$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li style="margin-left:1rem;list-style:decimal;color:#d1d5db">$1</li>')
+    .replace(/\n/g, '<br/>');
+  html = html.replace(/(<li[^>]*>.*?<\/li>(?:<br\/>)?)+/g, (match) => {
+    return '<ul style="margin:0.5rem 0;list-style:disc">' + match.replace(/<br\/>/g, '') + '</ul>';
+  });
+  return html;
 }
 
 const quickPrompts = [
@@ -92,7 +114,11 @@ export default function ChatPage() {
                 }`}
                 style={msg.role === "assistant" ? { background: "#141414", border: "1px solid rgba(255,255,255,0.08)" } : {}}
               >
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                {msg.role === "assistant" ? (
+                  <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
+                ) : (
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                )}
               </div>
               <div className={`text-[11px] mt-1.5 px-1 ${msg.role === "user" ? "text-right text-gray-600" : "text-gray-600"}`}>
                 {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
