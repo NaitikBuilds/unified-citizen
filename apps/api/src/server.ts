@@ -1,7 +1,7 @@
 import dns from "node:dns";
 
 dns.setDefaultResultOrder("ipv4first");
-import "dotenv/config";
+import "./env.js";
 import app from "./app.js";
 import { prisma } from "./services/prisma.service.js";
 import { checkAndProcessSLABreaches } from "./services/sla-check.service.js";
@@ -11,6 +11,13 @@ const PORT = Number(process.env.PORT) || 5000;
 
 const server = app.listen(PORT, () => {
   console.log(`API running on http://localhost:${PORT}`);
+
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    console.warn(
+      "[Auth] GOOGLE_CLIENT_ID is not set — Google sign-in will be rejected. " +
+        "Add it to apps/api/.env (or the root .env) and restart the API."
+    );
+  }
 });
 
 // Periodic SLA breach/warning detection. Runs once at startup and then every

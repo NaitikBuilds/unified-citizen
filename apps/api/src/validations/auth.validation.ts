@@ -30,6 +30,14 @@ export const logoutSchema = z.object({
   }),
 });
 
+export const googleAuthSchema = z.object({
+  body: z.object({
+    accessToken: z
+      .string()
+      .min(1, "Google access token is required"),
+  }),
+});
+
 export const changePasswordSchema = z.object({
   body: z.object({
     currentPassword: z.string().min(1, "Current password is required"),
