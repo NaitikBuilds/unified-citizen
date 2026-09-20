@@ -7,6 +7,7 @@ import PriorityBadge from "../../components/PriorityBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import EmptyState from "../../components/EmptyState";
 import ErrorAlert from "../../components/ErrorAlert";
+import Chip, { stableColorFor } from "../../components/Chip";
 import type { Grievance, PaginationMeta } from "../../types";
 
 const inputStyle = { background: "#111", border: "1px solid rgba(255,255,255,0.1)" };
@@ -66,7 +67,7 @@ export default function GrievancesPage() {
                     <td className="px-4 py-3"><Link to="/admin/grievances" className="font-mono text-xs text-white hover:underline">{g.ticketId}</Link></td>
                     <td className="px-4 py-3 font-medium text-white max-w-[200px] truncate">{g.title}</td>
                     <td className="px-4 py-3 text-sm text-gray-300">{g.citizen?.name || "—"}</td>
-                    <td className="px-4 py-3"><span className="text-xs px-2 py-1 rounded-lg text-gray-400" style={{ background: "rgba(255,255,255,0.05)" }}>{g.department?.name || "—"}</span></td>
+                    <td className="px-4 py-3">{g.department?.name ? <Chip label={g.department.name} color={stableColorFor(g.department.name)} /> : <span className="text-xs text-gray-600">—</span>}</td>
                     <td className="px-4 py-3"><StatusBadge status={g.status} /></td>
                     <td className="px-4 py-3"><PriorityBadge priority={g.priority} /></td>
                     <td className="px-4 py-3 text-sm text-gray-500">{new Date(g.createdAt).toLocaleDateString()}</td>

@@ -62,7 +62,10 @@ function App() {
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/chat" element={<ChatPage />} />
+          {/* AI chat rendered inside the app shell for every role */}
+          <Route element={<Layout />}>
+            <Route path="/chat" element={<ChatPage />} />
+          </Route>
 
           {/* Citizen */}
           <Route path="/citizen" element={<Layout />}>

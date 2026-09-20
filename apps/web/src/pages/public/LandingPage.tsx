@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Brain,
@@ -21,6 +21,27 @@ import Logo from "../../components/Logo";
 export default function LandingPage() {
   const [activeStep, setActiveStep] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [navHidden, setNavHidden] = useState(false);
+  const lastScrollYRef = useRef(0);
+
+  // Retracting navbar: hide while scrolling down, reveal on scroll up.
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastScrollYRef.current;
+      if (y < 80) {
+        setNavHidden(false);
+      } else if (delta > 4) {
+        setNavHidden(true);
+      } else if (delta < -4) {
+        setNavHidden(false);
+      }
+      lastScrollYRef.current = y;
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const workflowSteps = [
     {
@@ -137,8 +158,15 @@ export default function LandingPage() {
         />
       </div>
 
-      {/* ─── FLOATING NAVBAR ──────────────────────────────────── */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-2">
+      {/* ─── FLOATING RETRACTING NAVBAR ───────────────────────── */}
+      <div
+        className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-2 will-change-transform"
+        style={{
+          transform: navHidden ? "translateY(-120%)" : "translateY(0)",
+          visibility: navHidden ? "hidden" : "visible",
+          transition: `transform 300ms ease-out, visibility 0s ${navHidden ? "300ms" : "0s"}`,
+        }}
+      >
         <header
           className="max-w-6xl mx-auto px-5 h-12 flex items-center justify-between rounded-full"
           style={{ background: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.1)" }}

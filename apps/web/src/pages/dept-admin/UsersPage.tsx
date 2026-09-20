@@ -3,6 +3,7 @@ import { Users, Search } from "lucide-react";
 import { userApi } from "../../lib/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import EmptyState from "../../components/EmptyState";
+import RoleChip from "../../components/RoleChip";
 import type { User } from "../../types";
 
 export default function UsersPage() {
@@ -13,7 +14,6 @@ export default function UsersPage() {
   useEffect(() => { userApi.list(1, 100).then(({ data }) => setUsers(data.users)).catch(() => {}).finally(() => setLoading(false)); }, []);
 
   const filtered = users.filter((u) => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()));
-  const roleLabel: Record<string, string> = { CITIZEN: "Citizen", OFFICER: "Officer", DEPARTMENT_ADMIN: "Dept Admin", SUPER_ADMIN: "Super Admin" };
 
   if (loading) return <LoadingSpinner />;
 
@@ -35,7 +35,7 @@ export default function UsersPage() {
                 <tr key={u.id} className="hover:bg-white/5 transition" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                   <td className="px-4 py-3 font-medium text-white">{u.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-400">{u.email}</td>
-                  <td className="px-4 py-3"><span className="text-xs px-2 py-1 rounded-lg text-gray-400" style={{ background: "rgba(255,255,255,0.05)" }}>{roleLabel[u.role] || u.role}</span></td>
+                  <td className="px-4 py-3"><RoleChip role={u.role} /></td>
                   <td className="px-4 py-3 text-sm text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}

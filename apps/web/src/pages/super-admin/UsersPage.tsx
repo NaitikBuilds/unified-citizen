@@ -3,6 +3,7 @@ import { Users, Search, ChevronLeft, ChevronRight, Edit2 } from "lucide-react";
 import { userApi, departmentApi } from "../../lib/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import EmptyState from "../../components/EmptyState";
+import RoleChip from "../../components/RoleChip";
 import { toast } from "sonner";
 import type { User, Department, PaginationMeta } from "../../types";
 
@@ -59,7 +60,7 @@ export default function UsersPage() {
                         <select className="px-2 py-1 rounded-lg text-sm text-white focus:outline-none" style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)" }} value={editRole} onChange={(e) => setEditRole(e.target.value)}>
                           {Object.entries(roleLabel).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
                         </select>
-                      ) : <span className="text-xs px-2 py-1 rounded-lg text-gray-400" style={{ background: "rgba(255,255,255,0.05)" }}>{roleLabel[u.role] || u.role}</span>}
+                      ) : <RoleChip role={u.role} />}
                     </td>
                     <td className="px-4 py-3">
                       {editingUser === u.id ? (

@@ -4,6 +4,7 @@ import { FileText, ChevronLeft, ChevronRight } from "lucide-react";
 import { grievanceApi } from "../../lib/api";
 import StatusBadge from "../../components/StatusBadge";
 import PriorityBadge from "../../components/PriorityBadge";
+import CategoryChip from "../../components/CategoryChip";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import EmptyState from "../../components/EmptyState";
 import ErrorAlert from "../../components/ErrorAlert";
@@ -48,7 +49,7 @@ export default function GrievanceListPage() {
                   <tr key={g.id} className="hover:bg-white/5 transition" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                     <td className="px-4 py-3"><Link to={`/officer/grievances/${g.id}`} className="font-mono text-xs text-white hover:underline">{g.ticketId}</Link></td>
                     <td className="px-4 py-3"><Link to={`/officer/grievances/${g.id}`} className="font-medium text-white hover:text-gray-300 transition">{g.title.length > 40 ? g.title.slice(0, 40) + "..." : g.title}</Link></td>
-                    <td className="px-4 py-3"><span className="text-xs px-2 py-1 rounded-lg text-gray-400" style={{ background: "rgba(255,255,255,0.05)" }}>{g.category || "—"}</span></td>
+                    <td className="px-4 py-3"><CategoryChip category={g.category} /></td>
                     <td className="px-4 py-3"><StatusBadge status={g.status} /></td>
                     <td className="px-4 py-3"><PriorityBadge priority={g.priority} /></td>
                     <td className="px-4 py-3 text-gray-500 text-xs">{new Date(g.createdAt).toLocaleDateString()}</td>

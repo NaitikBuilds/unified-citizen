@@ -48,12 +48,12 @@ export default function SuperAdminDashboard() {
       <h1 className="text-2xl font-bold text-white mb-6">System Dashboard</h1>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         {stats.map((s) => (
-          <div key={s.label} className="p-5 rounded-2xl" style={S}>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-xl" style={{ background: s.bg }}><s.icon className="h-5 w-5" style={{ color: s.color }} /></div>
+          <div key={s.label} className="dark-card p-5 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-500">{s.label}</span>
+              <div className="p-2 rounded-xl" style={{ background: s.bg }}><s.icon className="h-4 w-4" style={{ color: s.color }} /></div>
             </div>
-            <div className="text-2xl font-bold text-white">{s.value}</div>
+            <div className="text-3xl font-bold text-white mt-3">{String(s.value).padStart(2, "0")}</div>
           </div>
         ))}
       </div>
