@@ -4,6 +4,13 @@ import { useAuthStore } from "../../stores/authStore";
 import { toast } from "sonner";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
 
+const DEMO_ACCOUNTS = [
+  { label: "Citizen Demo", email: "citizen1@example.com", password: "Citizen@12345" },
+  { label: "Officer Demo", email: "officer.pwd@unifiedcitizen.gov.in", password: "Officer@12345" },
+  { label: "Department Admin", email: "admin.pwd@unifiedcitizen.gov.in", password: "Admin@12345" },
+  { label: "Super Admin", email: "admin@unifiedcitizen.gov.in", password: "Admin@12345" },
+] as const;
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -183,27 +190,16 @@ export default function LoginPage() {
           <span>Quick Demo Logins</span>
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
-          <button
-            type="button"
-            onClick={() => handleQuickDemo("citizen@demo.com", "password123")}
-            className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 transition border border-white/[0.06]"
-          >
-            Citizen Demo
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickDemo("officer@demo.com", "password123")}
-            className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 transition border border-white/[0.06]"
-          >
-            Officer Demo
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickDemo("admin@demo.com", "password123")}
-            className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 transition border border-white/[0.06]"
-          >
-            Super Admin
-          </button>
+          {DEMO_ACCOUNTS.map((account) => (
+            <button
+              key={account.email}
+              type="button"
+              onClick={() => handleQuickDemo(account.email, account.password)}
+              className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 transition border border-white/[0.06]"
+            >
+              {account.label}
+            </button>
+          ))}
         </div>
       </div>
     </div>

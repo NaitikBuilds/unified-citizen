@@ -11,7 +11,15 @@ import {
   ArrowRight,
   CheckCircle2,
   Circle,
+  Sparkles,
 } from "lucide-react";
+
+const DEMO_ACCOUNTS = [
+  { label: "Citizen Demo", email: "citizen1@example.com", password: "Citizen@12345" },
+  { label: "Officer Demo", email: "officer.pwd@unifiedcitizen.gov.in", password: "Officer@12345" },
+  { label: "Department Admin", email: "admin.pwd@unifiedcitizen.gov.in", password: "Admin@12345" },
+  { label: "Super Admin", email: "admin@unifiedcitizen.gov.in", password: "Admin@12345" },
+] as const;
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -41,6 +49,11 @@ export default function RegisterPage() {
   };
 
   const strength = getStrengthLabel();
+
+  const handleQuickDemo = (demoEmail: string, demoPass: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPass);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,6 +305,26 @@ export default function RegisterPage() {
           </button>
         </div>
       </form>
+
+      {/* Quick Demo Credentials Assistant */}
+      <div className="mt-8 p-4 rounded-2xl" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="flex items-center gap-2 text-xs font-semibold mb-2.5" style={{ color: '#aaa' }}>
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Quick Demo Logins</span>
+        </div>
+        <div className="flex flex-wrap gap-2 text-xs">
+          {DEMO_ACCOUNTS.map((account) => (
+            <button
+              key={account.email}
+              type="button"
+              onClick={() => handleQuickDemo(account.email, account.password)}
+              className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 transition border border-white/[0.06]"
+            >
+              {account.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Switch to Login Link */}
       <div className="text-center text-xs text-gray-400 mt-6">
