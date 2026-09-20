@@ -1,1 +1,85 @@
 @import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
+
+@theme inline {
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-poppins);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Hide native browser password reveal button */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* CodeSarthi-style: pure black grid & card utilities */
+
+/* Fixed full-page background grid overlay — apply to a fixed div */
+.page-grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+}
+
+/* Inline usage via Tailwind (for bento cards etc.) */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+}
+
+.bg-grid-pattern-light {
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
+/* Card hover: subtle white border, no glow */
+.dark-card {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dark-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.04); }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 10s ease-in-out infinite;
+}
+

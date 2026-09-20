@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { 
   createGrievance, 
+  analyzeGrievancePreview,
   getGrievances, 
   getGrievanceById,
   updateGrievance,
@@ -23,6 +24,7 @@ import { validate } from '../middlewares/validate.middleware.js';
 import { upload } from '../middlewares/upload.middleware.js';
 import { 
   createGrievanceSchema, 
+  analyzeGrievanceSchema,
   updateGrievanceStatusSchema, 
   assignGrievanceSchema, 
   addCommentSchema, 
@@ -33,13 +35,25 @@ import {
   updateGrievanceSchema,
   reopenGrievanceSchema,
   listGrievancesSchema,
-  grievanceCommentsQuerySchema
+  grievanceCommentsQuerySchema,
+  generateEmailSchema,
+  getOfficialContactsSchema
 } from '../validations/grievance.validation.js';
+import { generateFormalEmail, getOfficialContacts } from '../controllers/grievance.controller.js';
 
 const router = Router();
 
 // Apply authentication to all grievance routes globally
 router.use(authenticate);
+
+// Generate formal email for a grievance
+router.post('/generate-email', requireRole(['CITIZEN']), validate(generateEmailSchema), generateFormalEmail);
+
+// Get official government contacts for a grievance category/location
+router.post('/get-official-contacts', requireRole(['CITIZEN']), validate(getOfficialContactsSchema), getOfficialContacts);
+
+// AI analysis preview — citizens analyze before creating
+router.post('/analyze', requireRole(['CITIZEN']), validate(analyzeGrievanceSchema), analyzeGrievancePreview);
 
 // Citizens can create grievances (Zod validated)
 router.post('/', requireRole(['CITIZEN']), validate(createGrievanceSchema), createGrievance);

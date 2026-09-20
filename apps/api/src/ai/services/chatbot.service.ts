@@ -2,7 +2,7 @@ import { getGemini } from "../providers/gemini.provider.js";
 import { buildChatbotPrompt } from "../prompts/chatbot.prompt.js";
 import { getCitizenContext } from "./citizen-context.service.js";
 
-const MODEL_NAME = "gemini-3.5-flash";
+const MODEL_NAME = "gemini-3.6-flash";
 
 export async function chatWithCitizen(
   citizenId: string,

@@ -142,3 +142,33 @@ export const listGrievancesSchema = z.object({
     limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
 });
+
+export const getOfficialContactsSchema = z.object({
+  body: z.object({
+    category: z.string().min(1, "Category is required"),
+    departmentName: z.string().optional(),
+    address: z.string().optional(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
+  }),
+});
+
+export const generateEmailSchema = z.object({
+  body: z.object({
+    title: z.string().min(5, "Title must be at least 5 characters long"),
+    description: z.string().min(10, "Description must be at least 10 characters long"),
+    category: z.string().min(1).optional(),
+    departmentName: z.string().optional(),
+    address: z.string().optional(),
+  }),
+});
+
+export const analyzeGrievanceSchema = z.object({
+  body: z.object({
+    title: z.string().min(5, "Title must be at least 5 characters long"),
+    description: z
+      .string()
+      .min(10, "Description must be at least 10 characters long"),
+    category: z.string().min(1).optional(),
+  }),
+});

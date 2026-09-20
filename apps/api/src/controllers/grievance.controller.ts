@@ -1,4 +1,6 @@
 import { analyzeGrievance } from "../ai/services/analysis.service.js";
+import { classifyGrievance } from "../ai/services/classification.service.js";
+import { prisma as rootPrisma } from "../services/prisma.service.js";
 
 import path from "path";
 import fs from "fs";
@@ -17,6 +19,219 @@ import {
 } from "../services/subresource.service.js";
 import { canTransitionGrievanceStatus } from "../services/grievance-status.service.js";
 import { canAccessGrievanceSubResource } from "../services/subresource-auth.service.js";
+
+// POST /api/grievances/analyze
+export async function analyzeGrievancePreview(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { title, description, category } = req.body;
+
+    if (!title || typeof title !== "string") {
+      res.status(400).json({ error: "Title is required" });
+      return;
+    }
+
+    if (!description || typeof description !== "string") {
+      res.status(400).json({ error: "Description is required" });
+      return;
+    }
+
+    // Run AI classification only (fast, no DB writes)
+    const classification = await classifyGrievance(title, description);
+
+    // Resolve department code to actual department
+    const department = await rootPrisma.department.findUnique({
+      where: { code: classification.department },
+    });
+
+    res.json({
+      classification: {
+        category: classification.category,
+        department: classification.department,
+        departmentName: department?.name || classification.department,
+        departmentId: department?.id || null,
+        priority: classification.priority,
+        severity: classification.severity,
+        sentiment: classification.sentiment,
+        confidence: classification.confidence,
+        summary: classification.summary,
+        explanation: classification.explanation,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// POST /api/grievances/generate-email
+export async function generateFormalEmail(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { title, description, category, departmentName, address } = req.body;
+
+    if (!title || !description) {
+      res.status(400).json({ error: "Title and description are required" });
+      return;
+    }
+
+    const { getGemini } = await import("../ai/providers/gemini.provider.js");
+
+    const prompt = `You are a professional legal/civic communications assistant.
+
+Generate a formal complaint email based on the following grievance details.
+The email should be:
+- Written in a professional, respectful, and formal tone
+- Addressed to the relevant government department
+- Include a clear subject line
+- Structured with: Subject, Salutation, Body (problem statement, impact, requested action), Closing
+- Include placeholder for sender name [YOUR NAME] and date [DATE]
+- Mention the grievance details provided below
+
+Grievance Details:
+- Title: ${title}
+- Description: ${description}
+- Category: ${category || "Not specified"}
+- Department: ${departmentName || "Relevant Government Department"}
+${address ? `- Location: ${address}` : ""}
+
+Generate ONLY the email text. No explanations or commentary.`;
+
+    const response = await getGemini().models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: prompt,
+    });
+
+    const text = response.text;
+
+    if (!text) {
+      throw new Error("Gemini returned an empty response for email generation");
+    }
+
+    res.status(200).json({ email: text });
+  } catch (error) {
+    console.error("Email generation failed:", error);
+    res.status(500).json({ error: "Failed to generate email. Please try again." });
+  }
+}
+
+// POST /api/grievances/get-official-contacts
+export async function getOfficialContacts(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { category, departmentName, address, latitude, longitude } = req.body;
+
+    if (!category) {
+      res.status(400).json({ error: "Category is required" });
+      return;
+    }
+
+    // Resolve address: if not provided, try server-side reverse geocoding from coordinates
+    let resolvedAddress = address;
+    if (!resolvedAddress && latitude && longitude) {
+      try {
+        const https = await import("node:https");
+        const geoData = await new Promise<any>((resolve, reject) => {
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+          https.get(url, { headers: { "User-Agent": "CIVIX-Governance-Platform/1.0" } }, (res) => {
+            let data = "";
+            res.on("data", (chunk: string) => data += chunk);
+            res.on("end", () => { try { resolve(JSON.parse(data)); } catch { reject(new Error("Parse error")); } });
+          }).on("error", reject);
+        });
+        resolvedAddress = geoData.display_name || `${latitude}, ${longitude}`;
+      } catch {
+        resolvedAddress = `${latitude}, ${longitude}`;
+      }
+    }
+
+    const { getGemini } = await import("../ai/providers/gemini.provider.js");
+
+    const prompt = `You are a civic communications assistant for India.
+
+The user is filing a grievance from a SPECIFIC LOCATION. You MUST identify the city and state from the location/address provided and return ONLY contacts relevant to that exact city and state. Do NOT return contacts from any other city or state.
+
+Grievance Details:
+- Category: ${category}
+- Department: ${departmentName || "Relevant Government Department"}
+- Location/Address: ${resolvedAddress || "Not provided"}
+
+CRITICAL RULES:
+1. FIRST: Parse the location/address to extract the CITY and STATE (e.g., "Hazratganj, Lucknow, Uttar Pradesh" → City: Lucknow, State: Uttar Pradesh)
+2. STATE LEVEL contacts MUST be from the SAME STATE extracted from the address (e.g., Uttar Pradesh officials, NOT Karnataka)
+3. CITY LEVEL contacts MUST be from the SAME CITY extracted from the address (e.g., Lucknow Municipal Corporation, NOT Bangalore)
+4. If the address is not provided or unclear, return a message indicating location is needed
+5. NATIONAL contacts are acceptable as they apply nationwide
+
+Provide contacts at these levels:
+1. NATIONAL LEVEL - Central government ministries and departments relevant to the category
+2. STATE LEVEL - MUST be from the state in the address (state ministers, state department heads, CM grievance portal for that state)
+3. CITY/MUNICIPALITY LEVEL - MUST be from the city in the address (municipal corporation, district collector, local utility companies for that city)
+
+For each contact, provide:
+- name: Official name/title with the state/city name included
+- email: Official email address (use real, publicly available government email addresses)
+- level: "NATIONAL" or "STATE" or "CITY"
+- description: Brief description including which state/city they serve
+
+IMPORTANT: Every STATE and CITY contact MUST mention the correct state and city from the user's address. If the address says Lucknow, Uttar Pradesh, then STATE contacts must be Uttar Pradesh officials and CITY contacts must be Lucknow officials.
+
+Return ONLY a JSON array in this exact format, no other text:
+[
+  { "name": "...", "email": "...", "level": "NATIONAL", "description": "..." },
+  { "name": "...", "email": "...", "level": "STATE", "description": "..." },
+  { "name": "...", "email": "...", "level": "CITY", "description": "..." }
+]`;
+
+    const response = await getGemini().models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: prompt,
+    });
+
+    const text = response.text;
+
+    if (!text) {
+      throw new Error("Gemini returned empty response for contacts");
+    }
+
+    // Parse JSON from response (may be wrapped in markdown code block)
+    let contacts;
+    try {
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      contacts = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
+    } catch {
+      throw new Error("Failed to parse contacts from AI response");
+    }
+
+    res.status(200).json({ contacts });
+  } catch (error: any) {
+    console.error("Official contacts generation failed:", error?.message || String(error));
+    res.status(500).json({ error: "Failed to get official contacts. Please try again." });
+  }
+}
 
 // POST /api/grievances
 export async function createGrievance(
@@ -196,7 +411,7 @@ export async function createGrievance(
 
               duplicateScore: duplicateDetection.duplicateScore,
 
-              modelName: "gemini-3.5-flash",
+              modelName: "gemini-3.6-flash",
               modelVersion: "3.5",
             },
           },

@@ -2,7 +2,7 @@ import { getGemini } from "../providers/gemini.provider.js";
 import { prisma } from "../../services/prisma.service.js";
 import { z } from "zod";
 
-const MODEL_NAME = "gemini-3.5-flash";
+const MODEL_NAME = "gemini-3.6-flash";
 
 const duplicateDetectionSchema = z.object({
   relationship: z.enum(["DUPLICATE", "COMMON_PROBLEM", "UNRELATED"]),
