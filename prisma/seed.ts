@@ -77,7 +77,8 @@ async function main() {
     {
       name: "Other Department",
       code: "OTHER",
-      description: "General complaints and uncategorized grievances. Catch-all for AI classification fallback.",
+      description:
+        "General complaints and uncategorized grievances. Catch-all for AI classification fallback.",
     },
   ];
 
@@ -722,8 +723,7 @@ async function main() {
       grievanceId: grievance1.id,
       type: "GRIEVANCE_CREATED",
       title: "New Grievance Assigned",
-      message:
-        "You have been assigned grievance GRV-2026-000001.",
+      message: "You have been assigned grievance GRV-2026-000001.",
     },
   });
 
@@ -775,8 +775,18 @@ async function main() {
 
   console.log("Creating feedback...");
 
-  await prisma.feedback.create({
-    data: {
+  await prisma.feedback.upsert({
+    where: {
+      grievanceId_userId: {
+        grievanceId: grievance1.id,
+        userId: citizen1.id,
+      },
+    },
+    update: {
+      rating: 5,
+      comment: "The complaint was handled quickly and professionally.",
+    },
+    create: {
       grievanceId: grievance1.id,
       userId: citizen1.id,
       rating: 5,
@@ -797,8 +807,7 @@ async function main() {
       grievanceId: grievance2.id,
       level: "LEVEL_1",
       status: "OPEN",
-      reason:
-        "Critical water supply complaint requires immediate attention.",
+      reason: "Critical water supply complaint requires immediate attention.",
       createdById: waterAdmin.id,
     },
   });
